@@ -20,6 +20,58 @@ import sys
 UI_FILE_PATH = 'ui/app_main.ui'
 
 
+class MapRenderer(object):
+    def __init__(self, window):
+        self.window = window
+
+        # Map details
+        self.map_scale = 4
+        self.img_w = 5300
+        self.img_h = 5553
+
+        # User and router details
+        self.user = None
+        self.active_routers = []
+
+        self.reset_labels()
+
+    
+    def reset_labels(self):
+        # Reset map and all label values
+        self.window.mapView.items().clear()
+        self.window.scaleLabel.setText(str(self.map_scale))
+        self.window.coordsLabel.setText('x: --, y: --')
+        self.window.floorLabel.setText('Floor -')
+        self.window.locationLabel.setText('---')
+        self.window.precLabel.setText('Precision: -- m')
+        self.window.radiusLabel.setText('Radius: -- m')
+
+    
+    def scale_map(self):
+        # Change map scaling
+        pass
+
+    
+    def render(self):
+        # Render the map
+        pass
+
+
+    def draw_user(self):
+        # Draw the user's location on map
+        pass
+
+
+    def draw_router(self):
+        # Draw a router as a dot on map
+        pass
+
+
+    def highlight_router(self):
+        # Highlight active routers
+        pass
+
+
 
 def load_UI(path):
     # Open UI file at given path
@@ -49,6 +101,12 @@ if __name__ == "__main__":
 
     # Re-set window size
     window.setFixedSize(window.width(), window.height())
+
+    # Init the main renderer class
+    mr = MapRenderer(window)
+
+    # Connect button controls
+    window.quitButton.clicked.connect(sys.exit)
  
     # Display window and start app
     window.show()
