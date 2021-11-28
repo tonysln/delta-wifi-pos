@@ -18,11 +18,13 @@ import sys
 
 # Constants
 UI_FILE_PATH = 'ui/app_main.ui'
+ROUTERS_FILE_PATH = 'data/routers.csv'
 
 
 class MapRenderer(object):
-    def __init__(self, window):
+    def __init__(self, window, routers):
         self.window = window
+        self.routers = routers
 
         # Map details
         self.map_scale = 4
@@ -73,6 +75,11 @@ class MapRenderer(object):
 
 
 
+def load_routers(path):
+    # Load data for all routers from storage
+    return None
+
+
 def load_UI(path):
     # Open UI file at given path
     ui_file = QFile(path)
@@ -102,8 +109,11 @@ if __name__ == "__main__":
     # Re-set window size
     window.setFixedSize(window.width(), window.height())
 
+    # Load all routers
+    routers = load_routers(ROUTERS_FILE_PATH)
+
     # Init the main renderer class
-    mr = MapRenderer(window)
+    mr = MapRenderer(window, routers)
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
