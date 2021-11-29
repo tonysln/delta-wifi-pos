@@ -38,7 +38,7 @@ class MapRenderer(object):
         self.img_h = 5553
 
         # User and router details
-        self.user = None
+        self.user = {'x': 0, 'y': 0, 'floor': 1}
         self.nearby_routers = []
 
         self.reset_labels()
@@ -64,13 +64,17 @@ class MapRenderer(object):
         # Render the map
         print('Rendering...')
 
+        # Load map for the current floor
         path = f'map/korrus-{self.user["floor"]}.png'
+        # Init a pixmap for the map
         pix = QPixmap(path)
         painter = QPainter(pix)
 
+        # Draw the user, routers and other information
         # ...
 
         painter.end()
+
 
         # Scale map based on current zoom
         scaled_w = self.window.mapView.width() * self.map_scale
@@ -79,17 +83,19 @@ class MapRenderer(object):
                          Qt.AspectRatioMode.KeepAspectRatio,
                          Qt.TransformationMode.SmoothTransformation)
 
+        # Add the pixmap to a scene in the QGraphicsView
         scene = QGraphicsScene()
         scene.addPixmap(pix)
-
         self.window.mapView.setScene(scene)
-        # Move image to give padding around all sides
+
+        # Move the map to give padding around all sides
         self.window.mapView.setSceneRect(-100, -100, scene.width() + 200, scene.height() + 200)
 
-        # Remap center coords based on scale
+        # Remap center coordinates based on the current map scale
         rc_x = interp1d([0, self.img_w], [0, scaled_w])
         rc_y = interp1d([0, self.img_h], [0, scaled_h])
 
+        # Center map view on the user's location 
         self.window.mapView.centerOn(rc_x(self.user['x']), rc_y(self.user['y']))
         self.window.mapView.show()
         
