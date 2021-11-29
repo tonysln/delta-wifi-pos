@@ -19,12 +19,14 @@ import sys
 # Constants
 UI_FILE_PATH = 'ui/app_main.ui'
 ROUTERS_FILE_PATH = 'data/routers.csv'
+LOCATIONS_FILE_PATH = 'data/locations.csv'
 
 
 class MapRenderer(object):
-    def __init__(self, window, routers):
+    def __init__(self, window, routers, locations):
         self.window = window
         self.routers = routers
+        self.locations = locations
 
         # Map details
         self.map_scale = 4
@@ -77,7 +79,51 @@ class MapRenderer(object):
 
 def load_routers(path):
     # Load data for all routers from storage
-    return None
+
+    # Open and read file
+    with open(path, 'r') as f:
+        rows = f.read().splitlines()
+
+    # Skip first row
+    if rows[0].startswith('mac'):
+        rows = rows[1:]
+
+    # Save router data into a dictionary
+    routers_dict = {}
+    for row in rows:
+        row = row.split(',')
+        mac = row[0]
+        routers_dict[mac] = {
+            'x': int(row[1]),
+            'y': int(row[2]),
+            'floor': int(row[3]),
+            'SSID': row[4],
+            'freq': int(row[5])
+        }
+
+    return routers_dict
+
+
+def load_locations(path):
+    # Load data for all locations from storage
+
+    # Open and read file
+    with open(path, 'r') as f:
+        rows = f.read().splitlines()
+
+    # Skip first row
+    if rows[0].startswith('mac'):
+        rows = rows[1:]
+    
+    # Save locations into a dictionary with
+    locations_dict = {}
+    for row in rows:
+        row = row.split(',')
+        mac = row[0]
+        loc = row[1]
+        locations_dict[mac] = loc
+
+    return locations_dict
 
 
 def load_UI(path):
@@ -109,11 +155,12 @@ if __name__ == "__main__":
     # Re-set window size
     window.setFixedSize(window.width(), window.height())
 
-    # Load all routers
+    # Load all routers and locations
     routers = load_routers(ROUTERS_FILE_PATH)
+    locations = load_locations(LOCATIONS_FILE_PATH)
 
     # Init the main renderer class
-    mr = MapRenderer(window, routers)
+    mr = MapRenderer(window, routers, locations)
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
