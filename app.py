@@ -11,8 +11,10 @@ Initialize the GUI and other components.
 
 # Packages
 from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication
+from PySide6.QtWidgets import QApplication, QGraphicsScene
+from PySide6.QtGui import QPixmap, QPainter
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QApplication
+from scipy.interpolate import interp1d
 import scanner
 import locator
 import sys
@@ -61,8 +63,36 @@ class MapRenderer(object):
     def render(self):
         # Render the map
         print('Rendering...')
-        pass
 
+        path = f'map/korrus-{self.user["floor"]}.png'
+        pix = QPixmap(path)
+        painter = QPainter(pix)
+
+        # ...
+
+        painter.end()
+
+        # Scale map based on current zoom
+        scaled_w = self.window.mapView.width() * self.map_scale
+        scaled_h = self.window.mapView.height() * self.map_scale
+        pix = pix.scaled(scaled_w, scaled_h, 
+                         Qt.AspectRatioMode.KeepAspectRatio,
+                         Qt.TransformationMode.SmoothTransformation)
+
+        scene = QGraphicsScene()
+        scene.addPixmap(pix)
+
+        self.window.mapView.setScene(scene)
+        # Move image to give padding around all sides
+        self.window.mapView.setSceneRect(-100, -100, scene.width() + 200, scene.height() + 200)
+
+        # Remap center coords based on scale
+        rc_x = interp1d([0, self.img_w], [0, scaled_w])
+        rc_y = interp1d([0, self.img_h], [0, scaled_h])
+
+        self.window.mapView.centerOn(rc_x(self.user['x']), rc_y(self.user['y']))
+        self.window.mapView.show()
+        
 
     def draw_user(self):
         # Draw the user's location on map
@@ -84,9 +114,9 @@ def begin_scan(renderer):
     print('Starting scanner & locator...')
 
     # Scan the network
-    nearby= scanner.scan()
+    nearby = []
     # Predict a position
-    user = locator.locate(nearby)
+    user = {'x': 200, 'y': 200, 'floor': 1}
 
     # Pass data to renderer and draw
     renderer.nearby_routers = nearby
