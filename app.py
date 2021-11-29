@@ -13,6 +13,8 @@ Initialize the GUI and other components.
 from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication
+import scanner
+import locator
 import sys
 
 
@@ -25,8 +27,8 @@ LOCATIONS_FILE_PATH = 'data/locations.csv'
 class MapRenderer(object):
     def __init__(self, window, routers, locations):
         self.window = window
-        self.routers = routers
-        self.locations = locations
+        self.routers = routers # routers dictionary
+        self.locations = locations # locations dictionary
 
         # Map details
         self.map_scale = 4
@@ -35,7 +37,7 @@ class MapRenderer(object):
 
         # User and router details
         self.user = None
-        self.active_routers = []
+        self.nearby_routers = []
 
         self.reset_labels()
 
@@ -58,6 +60,7 @@ class MapRenderer(object):
     
     def render(self):
         # Render the map
+        print('Rendering...')
         pass
 
 
@@ -77,6 +80,21 @@ class MapRenderer(object):
 
 
 
+def begin_scan(renderer):
+    print('Starting scanner & locator...')
+
+    # Scan the network
+    nearby= scanner.scan()
+    # Predict a position
+    user = locator.locate(nearby)
+
+    # Pass data to renderer and draw
+    renderer.nearby_routers = nearby
+    renderer.user = user
+    renderer.render()
+
+
+
 def load_routers(path):
     # Load data for all routers from storage
 
@@ -92,12 +110,16 @@ def load_routers(path):
     routers_dict = {}
     for row in rows:
         row = row.split(',')
-        mac = row[0]
+
+        # Ignore the last bit to speed up lookup
+        # (1 entry for each router instead of 4)
+        # TODO Needs more testing
+        mac = row[0][:-1]
         routers_dict[mac] = {
             'x': int(row[1]),
             'y': int(row[2]),
-            'floor': int(row[3]),
-            'SSID': row[4],
+            # 'floor': int(row[3]),
+            # 'SSID': row[4],
             'freq': int(row[5])
         }
 
@@ -119,7 +141,10 @@ def load_locations(path):
     locations_dict = {}
     for row in rows:
         row = row.split(',')
-        mac = row[0]
+
+        # Ignore last bit
+        # TODO Needs more testing
+        mac = row[0][:-1] 
         loc = row[1]
         locations_dict[mac] = loc
 
@@ -164,6 +189,8 @@ if __name__ == "__main__":
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
+    window.scanButton.clicked.connect(lambda: begin_scan(mr))
+    window.drawButton.clicked.connect(mr.render)
  
     # Display window and start app
     window.show()

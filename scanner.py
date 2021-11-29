@@ -36,6 +36,10 @@ def scan_macos():
         if idx == 0 or row[0] == '':
             continue
 
+        # For now, do not include unknown networks
+        if row[0] not in ['eduroam', 'ut-public']:
+            continue
+
         # Check if any of the desired values are empty
         for i in range(0,3):
             if row[i] == '':
@@ -68,11 +72,11 @@ def scan():
     pf = sys.platform
 
     if pf == 'linux':
-        scan_linux()
+        return scan_linux()
     elif pf  == 'win32':
-        scan_win()
+        return scan_win()
     elif pf == 'darwin':
-        scan_macos()
+        return scan_macos()
     else:
         print('[!] Unable to start a live scan')
         print('Your OS is not supported by this app.')
