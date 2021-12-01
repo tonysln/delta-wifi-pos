@@ -37,22 +37,17 @@ class MapRenderer(object):
         self.img_w = 5300
         self.img_h = 5553
 
-        # User and router details
-        self.user = {'x': 0, 'y': 0, 'floor': 1}
+        # User location and router details
+        self.user = {
+            'x': 0, 
+            'y': 0, 
+            'floor': 1, 
+            'location': 'Delta building',
+            'precision': 0,
+            'radius': 0
+        }
         self.nearby_routers = []
-
         self.reset_labels()
-
-    
-    def reset_labels(self):
-        # Reset map and all label values
-        self.window.mapView.items().clear()
-        self.window.scaleLabel.setText(str(self.map_scale))
-        self.window.coordsLabel.setText('x: --, y: --')
-        self.window.floorLabel.setText('Floor -')
-        self.window.locationLabel.setText('---')
-        self.window.precLabel.setText('Precision: -- m')
-        self.window.radiusLabel.setText('Radius: -- m')
 
     
     def scale_map(self):
@@ -115,6 +110,27 @@ class MapRenderer(object):
         pass
 
 
+    def update_labels(self):
+        # Write updated values to labels in sidebar menu
+        # Only after the values have been loaded in
+        self.window.coordsLabel.setText(f'x: {self.user["x"]}, y: {self.user["y"]}')
+        self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
+        self.window.locationLabel.setText(self.user["location"])
+        self.window.precLabel.setText(f'Precision: {self.user["precision"]} m')
+        self.window.radiusLabel.setText(f'Radius: {self.user["radius"]} m')
+
+
+    def reset_labels(self):
+        # Reset map and all label values
+        self.window.mapView.items().clear()
+        self.window.scaleLabel.setText(str(self.map_scale))
+        self.window.coordsLabel.setText('x: --, y: --')
+        self.window.floorLabel.setText('Floor -')
+        self.window.locationLabel.setText('---')
+        self.window.precLabel.setText('Precision: -- m')
+        self.window.radiusLabel.setText('Radius: -- m')
+
+
 
 def begin_scan(renderer):
     print('Starting scanner & locator...')
@@ -122,12 +138,20 @@ def begin_scan(renderer):
     # Scan the network
     nearby = []
     # Predict a position
-    user = {'x': 200, 'y': 200, 'floor': 1}
+    user = {
+            'x': 3800, 
+            'y': 500, 
+            'floor': 2, 
+            'location': 'Delta building',
+            'precision': 5,
+            'radius': 2
+        }
 
     # Pass data to renderer and draw
     renderer.nearby_routers = nearby
     renderer.user = user
     renderer.render()
+    renderer.update_labels()
 
 
 
