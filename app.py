@@ -33,7 +33,7 @@ class MapRenderer(object):
         self.locations = locations # locations dictionary
 
         # Map details
-        self.map_scale = 4
+        self.map_scale = 3
         self.img_w = 5300
         self.img_h = 5553
 
@@ -65,7 +65,7 @@ class MapRenderer(object):
         print('Rendering...')
 
         # Load map for the current floor
-        path = f'map/korrus-{self.user["floor"]}.png'
+        path = f'map/korrus-{self.user["floor"]}-c.png'
         # Init a pixmap for the map
         pix = QPixmap(path)
         painter = QPainter(pix)
