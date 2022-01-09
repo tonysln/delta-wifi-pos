@@ -10,9 +10,9 @@ Initialize the GUI and other components.
 
 
 # Packages
-from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication
+from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint
 from PySide6.QtWidgets import QApplication, QGraphicsScene
-from PySide6.QtGui import QPixmap, QPainter
+from PySide6.QtGui import QPixmap, QPainter, QPen, QColor
 from PySide6.QtUiTools import QUiLoader
 from scipy.interpolate import interp1d
 import scanner
@@ -50,9 +50,15 @@ class MapRenderer(object):
         self.reset_labels()
 
     
-    def scale_map(self):
+    def scale_map(self, up):
         # Change map scaling
-        pass
+        
+        if up and self.map_scale <= 5:
+            self.map_scale += 1
+        elif not up and self.map_scale > 1:
+            self.map_scale -= 1
+
+        self.render()
 
     
     def render(self):
@@ -65,8 +71,17 @@ class MapRenderer(object):
         pix = QPixmap(path)
         painter = QPainter(pix)
 
+
         # Draw the user, routers and other information
-        # ...
+
+        for mac in self.nearby_routers:
+            self.highlight_router(painter, self.routers[mac])
+
+        for router in self.routers.values():
+            if router['floor'] == self.user['floor']:
+                self.draw_router(painter, router)
+
+        self.draw_user(painter)
 
         painter.end()
 
@@ -93,26 +108,52 @@ class MapRenderer(object):
         # Center map view on the user's location 
         self.window.mapView.centerOn(rc_x(self.user['x']), rc_y(self.user['y']))
         self.window.mapView.show()
+
+        self.update_labels()
         
 
-    def draw_user(self):
+    def draw_user(self, painter):
         # Draw the user's location on map
-        pass
+        
+        painter.setPen(QPen(Qt.black, 1))
+        painter.setBrush(QColor(0, 255, 40, 70))
+
+        center = QPoint(self.user['x'], self.user['y'])
+        rad = self.user['radius']*12
+
+        # Outer circle
+        painter.drawEllipse(center, rad, rad)
+
+        # Inner circle/dot
+        painter.setBrush(QColor(0, 255, 40, 200))
+        painter.drawEllipse(center, 20, 20)
 
 
-    def draw_router(self):
+    def draw_router(self, painter, router):
         # Draw a router as a dot on map
-        pass
+
+        painter.setPen(QPen(Qt.black, 1))
+        painter.setBrush(Qt.black)
+
+        center = QPoint(router['x'], router['y'])
+        painter.drawEllipse(center, 14, 14)
 
 
-    def highlight_router(self):
+    def highlight_router(self, painter, router):
         # Highlight active routers
-        pass
+        
+        painter.setPen(QPen(Qt.black, 1))
+        painter.setBrush(Qt.red)
+
+        center = QPoint(router['x'], router['y'])
+        painter.drawEllipse(center, 22, 22)
+
 
 
     def update_labels(self):
         # Write updated values to labels in sidebar menu
         # Only after the values have been loaded in
+        self.window.scaleLabel.setText(str(self.map_scale))
         self.window.coordsLabel.setText(f'x: {self.user["x"]}, y: {self.user["y"]}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
         self.window.locationLabel.setText(self.user["location"])
@@ -136,22 +177,24 @@ def begin_scan(renderer):
     print('Starting scanner & locator...')
 
     # Scan the network
-    nearby = []
+    # Make sure it's sorted!
+    nearby = ['7c:21:0d:2e:e5:2', '7c:21:0d:2f:73:a', '7c:21:0d:2f:75:2']
+    loc = nearby[0]
+
     # Predict a position
     user = {
-            'x': 3800, 
-            'y': 500, 
+            'x': 500, 
+            'y': 800, 
             'floor': 2, 
-            'location': 'Delta building',
+            'location': renderer.locations[loc],
             'precision': 5,
-            'radius': 2
+            'radius': 9
         }
 
     # Pass data to renderer and draw
     renderer.nearby_routers = nearby
     renderer.user = user
     renderer.render()
-    renderer.update_labels()
 
 
 
@@ -169,17 +212,20 @@ def load_routers(path):
     # Save router data into a dictionary
     routers_dict = {}
     for row in rows:
+        if len(row) == 0 or not row:
+            continue
+
         row = row.split(',')
 
         # Ignore the last bit to speed up lookup
         # (1 entry for each router instead of 4)
         # TODO Needs more testing
-        mac = row[0][:-1]
+        mac = row[2][:-1]
         routers_dict[mac] = {
-            'x': int(row[1]),
-            'y': int(row[2]),
-            # 'floor': int(row[3]),
-            # 'SSID': row[4],
+            'x': int(row[0]),
+            'y': int(row[1]),
+            'SSID': row[3],
+            'floor': int(row[4]),
             'freq': int(row[5])
         }
 
@@ -200,6 +246,9 @@ def load_locations(path):
     # Save locations into a dictionary with
     locations_dict = {}
     for row in rows:
+        if len(row) == 0 or not row:
+            continue
+
         row = row.split(',')
 
         # Ignore last bit
@@ -251,6 +300,9 @@ if __name__ == "__main__":
     window.quitButton.clicked.connect(sys.exit)
     window.scanButton.clicked.connect(lambda: begin_scan(mr))
     window.drawButton.clicked.connect(mr.render)
+
+    window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
+    window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
  
     # Display window and start app
     window.show()
