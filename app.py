@@ -11,8 +11,8 @@ Initialize the GUI and other components.
 
 # Packages
 from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint
+from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont
 from PySide6.QtWidgets import QApplication, QGraphicsScene
-from PySide6.QtGui import QPixmap, QPainter, QPen, QColor
 from PySide6.QtUiTools import QUiLoader
 from scipy.interpolate import interp1d
 import scanner
@@ -36,6 +36,9 @@ class MapRenderer(object):
         self.map_scale = 3
         self.img_w = 5300
         self.img_h = 5553
+
+        # Font used to draw on map
+        self.font = QFont('', 32)
 
         # User location and router details
         self.user = {
@@ -70,16 +73,18 @@ class MapRenderer(object):
         # Init a pixmap for the map
         pix = QPixmap(path)
         painter = QPainter(pix)
-
+        painter.setFont(self.font)
 
         # Draw the user, routers and other information
 
-        for mac in self.nearby_routers:
-            self.highlight_router(painter, self.routers[mac])
+        for router in self.nearby_routers:
+            self.highlight_router(painter, self.routers[router['MAC']])
 
-        for router in self.routers.values():
+        for mac,router in self.routers.items():
             if router['floor'] == self.user['floor']:
                 self.draw_router(painter, router)
+                # Draw router location name on map
+                painter.drawText(router['x'] - 38, router['y'] - 24, self.locations[mac])
 
         self.draw_user(painter)
 
@@ -110,6 +115,8 @@ class MapRenderer(object):
         self.window.mapView.show()
 
         self.update_labels()
+        # List all routers and their distances
+        self.list_routers()
         
 
     def draw_user(self, painter):
@@ -149,6 +156,21 @@ class MapRenderer(object):
         painter.drawEllipse(center, 22, 22)
 
 
+    def list_routers(self):
+        # List all nearby routers and distances to them
+
+        rl = ''
+        for router in self.nearby_routers:
+            loc = self.locations[router['MAC']]
+            # Shorten location name
+            if len(loc) > 4:
+                loc = loc[:4] + '. ' + loc[-4:]
+
+            dist = router['DIST']
+            rl +=  f'{loc}  ({round(dist, 1)} m)\n'
+
+        self.window.routersListLabel.setText(rl)
+
 
     def update_labels(self):
         # Write updated values to labels in sidebar menu
@@ -170,6 +192,7 @@ class MapRenderer(object):
         self.window.locationLabel.setText('---')
         self.window.precLabel.setText('Precision: -- m')
         self.window.radiusLabel.setText('Radius: -- m')
+        self.window.routersListLabel.setText('')
 
 
 
@@ -177,19 +200,23 @@ def begin_scan(renderer):
     print('Starting scanner & locator...')
 
     # Scan the network
-    # Make sure it's sorted!
-    nearby = ['7c:21:0d:2e:e5:2', '7c:21:0d:2f:73:a', '7c:21:0d:2f:75:2']
-    loc = nearby[0]
+    # nearby_test = scanner.scan()
+    # for item in nearby_test:
+        # print(item)
 
-    # Predict a position
-    user = {
-            'x': 500, 
-            'y': 800, 
-            'floor': 2, 
-            'location': renderer.locations[loc],
-            'precision': 5,
-            'radius': 9
-        }
+    nearby = [{'MAC': '7c:21:0d:2e:e5:2', 'RSSI': '-61', 'SSID': 'eduroam', 'CH': 11}, 
+              {'MAC': '7c:21:0d:2f:73:a', 'RSSI': '-64', 'SSID': 'eduroam', 'CH': 6}, 
+              {'MAC': '7c:21:0d:2f:75:2', 'RSSI': '-81', 'SSID': 'ut-public', 'CH': 40}]
+
+    # Predict user x, y, floor
+    user = locator.locate(renderer.routers, nearby)
+
+    # Update nearby routers list with distances (in m)
+    # TODO Rework this
+    locator.calc_dists(nearby)
+
+    # Set user location name based on nearest router
+    user['location'] = renderer.locations[nearby[0]['MAC']]
 
     # Pass data to renderer and draw
     renderer.nearby_routers = nearby

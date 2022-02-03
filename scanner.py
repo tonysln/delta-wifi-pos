@@ -10,8 +10,7 @@ Supported on macOS, Windows and Linux distributions.
 Main method is run(), which performs an OS platform check and launches
 the appropriate method for scanning.
 
-Returned data is in the form of a tuple: (SSID,MAC,RSSI), 
-sorted by RSSI in descending order.
+Returned data is in the form of a list of dict objects.
 """
 
 
@@ -47,11 +46,15 @@ def scan_macos():
                 print('Did you run the app as sudo?')
                 quit(1)
 
-        # First three columns contain the required values
-        ssid = row[0]
-        mac = row[1]
-        rssi = row[2]
-        networks.append((ssid,mac,rssi))
+        # First columns contain the required values
+        # Based on the output of airport -s command
+        network = {
+            'SSID': row[0],
+            'MAC': row[1],
+            'RSSI': row[2],
+            'CH': int(row[4])
+        }
+        networks.append(network)
 
     return networks
 
