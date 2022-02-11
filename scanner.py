@@ -51,7 +51,7 @@ def scan_macos():
         network = {
             'SSID': row[0],
             'MAC': row[1],
-            'RSSI': row[2],
+            'RSSI': int(row[2]),
             'CH': int(row[4])
         }
         networks.append(network)
@@ -59,23 +59,31 @@ def scan_macos():
     return networks
 
 
-def scan_linux():
+def scan_linux(adapter):
     # TODO
+    # Custom adapter name given as app argument
+    if adapter:
+        print(adapter)
+
+    # possibly sudo airmon-ng start adapter
+    # sudo airodump-ng !mon0! -> have to Ctrl-C
+    # sudo airmon-ng stop adapter
     pass
 
 
 def scan_win():
     # TODO
-    # netsh wlan show networks mode=bssid
+    # netsh wlan show all
     pass
 
 
-def scan():
+def scan(adapter=None):
     # Launch the appropriate scanning method based on OS
+    # Custom adapter name given for Linux, otherwise always None
     pf = sys.platform
 
     if pf == 'linux':
-        return scan_linux()
+        return scan_linux(adapter)
     elif pf  == 'win32':
         return scan_win()
     elif pf == 'darwin':

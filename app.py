@@ -176,7 +176,7 @@ class MapRenderer(object):
         # Write updated values to labels in sidebar menu
         # Only after the values have been loaded in
         self.window.scaleLabel.setText(str(self.map_scale))
-        self.window.coordsLabel.setText(f'x: {self.user["x"]}, y: {self.user["y"]}')
+        self.window.coordsLabel.setText(f'x: {round(self.user["x"], 2)}, y: {round(self.user["y"], 2)}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
         self.window.locationLabel.setText(self.user["location"])
         self.window.precLabel.setText(f'Precision: {self.user["precision"]} m')
@@ -196,11 +196,15 @@ class MapRenderer(object):
 
 
 
-def begin_scan(renderer):
+def begin_scan(renderer, adapter=None):
+    # Main Renderer object
+    # Custom adapter name to use in Linux, otherwise
+    # adapter name is None and default is used
+
     print('Starting scanner & locator...')
 
     # Scan the network
-    # nearby_test = scanner.scan()
+    # nearby_test = scanner.scan(adapter)
     # for item in nearby_test:
         # print(item)
 
@@ -307,8 +311,16 @@ def load_UI(path):
 
 if __name__ == "__main__":
     # Initial attributes
+    args = sys.argv
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
-    app = QApplication(sys.argv)
+    app = QApplication(args)
+
+    # Handle given arguments
+    # Specified adapter to use (Linux only)
+    adapter = None
+    if '--adapter' in args:
+        adapter = args[args.index('--adapter') + 1]
+
 
     # Load window from UI file
     window = load_UI(UI_FILE_PATH)
@@ -325,7 +337,7 @@ if __name__ == "__main__":
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
-    window.scanButton.clicked.connect(lambda: begin_scan(mr))
+    window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
     window.drawButton.clicked.connect(mr.render)
 
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
