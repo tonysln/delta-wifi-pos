@@ -51,11 +51,11 @@ def scan_macos():
         network = {
             'SSID': row[0],
             'MAC': row[1],
-            'RSSI': int(row[2]),
-            'CH': int(row[4])
+            'RSSI': int(row[2])
         }
         networks.append(network)
 
+    networks.sort(key=lambda x:x['RSSI'], reverse=True)
     return networks
 
 

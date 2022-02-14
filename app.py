@@ -29,8 +29,8 @@ LOCATIONS_FILE_PATH = 'data/locations.csv'
 class MapRenderer(object):
     def __init__(self, window, routers, locations):
         self.window = window
-        self.routers = routers # routers dictionary
-        self.locations = locations # locations dictionary
+        self.routers = routers # routers dictionary, mac[:]
+        self.locations = locations # locations dictionary, mac[:-1]
 
         # Map details
         self.map_scale = 3
@@ -84,7 +84,7 @@ class MapRenderer(object):
             if router['floor'] == self.user['floor']:
                 self.draw_router(painter, router)
                 # Draw router location name on map
-                painter.drawText(router['x'] - 38, router['y'] - 24, self.locations[mac])
+                painter.drawText(router['x'] - 38, router['y'] - 24, self.locations[mac[:-1]])
 
         self.draw_user(painter)
 
@@ -123,17 +123,17 @@ class MapRenderer(object):
         # Draw the user's location on map
         
         painter.setPen(QPen(Qt.black, 1))
-        painter.setBrush(QColor(0, 255, 40, 70))
+        painter.setBrush(QColor(0, 255, 40, 40))
 
         center = QPoint(self.user['x'], self.user['y'])
-        rad = self.user['radius']*12
+        rad = self.user['radius']
 
         # Outer circle
         painter.drawEllipse(center, rad, rad)
 
         # Inner circle/dot
         painter.setBrush(QColor(0, 255, 40, 200))
-        painter.drawEllipse(center, 20, 20)
+        painter.drawEllipse(center, 30, 30)
 
 
     def draw_router(self, painter, router):
@@ -161,7 +161,7 @@ class MapRenderer(object):
 
         rl = ''
         for router in self.nearby_routers:
-            loc = self.locations[router['MAC']]
+            loc = self.locations[router['MAC'][:-1]]
             # Shorten location name
             if len(loc) > 4:
                 loc = loc[:4] + '. ' + loc[-4:]
@@ -179,8 +179,8 @@ class MapRenderer(object):
         self.window.coordsLabel.setText(f'x: {round(self.user["x"], 2)}, y: {round(self.user["y"], 2)}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
         self.window.locationLabel.setText(self.user["location"])
-        self.window.precLabel.setText(f'Precision: {self.user["precision"]} m')
-        self.window.radiusLabel.setText(f'Radius: {self.user["radius"]} m')
+        self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
+        self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"] / 11.0, 2)} m')
 
 
     def reset_labels(self):
@@ -204,23 +204,21 @@ def begin_scan(renderer, adapter=None):
     print('Starting scanner & locator...')
 
     # Scan the network
-    # nearby_test = scanner.scan(adapter)
+    # nearby = scanner.scan(adapter)
+    # nearby = nearby[:3]
     # for item in nearby_test:
         # print(item)
 
-    nearby = [{'MAC': '7c:21:0d:2e:e5:2', 'RSSI': '-61', 'SSID': 'eduroam', 'CH': 11}, 
-              {'MAC': '7c:21:0d:2f:73:a', 'RSSI': '-64', 'SSID': 'eduroam', 'CH': 6}, 
-              {'MAC': '7c:21:0d:2f:75:2', 'RSSI': '-81', 'SSID': 'ut-public', 'CH': 40}]
+    nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -61, 'SSID': 'eduroam'}, 
+              {'MAC': '7c:21:0d:2f:73:a0', 'RSSI': -64, 'SSID': 'eduroam'}, 
+              {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'}]
 
     # Predict user x, y, floor
+    # NB! nearby gets updated
     user = locator.locate(renderer.routers, nearby)
 
-    # Update nearby routers list with distances (in m)
-    # TODO Rework this
-    locator.calc_dists(nearby)
-
     # Set user location name based on nearest router
-    user['location'] = renderer.locations[nearby[0]['MAC']]
+    user['location'] = renderer.locations[nearby[0]['MAC'][:-1]]
 
     # Pass data to renderer and draw
     renderer.nearby_routers = nearby
@@ -248,10 +246,7 @@ def load_routers(path):
 
         row = row.split(',')
 
-        # Ignore the last bit to speed up lookup
-        # (1 entry for each router instead of 4)
-        # TODO Needs more testing
-        mac = row[2][:-1]
+        mac = row[2]
         routers_dict[mac] = {
             'x': int(row[0]),
             'y': int(row[1]),
@@ -282,9 +277,7 @@ def load_locations(path):
 
         row = row.split(',')
 
-        # Ignore last bit
-        # TODO Needs more testing
-        mac = row[0][:-1] 
+        mac = row[0][:-1]
         loc = row[1]
         locations_dict[mac] = loc
 
