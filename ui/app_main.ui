@@ -272,7 +272,7 @@
           </size>
          </property>
          <property name="title">
-          <string>Map Controls</string>
+          <string>Map Zoom</string>
          </property>
          <widget class="QWidget" name="horizontalLayoutWidget_3">
           <property name="geometry">

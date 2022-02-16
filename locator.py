@@ -10,6 +10,8 @@ Script for performing positioning calculations.
 
 
 # Packages
+from scipy import stats
+import numpy as np
 import math
 
 
@@ -18,45 +20,108 @@ def RSSI_to_dist(rssi):
     # https://stackoverflow.com/questions/62399361/swift-converting-rssi-to-distance
     # https://en.wikipedia.org/wiki/True-range_multilateration
     # https://en.wikipedia.org/wiki/Log-distance_path_loss_model
-    # https://www.gaussianwaves.com/2013/09/log-distance-path-loss-or-log-normal-shadowing-model/
     # https://appelsiini.net/2017/trilateration-with-n-points/
-    
-    #pow(10, ((-56 -rssi)/(10*2)))*3.2808
 
-    #N=2
-    #power="1 meter RSSI"
-    #10 ^ ((power – rssi)/(10 * N))
+    scale_px = 11.0
+    power = 1.7 # power="1 meter RSSI"
+    N = 2.2
+    dist = 10 ** ((power - rssi)/(10 * N)) / scale_px
 
     #PL0 = txPower - RSSI
     #pow(10, ((double) (txPower - RSSI - PL0)) / (10 * 2))
-
-    # NB limit to -70 at least, explain why
-    # use categories/steps as in iBeaconing
     
-    return 0.0
+    return dist
 
+
+def calc_mean_point(locations):
+    # Calculate average/centroid of given points
+
+    centroid = np.mean(locations, axis=0)
+    x, y, = centroid[0], centroid[1]
+    return x, y
+
+
+def calc_w_avg_point(locations, weights):
+    # Calculate weighted average of given points
+
+    centroid = np.average(locations, axis=0, weights=weights)
+    x, y, = centroid[0], centroid[1]
+    return x, y
+
+
+def mode_floor(routers):
+    # Calculate the mode of floor values
+
+    all_floors = [int(rr['floor']) for rr in routers]
+    floor = stats.mode(all_floors).mode[0]
+    return floor
 
 
 def locate(routers, nearby_routers):
     # routers: dict of all routers
     # nearby_routers: list of nearby routers as dicts
 
-    # Return user object
-    user = {
-            'x': 500, 
-            'y': 800, 
-            'floor': 2,
-            'precision': 5,
-            'radius': 9
-        }
-    return user
+    DIST_THRESHOLD = 1500.0
 
-
-
-def calc_dists(nearby_routers):
-    # nearby_routers: list of nearby router as dicts
-    # Add 'DIST' (in meters) for each router based on RSSI
-    # NB In place!
+    user = {}
+    # Update nearby routers with the corresponding floor, 
+    # coordinates, distance from RSSI, ...
+    near_coords = []
+    near_weights = []
+    
     for router in nearby_routers:
-        router['DIST'] = 12.56
+        mac = router['MAC']
+        router['floor'] = routers[mac]['floor']
+        
+        # Distance from RSSI
+        dist = RSSI_to_dist(router['RSSI'])
+        router['DIST'] = dist / 11.0
 
+        if dist < DIST_THRESHOLD:
+            near_coords.append((routers[mac]['x'], routers[mac]['y']))
+            near_weights.append(router['RSSI'])
+
+
+    # https://handwiki.org/wiki/Trilateration
+
+    # Apply multilateration formulas to the formed circles
+    # r1 = nearby_routers[0]['DIST']
+    # r2 = nearby_routers[1]['DIST']
+    # r3 = nearby_routers[2]['DIST']
+    # Ux = near_coords[2][0]
+    # Vx = near_coords[1][0]
+    # Vy = near_coords[1][1]
+    # x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
+    # y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
+    # # z = math.sqrt(r1**2 - x**2 - y**2)
+    # print(x,y)
+
+
+    # Weighted average
+    x,y = calc_w_avg_point(near_coords, near_weights)
+    min_dist = 10.0 * 1000
+    for router in near_coords:
+        rx,ry = router
+        dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
+        print(dist_to_mean)
+
+        if dist_to_mean < min_dist:
+            min_dist = dist_to_mean
+
+    user['x'] = x
+    user['y'] = y
+
+    # or calc mean point and use it as starting -> 
+    # move in a better/stronger direction
+    # NB! Overlapping networks (from one router) move location closer
+    
+    
+    # Calculate the precision of the result in pixels
+    user['precision'] = min_dist / 2.0
+    user['radius'] = min_dist
+
+    # Calculate the floor based on the mode floor
+    user['floor'] = mode_floor(nearby_routers)
+
+    # Return user object
+    return user

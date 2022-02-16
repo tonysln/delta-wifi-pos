@@ -132,8 +132,8 @@ class MapRenderer(object):
         painter.drawEllipse(center, rad, rad)
 
         # Inner circle/dot
-        painter.setBrush(QColor(0, 255, 40, 200))
-        painter.drawEllipse(center, 30, 30)
+        painter.setBrush(QColor(0, 255, 40, 180))
+        painter.drawEllipse(center, 38, 38)
 
 
     def draw_router(self, painter, router):
@@ -211,7 +211,9 @@ def begin_scan(renderer, adapter=None):
 
     nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -61, 'SSID': 'eduroam'}, 
               {'MAC': '7c:21:0d:2f:73:a0', 'RSSI': -64, 'SSID': 'eduroam'}, 
-              {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'}]
+              {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
+              {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
+              {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
 
     # Predict user x, y, floor
     # NB! nearby gets updated
