@@ -123,7 +123,7 @@ class MapRenderer(object):
         # Draw the user's location on map
         
         painter.setPen(QPen(Qt.black, 1))
-        painter.setBrush(QColor(0, 255, 40, 40))
+        painter.setBrush(QColor(0, 255, 40, 20))
 
         center = QPoint(self.user['x'], self.user['y'])
         rad = self.user['radius']
@@ -133,7 +133,7 @@ class MapRenderer(object):
 
         # Inner circle/dot
         painter.setBrush(QColor(0, 255, 40, 180))
-        painter.drawEllipse(center, 38, 38)
+        painter.drawEllipse(center, 32, 32)
 
 
     def draw_router(self, painter, router):
@@ -162,10 +162,6 @@ class MapRenderer(object):
         rl = ''
         for router in self.nearby_routers:
             loc = self.locations[router['MAC'][:-1]]
-            # Shorten location name
-            if len(loc) > 4:
-                loc = loc[:4] + '. ' + loc[-4:]
-
             dist = router['DIST']
             rl +=  f'{loc}  ({round(dist, 1)} m)\n'
 
@@ -179,7 +175,7 @@ class MapRenderer(object):
         self.window.coordsLabel.setText(f'x: {round(self.user["x"], 2)}, y: {round(self.user["y"], 2)}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
         self.window.locationLabel.setText(self.user["location"])
-        self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
+        self.window.precLabel.setText(f'Precision: {round(self.user["precision"] / 11.0, 2)} m')
         self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"] / 11.0, 2)} m')
 
 
@@ -205,12 +201,12 @@ def begin_scan(renderer, adapter=None):
 
     # Scan the network
     # nearby = scanner.scan(adapter)
-    # nearby = nearby[:3]
     # for item in nearby_test:
         # print(item)
 
-    nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -61, 'SSID': 'eduroam'}, 
-              {'MAC': '7c:21:0d:2f:73:a0', 'RSSI': -64, 'SSID': 'eduroam'}, 
+    nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -57, 'SSID': 'eduroam'}, 
+              {'MAC': '7c:21:0d:2e:e5:21', 'RSSI': -51, 'SSID': 'ut-public'}, 
+              {'MAC': '7c:21:0d:2f:73:a0', 'RSSI': -68, 'SSID': 'eduroam'}, 
               {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
               {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
               {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]

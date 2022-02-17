@@ -61,7 +61,7 @@ def locate(routers, nearby_routers):
     # routers: dict of all routers
     # nearby_routers: list of nearby routers as dicts
 
-    DIST_THRESHOLD = 1500.0
+    DIST_THRESHOLD = 1200.0
 
     user = {}
     # Update nearby routers with the corresponding floor, 
@@ -79,7 +79,7 @@ def locate(routers, nearby_routers):
 
         if dist < DIST_THRESHOLD:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
-            near_weights.append(router['RSSI'])
+            near_weights.append(1.001**router['RSSI']) # TODO
 
 
     # https://handwiki.org/wiki/Trilateration
@@ -98,27 +98,27 @@ def locate(routers, nearby_routers):
 
 
     # Weighted average
+    # NB! Overlapping networks (from one router) move location closer
     x,y = calc_w_avg_point(near_coords, near_weights)
-    min_dist = 10.0 * 1000
+    # NB! NB! For NEXT measures -> check if any networks too far away from
+    # the current predicted point - > use threshold
+
+    max_dist = 1.0
     for router in near_coords:
         rx,ry = router
         dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
         print(dist_to_mean)
 
-        if dist_to_mean < min_dist:
-            min_dist = dist_to_mean
+        if dist_to_mean > max_dist:
+            max_dist = dist_to_mean
 
     user['x'] = x
     user['y'] = y
 
-    # or calc mean point and use it as starting -> 
-    # move in a better/stronger direction
-    # NB! Overlapping networks (from one router) move location closer
-    
     
     # Calculate the precision of the result in pixels
-    user['precision'] = min_dist / 2.0
-    user['radius'] = min_dist
+    user['precision'] = max_dist / 2.0
+    user['radius'] = max_dist / 2.0
 
     # Calculate the floor based on the mode floor
     user['floor'] = mode_floor(nearby_routers)
