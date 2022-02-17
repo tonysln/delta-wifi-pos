@@ -199,6 +199,9 @@ def begin_scan(renderer, adapter=None):
 
     print('Starting scanner & locator...')
 
+    # Check if trilateration or mean method is selected
+    trilatOrMean = renderer.window.trilatMethod.isChecked()
+
     # Scan the network
     # nearby = scanner.scan(adapter)
     # for item in nearby_test:
@@ -213,7 +216,7 @@ def begin_scan(renderer, adapter=None):
 
     # Predict user x, y, floor
     # NB! nearby gets updated
-    user = locator.locate(renderer.routers, nearby)
+    user = locator.locate(renderer.routers, nearby, trilatOrMean)
 
     # Set user location name based on nearest router
     user['location'] = renderer.locations[nearby[0]['MAC'][:-1]]
@@ -223,6 +226,12 @@ def begin_scan(renderer, adapter=None):
     renderer.user = user
     renderer.render()
 
+
+def auto_scan(renderer, adapter=None):
+    # Main Renderer object
+    # Custom adapter name
+    # Automatic scan (auto-update)
+    print('Auto-scan clicked')
 
 
 def load_routers(path):
@@ -329,7 +338,7 @@ if __name__ == "__main__":
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
     window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
-    window.drawButton.clicked.connect(mr.render)
+    window.autoScanButton.clicked.connect(lambda: auto_scan(mr, adapter))
 
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))

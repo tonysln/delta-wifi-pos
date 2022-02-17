@@ -324,22 +324,76 @@
         <layout class="QHBoxLayout" name="mainControlsLayout">
          <item>
           <widget class="QPushButton" name="scanButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="text">
             <string>Scan</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="drawButton">
-           <property name="text">
-            <string>Draw</string>
+          <widget class="QPushButton" name="autoScanButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="flat">
-            <bool>false</bool>
+           <property name="text">
+            <string>Auto Scan</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="methodBox">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>62</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Method</string>
+         </property>
+         <widget class="QRadioButton" name="trilatMethod">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>100</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Trilateration</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="meanmethod">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>40</y>
+            <width>121</width>
+            <height>20</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Weighted Mean</string>
+          </property>
+         </widget>
+        </widget>
        </item>
        <item>
         <spacer name="botSpacer">
@@ -353,13 +407,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="settingsButton">
-         <property name="text">
-          <string>Settings</string>
-         </property>
-        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="quitButton">

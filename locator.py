@@ -57,7 +57,7 @@ def mode_floor(routers):
     return floor
 
 
-def locate(routers, nearby_routers):
+def locate(routers, nearby_routers, trilatOrMean):
     # routers: dict of all routers
     # nearby_routers: list of nearby routers as dicts
 
@@ -68,7 +68,7 @@ def locate(routers, nearby_routers):
     # coordinates, distance from RSSI, ...
     near_coords = []
     near_weights = []
-    
+    max_dist = 1.0
     for router in nearby_routers:
         mac = router['MAC']
         router['floor'] = routers[mac]['floor']
@@ -81,47 +81,54 @@ def locate(routers, nearby_routers):
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
             near_weights.append(1.001**router['RSSI']) # TODO
 
+            # For trilat, temporary
+            if dist > max_dist:
+                max_dist = dist
 
-    # https://handwiki.org/wiki/Trilateration
+    print(near_weights)
+    
+    # -============ Trilateration ============-
+    if trilatOrMean:
+        # Apply multilateration formulas to the formed circles
+        # https://handwiki.org/wiki/Trilateration
+        r1 = nearby_routers[0]['DIST']
+        r2 = nearby_routers[1]['DIST']
+        r3 = nearby_routers[2]['DIST']
+        Ux = near_coords[2][0]
+        Vx = near_coords[1][0]
+        Vy = near_coords[1][1]
+        x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
+        y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
+        # z = math.sqrt(r1**2 - x**2 - y**2)
+        
+        user['precision'] = max_dist
+        user['radius'] = max_dist
 
-    # Apply multilateration formulas to the formed circles
-    # r1 = nearby_routers[0]['DIST']
-    # r2 = nearby_routers[1]['DIST']
-    # r3 = nearby_routers[2]['DIST']
-    # Ux = near_coords[2][0]
-    # Vx = near_coords[1][0]
-    # Vy = near_coords[1][1]
-    # x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
-    # y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
-    # # z = math.sqrt(r1**2 - x**2 - y**2)
-    # print(x,y)
+    # -============ Weighted Mean ============-
+    else:
+        # Weighted average
+        x,y = calc_w_avg_point(near_coords, near_weights)
 
+        max_dist = 1.0
+        for router in near_coords:
+            rx,ry = router
+            dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
+            print(dist_to_mean)
 
-    # Weighted average
-    # NB! Overlapping networks (from one router) move location closer
-    x,y = calc_w_avg_point(near_coords, near_weights)
-    # NB! NB! For NEXT measures -> check if any networks too far away from
-    # the current predicted point - > use threshold
+            # Custom dist precision for mean
+            if dist_to_mean > max_dist:
+                max_dist = dist_to_mean
 
-    max_dist = 1.0
-    for router in near_coords:
-        rx,ry = router
-        dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
-        print(dist_to_mean)
+        user['precision'] = max_dist / 2.0
+        user['radius'] = max_dist / 2.0
 
-        if dist_to_mean > max_dist:
-            max_dist = dist_to_mean
 
     user['x'] = x
     user['y'] = y
 
-    
-    # Calculate the precision of the result in pixels
-    user['precision'] = max_dist / 2.0
-    user['radius'] = max_dist / 2.0
-
     # Calculate the floor based on the mode floor
     user['floor'] = mode_floor(nearby_routers)
+    # TODO use floors for more
 
     # Return user object
     return user
