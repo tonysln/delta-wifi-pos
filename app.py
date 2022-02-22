@@ -10,6 +10,7 @@ Initialize the GUI and other components.
 
 
 # Packages
+import re
 from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint
 from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont
 from PySide6.QtWidgets import QApplication, QGraphicsScene
@@ -203,19 +204,32 @@ def begin_scan(renderer, adapter=None):
     trilatOrMean = renderer.window.trilatMethod.isChecked()
 
     # Scan the network
-    # nearby = scanner.scan(adapter)
-    # for item in nearby_test:
-        # print(item)
-
     nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -57, 'SSID': 'eduroam'}, 
               {'MAC': '7c:21:0d:2e:e5:21', 'RSSI': -51, 'SSID': 'ut-public'}, 
               {'MAC': '7c:21:0d:2f:73:a0', 'RSSI': -68, 'SSID': 'eduroam'}, 
               {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
               {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
               {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
+    nearby = scanner.scan(adapter)
+
+    print('Nearby:')
+    for item in nearby:
+        print(item)
+
+    print()
+
+    RSSI_MIN = -77
+    # Filter out too weak and unknown routers
+    print('Excluding:')
+    for router in reversed(nearby):
+        if router['RSSI'] < RSSI_MIN or router['MAC'] not in renderer.routers.keys():
+            print(router)
+            nearby.remove(router)
+    
+    print()
 
     # Predict user x, y, floor
-    # NB! nearby gets updated
+    # NB! Nearby list gets mutated
     user = locator.locate(renderer.routers, nearby, trilatOrMean)
 
     # Set user location name based on nearest router
@@ -231,7 +245,10 @@ def auto_scan(renderer, adapter=None):
     # Main Renderer object
     # Custom adapter name
     # Automatic scan (auto-update)
-    print('Auto-scan clicked')
+    activated = renderer.window.autoScanButton.isChecked()
+    print('Auto-scan activated:', activated)
+    if activated:
+        begin_scan(renderer, adapter)
 
 
 def load_routers(path):
