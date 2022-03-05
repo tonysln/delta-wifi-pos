@@ -15,6 +15,7 @@ Returned data is in the form of a list of dict objects.
 
 
 # Packages
+from re import L
 import subprocess as sp
 import sys
 
@@ -65,12 +66,45 @@ def scan_linux(adapter):
         print(adapter)
 
     res = sp.run(['iw', adapter, 'scan'], capture_output=True)
-    print(res)
+    result = res.stdout.decode().split('\n')
+    
+    networks = []
+    new_network = {}
+    adding = False
+    for row in result:
+        row = row.strip().lower()
+
+        if row.startswith('bss') and row.endswith(f'({adapter})'):
+            if adding:
+                networks.append(new_network)
+                new_network = {}
+                adding = False
+            
+            adding = True
+            new_network['MAC'] = row[4:21]
+
+        if adding and row.startswith('ssid:'):
+            new_network['SSID'] = row[6:]
+
+        if adding and row.startswith('signal:'):
+            new_network['RSSI'] = int(row[8:14])
 
 
 def scan_win():
     res = sp.run(['netsh', 'wlan', 'show', 'all'], capture_output=True)
-    print(res)
+    result = res.stdout.decode(encoding='cp1252').split('\n')
+
+    networks = []
+    display = False
+    for row in result:
+        if 'SHOW NETWORKS MODE=BSSID' in row:
+            display = True
+
+        if 'SHOW INTERFACE CAPABILITIES' in row:
+            display = False
+
+        if display:
+            print(row.strip())
 
 
 def scan(adapter=None):
