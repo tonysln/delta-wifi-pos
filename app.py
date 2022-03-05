@@ -18,6 +18,7 @@ from PySide6.QtUiTools import QUiLoader
 from scipy.interpolate import interp1d
 import scanner
 import locator
+import time
 import sys
 
 
@@ -127,7 +128,7 @@ class MapRenderer(object):
         painter.setBrush(QColor(0, 255, 40, 20))
 
         center = QPoint(self.user['x'], self.user['y'])
-        rad = self.user['radius']
+        rad = self.user['radius'] * 11
 
         # Outer circle
         painter.drawEllipse(center, rad, rad)
@@ -176,8 +177,8 @@ class MapRenderer(object):
         self.window.coordsLabel.setText(f'x: {round(self.user["x"], 2)}, y: {round(self.user["y"], 2)}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
         self.window.locationLabel.setText(self.user["location"])
-        self.window.precLabel.setText(f'Precision: {round(self.user["precision"] / 11.0, 2)} m')
-        self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"] / 11.0, 2)} m')
+        self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
+        self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"], 2)} m')
 
 
     def reset_labels(self):
@@ -210,7 +211,11 @@ def begin_scan(renderer, adapter=None):
               {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
               {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
               {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
-    nearby = scanner.scan(adapter)
+    #nearby = scanner.scan(adapter)
+
+    if not nearby or len(nearby) == 0:
+        print('[!] No nearby routers detected')
+        return
 
     print('Nearby:')
     for item in nearby:
@@ -247,8 +252,10 @@ def auto_scan(renderer, adapter=None):
     # Automatic scan (auto-update)
     activated = renderer.window.autoScanButton.isChecked()
     print('Auto-scan activated:', activated)
-    if activated:
+    while activated:
+        # TODO use other threads
         begin_scan(renderer, adapter)
+        activated = False
 
 
 def load_routers(path):

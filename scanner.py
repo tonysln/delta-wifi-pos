@@ -51,7 +51,7 @@ def scan_macos():
         network = {
             'SSID': row[0],
             'MAC': row[1],
-            'RSSI': int(row[2])
+            'RSSI': int(row[2]) # https://support.moonpoint.com/os/os-x/wireless/wifi-signal-strength
         }
         networks.append(network)
 
@@ -60,21 +60,17 @@ def scan_macos():
 
 
 def scan_linux(adapter):
-    # TODO
     # Custom adapter name given as app argument
     if adapter:
         print(adapter)
 
-    # possibly sudo airmon-ng start adapter
-    # sudo airodump-ng !mon0! -> have to Ctrl-C
-    # sudo airmon-ng stop adapter
-    pass
+    res = sp.run(['iw', adapter, 'scan'], capture_output=True)
+    print(res)
 
 
 def scan_win():
-    # TODO
-    # netsh wlan show all
-    pass
+    res = sp.run(['netsh', 'wlan', 'show', 'all'], capture_output=True)
+    print(res)
 
 
 def scan(adapter=None):

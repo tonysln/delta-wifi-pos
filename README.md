@@ -4,8 +4,6 @@
 
 ### Installing
 
-Requirements: `Python 3` and `PySide 6, SciPy`
-
 ```
 $ git clone https://github.com/tonysln/delta-wifi-pos.git
 $ cd delta-wifi-pos
@@ -25,9 +23,9 @@ In case of macOS you will need sudo privileges:
 $ sudo python3 app.py
 ```
 
-In case of Linux you will need to specify the name of your Wi-Fi adapter:
+In case of Linux you will also need to specify the name of your Wi-Fi adapter:
 ```
-$ python3 app.py --adapter NAME
+$ sudo python3 app.py --adapter NAME
 ```
 
 On some Linux builds, the following error might be displayed, due to a bug in PySide 6:

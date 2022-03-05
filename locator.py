@@ -23,21 +23,26 @@ def RSSI_to_dist(rssi):
     scale_px = 11.0
     power = 1.68 # NB Important -> Calibration
     N = 2.2
-    dist = 10 ** ((power - rssi)/(10 * N)) / scale_px
+    dist = 10 ** ((power - rssi)/(10 * N))
 
     # NB Mention in paper -> constants and variables very
     # important, need calibration and setup to ensure best
     # result with the type of building and layout.
     # More routers -> better, less routers -> tweak vars
     
-    return dist
+    return dist / scale_px
 
 
 def calc_w_avg_point(locations, weights):
     # Calculate weighted average of given points
 
-    centroid = np.average(locations, axis=0, weights=weights)
-    x, y, = centroid[0], centroid[1]
+    try:
+        centroid = np.average(locations, axis=0, weights=weights)
+    except ZeroDivisionError:
+        print("[!] Issue with weights:", weights)
+        return 0, 0
+
+    x, y = centroid[0], centroid[1]
     return x, y
 
 
@@ -50,21 +55,40 @@ def mode_floor(routers):
     for item in all_floors:
         freqs[item] = all_floors.count(item)
     
-    floor = max(freqs, key=freqs.get)
+    try:
+        floor = max(freqs, key=freqs.get)
+    except ValueError:
+        print('[!] Unable to calculate floor from freqs:', all_floors)
+        return 1
+
     return floor
+
+
+def scr_to_cart(x, y, w, h):
+    # Screen coordinates to cartesian
+    cart_x = int(x) - int(w) // 2
+    cart_y = -int(y) + int(h) // 2
+    return cart_x,cart_y
+
+
+def cart_to_scr(x, y, w, h):
+    # Cartesian coordinates to screen
+    scr_x = int(x) + (int(w) // 2)
+    scr_y = -int(y) + (int(h) // 2)
+    return scr_x,scr_y
 
 
 def locate(routers, nearby_routers, trilatOrMean):
     # routers: dict of all routers
     # nearby_routers: list of nearby routers as dicts
 
-    DIST_THRESHOLD = 1200.0
+    DIST_THRESHOLD = 900.0
 
     user = {}
     # Update nearby routers with the corresponding floor, 
-    # coordinates, distance from RSSI, ...
+    # coordinates, distance from RSSI
     near_coords = []
-    near_weights = []
+    near_weights = []   
     max_dist = 1.0
     for router in nearby_routers:
         mac = router['MAC']
@@ -72,7 +96,7 @@ def locate(routers, nearby_routers, trilatOrMean):
         
         # Distance from RSSI
         dist = RSSI_to_dist(router['RSSI'])
-        router['DIST'] = dist / 11.0
+        router['DIST'] = dist / 11.0 # ?! TODO
 
         if dist < DIST_THRESHOLD:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
@@ -90,17 +114,16 @@ def locate(routers, nearby_routers, trilatOrMean):
         r1 = nearby_routers[0]['DIST']
         r2 = nearby_routers[1]['DIST']
         r3 = nearby_routers[2]['DIST']
-        Ux = near_coords[1][0]
-        Vx = near_coords[2][0]
-        Vy = near_coords[2][1]
+        Ux,_ = scr_to_cart(near_coords[1][0], 0, 5300, 5553)
+        Vx,Vy = scr_to_cart(near_coords[2][0], near_coords[2][1], 5300, 5553)
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
-        # z = math.sqrt(r1**2 - x**2 - y**2)
 
-        x += near_coords[0][0]
+        x -= near_coords[1][1] # ?! TODO
+        x,y = cart_to_scr(x, y, 5300, 5553)
         
-        user['precision'] = max_dist
-        user['radius'] = max_dist
+        user['precision'] = 20.0
+        user['radius'] = user['precision']
 
 
     # -============ Weighted Mean ============-
@@ -120,8 +143,8 @@ def locate(routers, nearby_routers, trilatOrMean):
             if dist_to_mean > max_dist:
                 max_dist = dist_to_mean
 
-        user['precision'] = max_dist / 2.0
-        user['radius'] = max_dist / 2.0
+        user['precision'] = (max_dist / 11.0) * 0.5
+        user['radius'] = user['precision']
 
 
     user['x'] = x
