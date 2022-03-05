@@ -62,8 +62,6 @@ def scan_macos():
 
 def scan_linux(adapter):
     # Custom adapter name given as app argument
-    if adapter:
-        print(adapter)
 
     res = sp.run(['iw', adapter, 'scan'], capture_output=True)
     result = res.stdout.decode().split('\n')
@@ -74,11 +72,10 @@ def scan_linux(adapter):
     for row in result:
         row = row.strip().lower()
 
-        if row.startswith('bss') and row.endswith(f'({adapter})'):
+        if row.startswith('bss') and f'(on {adapter})' in row:
             if adding:
                 networks.append(new_network)
                 new_network = {}
-                adding = False
             
             adding = True
             new_network['MAC'] = row[4:21]
@@ -89,13 +86,18 @@ def scan_linux(adapter):
         if adding and row.startswith('signal:'):
             new_network['RSSI'] = int(row[8:14])
 
+    networks.append(new_network)
+    return networks
+
 
 def scan_win():
     res = sp.run(['netsh', 'wlan', 'show', 'all'], capture_output=True)
     result = res.stdout.decode(encoding='cp1252').split('\n')
 
     networks = []
+    new_network = {}
     display = False
+    adding = False
     for row in result:
         if 'SHOW NETWORKS MODE=BSSID' in row:
             display = True
@@ -103,8 +105,27 @@ def scan_win():
         if 'SHOW INTERFACE CAPABILITIES' in row:
             display = False
 
-        if display:
-            print(row.strip())
+        if not display:
+            continue
+
+        row = row.strip().lower()
+        if row.startswith('ssid '):
+            if adding:
+                networks.append(new_network)
+                new_network = {}
+
+            adding = True
+            new_network['SSID'] = row.split(':')[1].strip()
+
+        if adding and row.startswith('bssid'):
+            new_network['MAC'] = row.split(':', 1)[1].strip()
+
+        if adding and row.startswith('signal'):
+            # NB TODO
+            new_network['RSSI'] = row.split(':')[1].strip()
+
+    networks.append(new_network)
+    return networks
 
 
 def scan(adapter=None):
