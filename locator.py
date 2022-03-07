@@ -13,6 +13,12 @@ import numpy as np
 import math
 
 
+# Constants
+DIST_THRESHOLD = 900.0
+PX_SCALE = 11.0
+POWER = 1.68
+PATH_LOSS = 2.2
+
 
 def RSSI_to_dist(rssi):
     # https://stackoverflow.com/questions/62399361/swift-converting-rssi-to-distance
@@ -20,17 +26,14 @@ def RSSI_to_dist(rssi):
     # https://en.wikipedia.org/wiki/Log-distance_path_loss_model
     # https://appelsiini.net/2017/trilateration-with-n-points/
 
-    scale_px = 11.0
-    power = 1.68 # NB Important -> Calibration
-    N = 2.2
-    dist = 10 ** ((power - rssi)/(10 * N))
+    dist = 10 ** ((POWER - rssi)/(10 * PATH_LOSS))
 
     # NB Mention in paper -> constants and variables very
     # important, need calibration and setup to ensure best
     # result with the type of building and layout.
     # More routers -> better, less routers -> tweak vars
     
-    return dist / scale_px
+    return dist / PX_SCALE
 
 
 def calc_w_avg_point(locations, weights):
@@ -82,8 +85,6 @@ def locate(routers, nearby_routers, trilatOrMean):
     # routers: dict of all routers
     # nearby_routers: list of nearby routers as dicts
 
-    DIST_THRESHOLD = 900.0
-
     user = {}
     # Update nearby routers with the corresponding floor, 
     # coordinates, distance from RSSI
@@ -96,7 +97,7 @@ def locate(routers, nearby_routers, trilatOrMean):
         
         # Distance from RSSI
         dist = RSSI_to_dist(router['RSSI'])
-        router['DIST'] = dist / 11.0 # ?! TODO
+        router['DIST'] = dist / PX_SCALE # ?! TODO
 
         if dist < DIST_THRESHOLD:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
@@ -143,7 +144,7 @@ def locate(routers, nearby_routers, trilatOrMean):
             if dist_to_mean > max_dist:
                 max_dist = dist_to_mean
 
-        user['precision'] = (max_dist / 11.0) * 0.5
+        user['precision'] = (max_dist / PX_SCALE) * 0.5
         user['radius'] = user['precision']
 
 

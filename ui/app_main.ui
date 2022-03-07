@@ -43,6 +43,9 @@
     <layout class="QHBoxLayout" name="mainLayout">
      <item>
       <widget class="QGraphicsView" name="mapView">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="autoFillBackground">
         <bool>true</bool>
        </property>
@@ -70,7 +73,7 @@
       </widget>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="sideMenuLayout" stretch="0,0,0,0,0,0,0,0,0">
+      <layout class="QVBoxLayout" name="sideMenuLayout" stretch="0,0,0,0,0,0,0,0,0,0">
        <property name="spacing">
         <number>-1</number>
        </property>
@@ -349,6 +352,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <property name="autoRepeat">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
         </layout>
@@ -410,6 +416,22 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="addNewRouterButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Add New Router</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="quitButton">

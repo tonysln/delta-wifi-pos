@@ -10,9 +10,8 @@ Initialize the GUI and other components.
 
 
 # Packages
-import re
 from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint
-from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont
+from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont, QCursor
 from PySide6.QtWidgets import QApplication, QGraphicsScene
 from PySide6.QtUiTools import QUiLoader
 from scipy.interpolate import interp1d
@@ -26,6 +25,7 @@ import sys
 UI_FILE_PATH = 'ui/app_main.ui'
 ROUTERS_FILE_PATH = 'data/routers.csv'
 LOCATIONS_FILE_PATH = 'data/locations.csv'
+RSSI_MIN = -77
 
 
 class MapRenderer(object):
@@ -163,9 +163,10 @@ class MapRenderer(object):
 
         rl = ''
         for router in self.nearby_routers:
-            loc = self.locations[router['MAC'][:-1]]
+            mac = router['MAC']
+            #loc = self.locations[mac[:-1]]
             dist = router['DIST']
-            rl +=  f'{loc}  ({round(dist, 1)} m)\n'
+            rl +=  f'{mac}   ({round(dist, 1)} m)\n'
 
         self.window.routersListLabel.setText(rl)
 
@@ -223,7 +224,6 @@ def begin_scan(renderer, adapter=None):
 
     print()
 
-    RSSI_MIN = -77
     # Filter out too weak and unknown routers
     print('Excluding:')
     for router in reversed(nearby):
@@ -333,6 +333,10 @@ def load_UI(path):
     return window
 
 
+def add_new_router():
+    pass
+
+
 if __name__ == "__main__":
     # Initial attributes
     args = sys.argv
@@ -363,10 +367,11 @@ if __name__ == "__main__":
     window.quitButton.clicked.connect(sys.exit)
     window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
     window.autoScanButton.clicked.connect(lambda: auto_scan(mr, adapter))
+    window.addNewRouterButton.clicked.connect(add_new_router)
 
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
- 
+
     # Display window and start app
     window.show()
     sys.exit(app.exec())
