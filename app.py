@@ -65,6 +65,13 @@ class MapRenderer(object):
 
         self.render()
 
+
+    def change_displayed_floor(self, up):
+        # ...
+
+        print('Floor change...')
+        self.render()
+
     
     def render(self):
         # Render the map
@@ -177,6 +184,7 @@ class MapRenderer(object):
         self.window.scaleLabel.setText(str(self.map_scale))
         self.window.coordsLabel.setText(f'x: {round(self.user["x"], 2)}, y: {round(self.user["y"], 2)}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
+        self.window.floorChoiceLabel.setText(str(self.user["floor"]))
         self.window.locationLabel.setText(self.user["location"])
         self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
         self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"], 2)} m')
@@ -188,6 +196,7 @@ class MapRenderer(object):
         self.window.scaleLabel.setText(str(self.map_scale))
         self.window.coordsLabel.setText('x: --, y: --')
         self.window.floorLabel.setText('Floor -')
+        self.window.floorChoiceLabel.setText('1')
         self.window.locationLabel.setText('---')
         self.window.precLabel.setText('Precision: -- m')
         self.window.radiusLabel.setText('Radius: -- m')
@@ -333,8 +342,14 @@ def load_UI(path):
     return window
 
 
-def add_new_router():
-    pass
+def add_new_router(renderer):
+    # ...
+
+    isChecked = renderer.window.addNewRouterButton.isChecked()
+    print('New router add mode:', isChecked)
+    if isChecked:
+        renderer.render()
+
 
 
 if __name__ == "__main__":
@@ -353,8 +368,8 @@ if __name__ == "__main__":
     # Load window from UI file
     window = load_UI(UI_FILE_PATH)
 
-    # Re-set window size
-    window.setFixedSize(window.width(), window.height())
+    # Restrict window size
+    window.setMinimumSize(window.width(), window.height())
 
     # Load all routers and locations
     routers = load_routers(ROUTERS_FILE_PATH)
@@ -367,10 +382,13 @@ if __name__ == "__main__":
     window.quitButton.clicked.connect(sys.exit)
     window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
     window.autoScanButton.clicked.connect(lambda: auto_scan(mr, adapter))
-    window.addNewRouterButton.clicked.connect(add_new_router)
+    window.addNewRouterButton.clicked.connect(lambda: add_new_router(mr))
 
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
+
+    window.floorPlusButton.clicked.connect(lambda: mr.change_displayed_floor(True))
+    window.floorMinusButton.clicked.connect(lambda: mr.change_displayed_floor(False))
 
     # Display window and start app
     window.show()
