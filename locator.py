@@ -101,7 +101,8 @@ def locate(routers, nearby_routers, trilatOrMean):
 
         if dist < DIST_THRESHOLD:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
-            near_weights.append(1 / router['RSSI'])
+            weight = 1 / router['RSSI'] # TODO make heavier
+            near_weights.append(weight)
 
             # For trilat, temporary
             if dist > max_dist:

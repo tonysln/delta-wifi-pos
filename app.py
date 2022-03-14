@@ -26,6 +26,7 @@ UI_FILE_PATH = 'ui/app_main.ui'
 ROUTERS_FILE_PATH = 'data/routers.csv'
 LOCATIONS_FILE_PATH = 'data/locations.csv'
 RSSI_MIN = -77
+PX_SCALE = 11.0
 
 
 class MapRenderer(object):
@@ -40,13 +41,13 @@ class MapRenderer(object):
         self.img_h = 5553
 
         # Font used to draw on map
-        self.font = QFont('', 32)
+        self.font = QFont('Arial', 32)
 
         # User location and router details
         self.user = {
             'x': 0, 
             'y': 0, 
-            'floor': 1, 
+            'floor': 1,
             'location': 'Delta building',
             'precision': 0,
             'radius': 0
@@ -70,6 +71,11 @@ class MapRenderer(object):
         # ...
 
         print('Floor change...')
+        if up and self.user['floor'] < 4:
+            self.user['floor'] += 1
+        elif not up and self.user['floor'] > 1:
+            self.user['floor'] -= 1
+
         self.render()
 
     
@@ -92,7 +98,7 @@ class MapRenderer(object):
         for mac,router in self.routers.items():
             if router['floor'] == self.user['floor']:
                 self.draw_router(painter, router)
-                # Draw router location name on map
+                # Draw router location name on map, offset
                 painter.drawText(router['x'] - 38, router['y'] - 24, self.locations[mac[:-1]])
 
         self.draw_user(painter)
@@ -135,7 +141,7 @@ class MapRenderer(object):
         painter.setBrush(QColor(0, 255, 40, 20))
 
         center = QPoint(self.user['x'], self.user['y'])
-        rad = self.user['radius'] * 11
+        rad = self.user['radius'] * PX_SCALE
 
         # Outer circle
         painter.drawEllipse(center, rad, rad)
@@ -221,7 +227,7 @@ def begin_scan(renderer, adapter=None):
               {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
               {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
               {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
-    #nearby = scanner.scan(adapter)
+    nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
         print('[!] No nearby routers detected')
