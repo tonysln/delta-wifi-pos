@@ -10,13 +10,14 @@ Initialize the GUI and other components.
 
 
 # Packages
-from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication
+from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint
+from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont, QCursor
 from PySide6.QtWidgets import QApplication, QGraphicsScene
-from PySide6.QtGui import QPixmap, QPainter
 from PySide6.QtUiTools import QUiLoader
 from scipy.interpolate import interp1d
 import scanner
 import locator
+import time
 import sys
 
 
@@ -24,24 +25,29 @@ import sys
 UI_FILE_PATH = 'ui/app_main.ui'
 ROUTERS_FILE_PATH = 'data/routers.csv'
 LOCATIONS_FILE_PATH = 'data/locations.csv'
+RSSI_MIN = -77
+PX_SCALE = 11.0
 
 
 class MapRenderer(object):
     def __init__(self, window, routers, locations):
         self.window = window
-        self.routers = routers # routers dictionary
-        self.locations = locations # locations dictionary
+        self.routers = routers # routers dictionary, mac[:]
+        self.locations = locations # locations dictionary, mac[:-1]
 
         # Map details
         self.map_scale = 3
         self.img_w = 5300
         self.img_h = 5553
 
+        # Font used to draw on map
+        self.font = QFont('Arial', 32)
+
         # User location and router details
         self.user = {
             'x': 0, 
             'y': 0, 
-            'floor': 1, 
+            'floor': 1,
             'location': 'Delta building',
             'precision': 0,
             'radius': 0
@@ -50,9 +56,27 @@ class MapRenderer(object):
         self.reset_labels()
 
     
-    def scale_map(self):
+    def scale_map(self, up):
         # Change map scaling
-        pass
+        
+        if up and self.map_scale <= 5:
+            self.map_scale += 1
+        elif not up and self.map_scale > 1:
+            self.map_scale -= 1
+
+        self.render()
+
+
+    def change_displayed_floor(self, up):
+        # ...
+
+        print('Floor change...')
+        if up and self.user['floor'] < 4:
+            self.user['floor'] += 1
+        elif not up and self.user['floor'] > 1:
+            self.user['floor'] -= 1
+
+        self.render()
 
     
     def render(self):
@@ -64,9 +88,20 @@ class MapRenderer(object):
         # Init a pixmap for the map
         pix = QPixmap(path)
         painter = QPainter(pix)
+        painter.setFont(self.font)
 
         # Draw the user, routers and other information
-        # ...
+
+        for router in self.nearby_routers:
+            self.highlight_router(painter, self.routers[router['MAC']])
+
+        for mac,router in self.routers.items():
+            if router['floor'] == self.user['floor']:
+                self.draw_router(painter, router)
+                # Draw router location name on map, offset
+                painter.drawText(router['x'] - 38, router['y'] - 24, self.locations[mac[:-1]])
+
+        self.draw_user(painter)
 
         painter.end()
 
@@ -93,31 +128,72 @@ class MapRenderer(object):
         # Center map view on the user's location 
         self.window.mapView.centerOn(rc_x(self.user['x']), rc_y(self.user['y']))
         self.window.mapView.show()
+
+        self.update_labels()
+        # List all routers and their distances
+        self.list_routers()
         
 
-    def draw_user(self):
+    def draw_user(self, painter):
         # Draw the user's location on map
-        pass
+        
+        painter.setPen(QPen(Qt.black, 1))
+        painter.setBrush(QColor(0, 255, 40, 20))
+
+        center = QPoint(self.user['x'], self.user['y'])
+        rad = self.user['radius'] * PX_SCALE
+
+        # Outer circle
+        painter.drawEllipse(center, rad, rad)
+
+        # Inner circle/dot
+        painter.setBrush(QColor(0, 255, 40, 180))
+        painter.drawEllipse(center, 32, 32)
 
 
-    def draw_router(self):
+    def draw_router(self, painter, router):
         # Draw a router as a dot on map
-        pass
+
+        painter.setPen(QPen(Qt.black, 1))
+        painter.setBrush(Qt.black)
+
+        center = QPoint(router['x'], router['y'])
+        painter.drawEllipse(center, 14, 14)
 
 
-    def highlight_router(self):
+    def highlight_router(self, painter, router):
         # Highlight active routers
-        pass
+        
+        painter.setPen(QPen(Qt.black, 1))
+        painter.setBrush(Qt.red)
+
+        center = QPoint(router['x'], router['y'])
+        painter.drawEllipse(center, 22, 22)
+
+
+    def list_routers(self):
+        # List all nearby routers and distances to them
+
+        rl = ''
+        for router in self.nearby_routers:
+            mac = router['MAC']
+            #loc = self.locations[mac[:-1]]
+            dist = router['DIST']
+            rl +=  f'{mac}   ({round(dist, 1)} m)\n'
+
+        self.window.routersListLabel.setText(rl)
 
 
     def update_labels(self):
         # Write updated values to labels in sidebar menu
         # Only after the values have been loaded in
-        self.window.coordsLabel.setText(f'x: {self.user["x"]}, y: {self.user["y"]}')
+        self.window.scaleLabel.setText(str(self.map_scale))
+        self.window.coordsLabel.setText(f'x: {round(self.user["x"], 2)}, y: {round(self.user["y"], 2)}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
+        self.window.floorChoiceLabel.setText(str(self.user["floor"]))
         self.window.locationLabel.setText(self.user["location"])
-        self.window.precLabel.setText(f'Precision: {self.user["precision"]} m')
-        self.window.radiusLabel.setText(f'Radius: {self.user["radius"]} m')
+        self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
+        self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"], 2)} m')
 
 
     def reset_labels(self):
@@ -126,33 +202,75 @@ class MapRenderer(object):
         self.window.scaleLabel.setText(str(self.map_scale))
         self.window.coordsLabel.setText('x: --, y: --')
         self.window.floorLabel.setText('Floor -')
+        self.window.floorChoiceLabel.setText('1')
         self.window.locationLabel.setText('---')
         self.window.precLabel.setText('Precision: -- m')
         self.window.radiusLabel.setText('Radius: -- m')
+        self.window.routersListLabel.setText('')
 
 
 
-def begin_scan(renderer):
+def begin_scan(renderer, adapter=None):
+    # Main Renderer object
+    # Custom adapter name to use in Linux, otherwise
+    # adapter name is None and default is used
+
     print('Starting scanner & locator...')
 
+    # Check if trilateration or mean method is selected
+    trilatOrMean = renderer.window.trilatMethod.isChecked()
+
     # Scan the network
-    nearby = []
-    # Predict a position
-    user = {
-            'x': 3800, 
-            'y': 500, 
-            'floor': 2, 
-            'location': 'Delta building',
-            'precision': 5,
-            'radius': 2
-        }
+    nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -57, 'SSID': 'eduroam'}, 
+              {'MAC': '7c:21:0d:2e:e5:21', 'RSSI': -51, 'SSID': 'ut-public'}, 
+              {'MAC': '7c:21:0d:2f:73:a0', 'RSSI': -68, 'SSID': 'eduroam'}, 
+              {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
+              {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
+              {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
+    nearby = scanner.scan(adapter)
+
+    if not nearby or len(nearby) == 0:
+        print('[!] No nearby routers detected')
+        return
+
+    print('Nearby:')
+    for item in nearby:
+        print(item)
+
+    print()
+
+    # Filter out too weak and unknown routers
+    print('Excluding:')
+    for router in reversed(nearby):
+        if router['RSSI'] < RSSI_MIN or router['MAC'] not in renderer.routers.keys():
+            print(router)
+            nearby.remove(router)
+    
+    print()
+
+    # Predict user x, y, floor
+    # NB! Nearby list gets mutated
+    user = locator.locate(renderer.routers, nearby, trilatOrMean)
+
+    # Set user location name based on nearest router
+    user['location'] = renderer.locations[nearby[0]['MAC'][:-1]]
 
     # Pass data to renderer and draw
     renderer.nearby_routers = nearby
     renderer.user = user
     renderer.render()
-    renderer.update_labels()
 
+
+def auto_scan(renderer, adapter=None):
+    # Main Renderer object
+    # Custom adapter name
+    # Automatic scan (auto-update)
+    activated = renderer.window.autoScanButton.isChecked()
+    print('Auto-scan activated:', activated)
+    while activated:
+        # TODO use other threads
+        begin_scan(renderer, adapter)
+        activated = False
 
 
 def load_routers(path):
@@ -169,17 +287,17 @@ def load_routers(path):
     # Save router data into a dictionary
     routers_dict = {}
     for row in rows:
+        if len(row) == 0 or not row:
+            continue
+
         row = row.split(',')
 
-        # Ignore the last bit to speed up lookup
-        # (1 entry for each router instead of 4)
-        # TODO Needs more testing
-        mac = row[0][:-1]
+        mac = row[2]
         routers_dict[mac] = {
-            'x': int(row[1]),
-            'y': int(row[2]),
-            # 'floor': int(row[3]),
-            # 'SSID': row[4],
+            'x': int(row[0]),
+            'y': int(row[1]),
+            'SSID': row[3],
+            'floor': int(row[4]),
             'freq': int(row[5])
         }
 
@@ -200,11 +318,12 @@ def load_locations(path):
     # Save locations into a dictionary with
     locations_dict = {}
     for row in rows:
+        if len(row) == 0 or not row:
+            continue
+
         row = row.split(',')
 
-        # Ignore last bit
-        # TODO Needs more testing
-        mac = row[0][:-1] 
+        mac = row[0][:-1]
         loc = row[1]
         locations_dict[mac] = loc
 
@@ -229,16 +348,34 @@ def load_UI(path):
     return window
 
 
+def add_new_router(renderer):
+    # ...
+
+    isChecked = renderer.window.addNewRouterButton.isChecked()
+    print('New router add mode:', isChecked)
+    if isChecked:
+        renderer.render()
+
+
+
 if __name__ == "__main__":
     # Initial attributes
+    args = sys.argv
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
-    app = QApplication(sys.argv)
+    app = QApplication(args)
+
+    # Handle given arguments
+    # Specified adapter to use (Linux only)
+    adapter = None
+    if '--adapter' in args:
+        adapter = args[args.index('--adapter') + 1]
+
 
     # Load window from UI file
     window = load_UI(UI_FILE_PATH)
 
-    # Re-set window size
-    window.setFixedSize(window.width(), window.height())
+    # Restrict window size
+    window.setMinimumSize(window.width(), window.height())
 
     # Load all routers and locations
     routers = load_routers(ROUTERS_FILE_PATH)
@@ -249,9 +386,16 @@ if __name__ == "__main__":
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
-    window.scanButton.clicked.connect(lambda: begin_scan(mr))
-    window.drawButton.clicked.connect(mr.render)
- 
+    window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
+    window.autoScanButton.clicked.connect(lambda: auto_scan(mr, adapter))
+    window.addNewRouterButton.clicked.connect(lambda: add_new_router(mr))
+
+    window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
+    window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
+
+    window.floorPlusButton.clicked.connect(lambda: mr.change_displayed_floor(True))
+    window.floorMinusButton.clicked.connect(lambda: mr.change_displayed_floor(False))
+
     # Display window and start app
     window.show()
     sys.exit(app.exec())

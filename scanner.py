@@ -10,12 +10,12 @@ Supported on macOS, Windows and Linux distributions.
 Main method is run(), which performs an OS platform check and launches
 the appropriate method for scanning.
 
-Returned data is in the form of a tuple: (SSID,MAC,RSSI), 
-sorted by RSSI in descending order.
+Returned data is in the form of a list of dict objects.
 """
 
 
 # Packages
+from re import L
 import subprocess as sp
 import sys
 
@@ -47,32 +47,94 @@ def scan_macos():
                 print('Did you run the app as sudo?')
                 quit(1)
 
-        # First three columns contain the required values
-        ssid = row[0]
-        mac = row[1]
-        rssi = row[2]
-        networks.append((ssid,mac,rssi))
+        # First columns contain the required values
+        # Based on the output of airport -s command
+        network = {
+            'SSID': row[0],
+            'MAC': row[1],
+            'RSSI': int(row[2]) # https://support.moonpoint.com/os/os-x/wireless/wifi-signal-strength
+        }
+        networks.append(network)
 
+    networks.sort(key=lambda x:x['RSSI'], reverse=True)
     return networks
 
 
-def scan_linux():
-    # TODO
-    pass
+def scan_linux(adapter):
+    # Custom adapter name given as app argument
+
+    res = sp.run(['iw', adapter, 'scan'], capture_output=True)
+    result = res.stdout.decode().split('\n')
+    
+    networks = []
+    new_network = {}
+    adding = False
+    for row in result:
+        row = row.strip().lower()
+
+        if row.startswith('bss') and f'(on {adapter})' in row:
+            if adding:
+                networks.append(new_network)
+                new_network = {}
+            
+            adding = True
+            new_network['MAC'] = row[4:21]
+
+        if adding and row.startswith('ssid:'):
+            new_network['SSID'] = row[6:]
+
+        if adding and row.startswith('signal:'):
+            new_network['RSSI'] = int(row[8:14])
+
+    networks.append(new_network)
+    return networks
 
 
 def scan_win():
-    # TODO
-    # netsh wlan show networks mode=bssid
-    pass
+    res = sp.run(['netsh', 'wlan', 'show', 'all'], capture_output=True)
+    result = res.stdout.decode(encoding='cp1252').split('\n')
+
+    networks = []
+    new_network = {}
+    display = False
+    adding = False
+    for row in result:
+        if 'SHOW NETWORKS MODE=BSSID' in row:
+            display = True
+
+        if 'SHOW INTERFACE CAPABILITIES' in row:
+            display = False
+
+        if not display:
+            continue
+
+        row = row.strip().lower()
+        if row.startswith('ssid '):
+            if adding:
+                networks.append(new_network)
+                new_network = {}
+
+            adding = True
+            new_network['SSID'] = row.split(':')[1].strip()
+
+        if adding and row.startswith('bssid'):
+            new_network['MAC'] = row.split(':', 1)[1].strip()
+
+        if adding and row.startswith('signal'):
+            # NB TODO
+            new_network['RSSI'] = row.split(':')[1].strip()
+
+    networks.append(new_network)
+    return networks
 
 
-def scan():
+def scan(adapter=None):
     # Launch the appropriate scanning method based on OS
+    # Custom adapter name given for Linux, otherwise always None
     pf = sys.platform
 
     if pf == 'linux':
-        return scan_linux()
+        return scan_linux(adapter)
     elif pf  == 'win32':
         return scan_win()
     elif pf == 'darwin':
