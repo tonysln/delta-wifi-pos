@@ -11,22 +11,15 @@ Initialize the GUI and other components.
 
 # Packages
 from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint
-from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont, QCursor
+from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont
 from PySide6.QtWidgets import QApplication, QGraphicsScene
 from PySide6.QtUiTools import QUiLoader
 from scipy.interpolate import interp1d
 import scanner
 import locator
-import time
+import json
 import sys
 
-
-# Constants
-UI_FILE_PATH = 'ui/app_main.ui'
-ROUTERS_FILE_PATH = 'data/routers.csv'
-LOCATIONS_FILE_PATH = 'data/locations.csv'
-RSSI_MIN = -77
-PX_SCALE = 11.0
 
 
 class MapRenderer(object):
@@ -37,8 +30,8 @@ class MapRenderer(object):
 
         # Map details
         self.map_scale = 3
-        self.img_w = 5300
-        self.img_h = 5553
+        self.img_w = cfg['IMG_W']
+        self.img_h = cfg['IMG_H']
 
         # Font used to draw on map
         self.font = QFont('Arial', 32)
@@ -140,7 +133,7 @@ class MapRenderer(object):
         painter.setBrush(QColor(0, 255, 40, 20))
 
         center = QPoint(self.user['x'], self.user['y'])
-        rad = self.user['radius'] * PX_SCALE
+        rad = self.user['radius'] * cfg['PX_SCALE']
 
         # Outer circle
         painter.drawEllipse(center, rad, rad)
@@ -241,7 +234,7 @@ def begin_scan(renderer, adapter=None):
     # Filter out too weak and unknown routers
     print('Excluding:')
     for router in reversed(nearby):
-        if router['RSSI'] < RSSI_MIN or router['MAC'] not in renderer.routers.keys():
+        if router['RSSI'] < cfg['RSSI_MIN'] or router['MAC'] not in renderer.routers.keys():
             print(router)
             nearby.remove(router)
     
@@ -358,6 +351,10 @@ def add_new_router(renderer):
 
 
 if __name__ == "__main__":
+    # Load config file
+    with open('config.json', 'r') as f:
+        cfg = json.load(f)
+
     # Initial attributes
     args = sys.argv
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
@@ -369,16 +366,15 @@ if __name__ == "__main__":
     if '--adapter' in args:
         adapter = args[args.index('--adapter') + 1]
 
-
     # Load window from UI file
-    window = load_UI(UI_FILE_PATH)
+    window = load_UI(cfg['UI_FILE_PATH'])
 
     # Restrict window size
     window.setMinimumSize(window.width(), window.height())
 
     # Load all routers and locations
-    routers = load_routers(ROUTERS_FILE_PATH)
-    locations = load_locations(LOCATIONS_FILE_PATH)
+    routers = load_routers(cfg['ROUTERS_FILE_PATH'])
+    locations = load_locations(cfg['LOCATIONS_FILE_PATH'])
 
     # Init the main renderer class
     mr = MapRenderer(window, routers, locations)

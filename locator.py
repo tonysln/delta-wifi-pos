@@ -11,13 +11,12 @@ Script for performing positioning calculations.
 # Packages
 import numpy as np
 import math
+import json
 
 
-# Constants
-DIST_THRESHOLD = 900.0
-PX_SCALE = 11.0
-POWER = 1.68
-PATH_LOSS = 2.25
+# Load constants from config
+with open('config.json', 'r') as f:
+    cfg = json.load(f)
 
 
 def RSSI_to_dist(rssi):
@@ -30,8 +29,8 @@ def RSSI_to_dist(rssi):
     # Formula based on ...
     # Power stands for router power (max?)
     # Path loss is different for each environment and must be tweaked
-    dist = 10 ** ((POWER - rssi)/(10 * PATH_LOSS))
-    return dist / PX_SCALE
+    dist = 10 ** ((cfg['POWER'] - rssi)/(10 * cfg['PATH_LOSS']))
+    return dist / cfg['PX_SCALE']
 
 
 def calc_w_avg_point(locations, weights):
@@ -95,9 +94,9 @@ def locate(routers, nearby_routers, trilatOrMean):
         
         # Distance from RSSI
         dist = RSSI_to_dist(router['RSSI'])
-        router['DIST'] = dist / PX_SCALE # ?! TODO
+        router['DIST'] = dist / cfg['PX_SCALE'] # ?! TODO
 
-        if dist < DIST_THRESHOLD:
+        if dist < cfg['DIST_THRESHOLD']:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
             # Weight formula for the weighted mean method
             weight = 1 / router['RSSI']
@@ -114,14 +113,14 @@ def locate(routers, nearby_routers, trilatOrMean):
         r1 = nearby_routers[0]['DIST']
         r2 = nearby_routers[1]['DIST']
         r3 = nearby_routers[2]['DIST']
-        Ux,_ = scr_to_cart(near_coords[1][0], 0, 5300, 5553)
-        Vx,Vy = scr_to_cart(near_coords[2][0], near_coords[2][1], 5300, 5553)
+        Ux,_ = scr_to_cart(near_coords[1][0], 0, cfg['IMG_W'], cfg['IMG_H'])
+        Vx,Vy = scr_to_cart(near_coords[2][0], near_coords[2][1], cfg['IMG_W'], cfg['IMG_H'])
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
 
         # Fix result by offsetting
         x -= near_coords[1][1] # ?! TODO
-        x,y = cart_to_scr(x, y, 5300, 5553)
+        x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
 
 
     # -================== Weighted Mean ==================-
@@ -134,7 +133,7 @@ def locate(routers, nearby_routers, trilatOrMean):
             rx,ry = router
             dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
 
-            if dist_to_mean > DIST_THRESHOLD:
+            if dist_to_mean > cfg['DIST_THRESHOLD']:
                 print(dist_to_mean, router)
 
             # Custom dist precision for mean
@@ -143,9 +142,9 @@ def locate(routers, nearby_routers, trilatOrMean):
 
 
     # Set precision based on the pixel scale divided in half
-    user['precision'] = PX_SCALE * 0.5
+    user['precision'] = cfg['PX_SCALE'] * 0.5
     # Maximum radius is based on the maximum distance to a detected router
-    user['radius'] = (max_dist / PX_SCALE) * 0.5
+    user['radius'] = (max_dist / cfg['PX_SCALE']) * 0.5
     user['x'] = x
     user['y'] = y
 

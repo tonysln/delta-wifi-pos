@@ -15,7 +15,6 @@ Returned data is in the form of a list of dict objects.
 
 
 # Packages
-from re import L
 import subprocess as sp
 import sys
 

@@ -35,3 +35,14 @@ ImportError: libOpenGL.so.0: cannot open shared object file: No such file or dir
 ```
 
 You might need to install the `libopengl0` library to fix this.
+
+
+### Configuration
+
+All constant variables used throughout the app are saved in `config.ini` and can be changed to possibly improve the accuracy. 
+
+Some useful variables to configure:
+
+- `DIST_THRESHOLD` - expressed in pixels. All nearby routers above this value are ignored.
+- `RSSI_MIN` - expressed in dBm. All nearby routers below this value are excluded.
+- `PATH_LOSS` exponent. Influences the conversion algorithm between RSSI and distance.
