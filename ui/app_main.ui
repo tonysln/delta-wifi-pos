@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>978</width>
-    <height>769</height>
+    <height>759</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -108,7 +108,7 @@
           <property name="minimumSize">
            <size>
             <width>230</width>
-            <height>160</height>
+            <height>146</height>
            </size>
           </property>
           <property name="title">
@@ -154,7 +154,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>90</y>
+             <y>80</y>
              <width>191</width>
              <height>16</height>
             </rect>
@@ -172,7 +172,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>110</y>
+             <y>100</y>
              <width>191</width>
              <height>16</height>
             </rect>
@@ -185,7 +185,7 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>130</y>
+             <y>120</y>
              <width>191</width>
              <height>16</height>
             </rect>
@@ -355,7 +355,7 @@
           <item>
            <widget class="QPushButton" name="autoScanButton">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -440,7 +440,7 @@
         <item>
          <widget class="QGroupBox" name="floorBox">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -506,7 +506,7 @@
         <item>
          <widget class="QPushButton" name="addNewRouterButton">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">

@@ -17,22 +17,20 @@ import math
 DIST_THRESHOLD = 900.0
 PX_SCALE = 11.0
 POWER = 1.68
-PATH_LOSS = 2.2
+PATH_LOSS = 2.25
 
 
 def RSSI_to_dist(rssi):
+    # Convert RSSI (signal strength) to distance in pixels.
     # https://stackoverflow.com/questions/62399361/swift-converting-rssi-to-distance
     # https://en.wikipedia.org/wiki/True-range_multilateration
     # https://en.wikipedia.org/wiki/Log-distance_path_loss_model
     # https://appelsiini.net/2017/trilateration-with-n-points/
 
+    # Formula based on ...
+    # Power stands for router power (max?)
+    # Path loss is different for each environment and must be tweaked
     dist = 10 ** ((POWER - rssi)/(10 * PATH_LOSS))
-
-    # NB Mention in paper -> constants and variables very
-    # important, need calibration and setup to ensure best
-    # result with the type of building and layout.
-    # More routers -> better, less routers -> tweak vars
-    
     return dist / PX_SCALE
 
 
@@ -101,15 +99,15 @@ def locate(routers, nearby_routers, trilatOrMean):
 
         if dist < DIST_THRESHOLD:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
-            weight = 1 / router['RSSI'] # TODO make heavier
+            # Weight formula for the weighted mean method
+            weight = 1 / router['RSSI']
             near_weights.append(weight)
 
-            # For trilat, temporary
             if dist > max_dist:
                 max_dist = dist
 
     
-    # -============ Trilateration ============-
+    # -================== Trilateration ==================-
     if trilatOrMean:
         # Apply multilateration formulas to the formed circles
         # https://handwiki.org/wiki/Trilateration
@@ -121,14 +119,12 @@ def locate(routers, nearby_routers, trilatOrMean):
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
 
+        # Fix result by offsetting
         x -= near_coords[1][1] # ?! TODO
         x,y = cart_to_scr(x, y, 5300, 5553)
-        
-        user['precision'] = 20.0
-        user['radius'] = user['precision']
 
 
-    # -============ Weighted Mean ============-
+    # -================== Weighted Mean ==================-
     else:
         # Weighted average
         x,y = calc_w_avg_point(near_coords, near_weights)
@@ -145,10 +141,11 @@ def locate(routers, nearby_routers, trilatOrMean):
             if dist_to_mean > max_dist:
                 max_dist = dist_to_mean
 
-        user['precision'] = (max_dist / PX_SCALE) * 0.5
-        user['radius'] = user['precision']
 
-
+    # Set precision based on the pixel scale divided in half
+    user['precision'] = PX_SCALE * 0.5
+    # Maximum radius is based on the maximum distance to a detected router
+    user['radius'] = (max_dist / PX_SCALE) * 0.5
     user['x'] = x
     user['y'] = y
 

@@ -61,6 +61,8 @@ def scan_macos():
 
 
 def scan_linux(adapter):
+    # Run the iw utility and parse output (despite being not recommended)
+    # to get a list of nearby networks.
     # Custom adapter name given as app argument
 
     res = sp.run(['iw', adapter, 'scan'], capture_output=True)
@@ -91,6 +93,8 @@ def scan_linux(adapter):
 
 
 def scan_win():
+    # Run the netsh utility and parse output to get a list
+    # of nearby networks as detected by Wi-Fi adapter
     res = sp.run(['netsh', 'wlan', 'show', 'all'], capture_output=True)
     result = res.stdout.decode(encoding='cp1252').split('\n')
 
