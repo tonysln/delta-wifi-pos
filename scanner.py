@@ -124,8 +124,8 @@ def scan_win():
             new_network['MAC'] = row.split(':', 1)[1].strip()
 
         if adding and row.startswith('signal'):
-            # NB TODO
-            new_network['RSSI'] = row.split(':')[1].strip()
+            new_network['RSSI'] = int(row.split(':')[1].strip()[:-1])
+            # TODO convert to dBm from %
 
     networks.append(new_network)
     return networks

@@ -219,7 +219,9 @@ def begin_scan(renderer, adapter=None):
               {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
               {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
               {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
-    # nearby = scanner.scan(adapter)
+    
+    if adapter:
+        nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
         print('[!] No nearby routers detected')

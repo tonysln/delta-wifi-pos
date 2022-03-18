@@ -5,6 +5,7 @@
     "IMG_W": 5300,
     "IMG_H": 5553,
     "DIST_THRESHOLD": 900,
+    "RAD_THRESHOLD": 80,
     "PX_SCALE": 11,
     "POWER": 1.68,
     "PATH_LOSS": 2.25,

@@ -99,6 +99,7 @@ def locate(routers, nearby_routers, trilatOrMean):
         if dist < cfg['DIST_THRESHOLD']:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
             # Weight formula for the weighted mean method
+            # TODO make heavier
             weight = 1 / router['RSSI']
             near_weights.append(weight)
 
@@ -113,14 +114,23 @@ def locate(routers, nearby_routers, trilatOrMean):
         r1 = nearby_routers[0]['DIST']
         r2 = nearby_routers[1]['DIST']
         r3 = nearby_routers[2]['DIST']
+
+        # Transform to cartestian coordinates for formula
         Ux,_ = scr_to_cart(near_coords[1][0], 0, cfg['IMG_W'], cfg['IMG_H'])
         Vx,Vy = scr_to_cart(near_coords[2][0], near_coords[2][1], cfg['IMG_W'], cfg['IMG_H'])
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
 
         # Fix result by offsetting
-        x -= near_coords[1][1] # ?! TODO
+        # TODO adjust vals dynamically
+        xf = 1
+        yf = 1
+        sf = -1
+        x += near_coords[xf][yf] * sf
+
+        # Adjust back to screen coordinates
         x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
+
 
 
     # -================== Weighted Mean ==================-
@@ -141,10 +151,16 @@ def locate(routers, nearby_routers, trilatOrMean):
                 max_dist = dist_to_mean
 
 
-    # Set precision based on the pixel scale divided in half
-    user['precision'] = cfg['PX_SCALE'] * 0.5
+    # Set precision based on the pixel scale divided in half,
+    # with additional precision set by the amount of nearby routers
+    user['precision'] = cfg['PX_SCALE'] * (0.05 - (math.floor(len(near_coords))/100))
+
     # Maximum radius is based on the maximum distance to a detected router
-    user['radius'] = (max_dist / cfg['PX_SCALE']) * 0.5
+    user['radius'] = (max_dist / cfg['PX_SCALE']) * user['precision']
+
+    # Clamp radius to avoid unrealistic values
+    user['radius'] = min(user['radius'], cfg['RAD_THRESHOLD'])
+
     user['x'] = x
     user['y'] = y
 
