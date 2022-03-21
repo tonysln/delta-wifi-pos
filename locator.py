@@ -153,7 +153,8 @@ def locate(routers, nearby_routers, trilatOrMean):
 
     # Set precision based on the pixel scale divided in half,
     # with additional precision set by the amount of nearby routers
-    user['precision'] = cfg['PX_SCALE'] * (0.05 - (math.floor(len(near_coords))/100))
+    coef = 0.05 # TODO
+    user['precision'] = cfg['PX_SCALE'] * coef
 
     # Maximum radius is based on the maximum distance to a detected router
     user['radius'] = (max_dist / cfg['PX_SCALE']) * user['precision']

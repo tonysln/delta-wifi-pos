@@ -15,6 +15,7 @@ Returned data is in the form of a list of dict objects.
 
 
 # Packages
+from scipy.interpolate import interp1d
 import subprocess as sp
 import sys
 
@@ -124,8 +125,12 @@ def scan_win():
             new_network['MAC'] = row.split(':', 1)[1].strip()
 
         if adding and row.startswith('signal'):
-            new_network['RSSI'] = int(row.split(':')[1].strip()[:-1])
-            # TODO convert to dBm from %
+            # https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_association_attributes
+            # Interpolate signal strength % to dBm
+            conversion = interp1d([0, 100], [-100, -50])
+            percent = int(row.split(':')[1].strip()[:-1])
+            new_network['RSSI'] = conversion(percent)
+
 
     networks.append(new_network)
     return networks

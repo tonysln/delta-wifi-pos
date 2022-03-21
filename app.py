@@ -10,7 +10,7 @@ Initialize the GUI and other components.
 
 
 # Packages
-from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint
+from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint, QTimer
 from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont
 from PySide6.QtWidgets import QApplication, QGraphicsScene
 from PySide6.QtUiTools import QUiLoader
@@ -259,12 +259,16 @@ def auto_scan(renderer, adapter=None):
     # Main Renderer object
     # Custom adapter name
     # Automatic scan (auto-update)
+
     activated = renderer.window.autoScanButton.isChecked()
     print('Auto-scan activated:', activated)
-    while activated:
-        # TODO use other threads
+
+    if activated:
+        # Do a scan
         begin_scan(renderer, adapter)
-        activated = False
+        # Repeat this method call in N seconds (will check if button still pressed too)
+        QTimer.singleShot(cfg['AUTO_SEC']*1000, lambda: auto_scan(renderer, adapter))
+        return
 
 
 def load_routers(path):
@@ -343,7 +347,8 @@ def load_UI(path):
 
 
 def add_new_router(renderer):
-    # ...
+    # Add new router mode, saves location of mouse click
+    # TODO
 
     isChecked = renderer.window.addNewRouterButton.isChecked()
     print('New router add mode:', isChecked)
@@ -386,10 +391,8 @@ if __name__ == "__main__":
     window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
     window.autoScanButton.clicked.connect(lambda: auto_scan(mr, adapter))
     window.addNewRouterButton.clicked.connect(lambda: add_new_router(mr))
-
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
-
     window.floorPlusButton.clicked.connect(lambda: mr.change_displayed_floor(True))
     window.floorMinusButton.clicked.connect(lambda: mr.change_displayed_floor(False))
 

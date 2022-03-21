@@ -46,3 +46,4 @@ Some useful variables to configure:
 - `DIST_THRESHOLD` - expressed in pixels. All nearby routers above this value are ignored.
 - `RSSI_MIN` - expressed in dBm. All nearby routers below this value are excluded.
 - `PATH_LOSS` exponent. Influences the conversion algorithm between RSSI and distance.
+- `AUTO_SEC` - expressed in seconds. Number of seconds between auto-scan activations.
