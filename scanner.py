@@ -36,10 +36,6 @@ def scan_macos():
         if idx == 0 or row[0] == '':
             continue
 
-        # For now, do not include unknown networks
-        if row[0] not in ['eduroam', 'ut-public']:
-            continue
-
         # Check if any of the desired values are empty
         for i in range(0,3):
             if row[i] == '':

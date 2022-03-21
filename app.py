@@ -10,7 +10,7 @@ Initialize the GUI and other components.
 
 
 # Packages
-from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint, QTimer
+from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint, QPointF, QTimer, Signal
 from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont
 from PySide6.QtWidgets import QApplication, QGraphicsScene
 from PySide6.QtUiTools import QUiLoader
@@ -19,6 +19,21 @@ import scanner
 import locator
 import json
 import sys
+
+
+
+class CGraphicsScene(QGraphicsScene):
+    # Custom GraphicsScene class to capture the mouse
+    # clicks for easily adding new routers.
+
+    signalMousePos = Signal(QPointF)
+
+    def __init__(self, parent):
+        super(CGraphicsScene, self).__init__(parent)
+
+    def mouseReleaseEvent(self, QGraphicsSceneMouseEvent):
+        pos = QGraphicsSceneMouseEvent.lastScenePos()
+        self.signalMousePos.emit(pos)
 
 
 
@@ -47,6 +62,12 @@ class MapRenderer(object):
         }
         self.nearby_routers = []
         self.reset_labels()
+        self.add_new_router_mode = False
+        self.new_router = {
+            'x': 0,
+            'y': 0,
+            'floor': 1
+        }
 
     
     def scale_map(self, up):
@@ -95,6 +116,17 @@ class MapRenderer(object):
 
         self.draw_user(painter)
 
+        # Init custom graphics scene
+        scene = CGraphicsScene(None)
+        # Forward mouse click signals to update new router location info
+        scene.signalMousePos.connect(lambda pos: self.add_router_on_click(pos))
+        # If new router add mode is engaged, draw new router location
+        if self.add_new_router_mode:
+            painter.setPen(QPen(Qt.black, 1))
+            painter.setBrush(Qt.blue)
+            center = QPoint(self.new_router["x"], self.new_router["y"])
+            painter.drawEllipse(center, 22, 22)
+
         painter.end()
 
 
@@ -104,9 +136,8 @@ class MapRenderer(object):
         pix = pix.scaled(scaled_w, scaled_h, 
                          Qt.AspectRatioMode.KeepAspectRatio,
                          Qt.TransformationMode.SmoothTransformation)
-
+        
         # Add the pixmap to a scene in the QGraphicsView
-        scene = QGraphicsScene()
         scene.addPixmap(pix)
         self.window.mapView.setScene(scene)
 
@@ -124,7 +155,20 @@ class MapRenderer(object):
         self.update_labels()
         # List all routers and their distances
         self.list_routers()
-        
+
+
+    def add_router_on_click(self, new_pos):
+        # Handle clicks on map in case "add new router" mode is engaged
+        # TODO fix offset 
+        self.new_router = {
+            'x': new_pos.x(),
+            'y': new_pos.y(),
+            'floor': self.user["floor"]
+        }
+        if self.add_new_router_mode:
+            print('New router:', self.new_router)
+            self.render()
+
 
     def draw_user(self, painter):
         # Draw the user's location on map
@@ -347,14 +391,13 @@ def load_UI(path):
 
 
 def add_new_router(renderer):
-    # Add new router mode, saves location of mouse click
-    # TODO
+    # Toggle add new router mode in renderer,
+    # will enable mouse click capture on map
 
     isChecked = renderer.window.addNewRouterButton.isChecked()
     print('New router add mode:', isChecked)
-    if isChecked:
-        renderer.render()
-
+    renderer.add_new_router_mode = isChecked
+    renderer.render()
 
 
 if __name__ == "__main__":
