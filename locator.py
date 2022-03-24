@@ -154,11 +154,11 @@ def locate(routers, nearby_routers, trilatOrMean):
     n = len(near_coords)
     # Precision is increased if more routers are nearby,
     # by 0.01 for each 10 additional routers
-    coef = 0.05 - (math.ceil(n / 100) if n < 10 else math.floor(n / 10)) / 100
-    user['precision'] = cfg['PX_SCALE'] * coef
+    coef = cfg['RAD_NORM'] - (math.ceil(n / 100) if n < 10 else math.floor(n / 10)) / 100
+    user['precision'] = cfg['PX_SCALE'] * coef * cfg['PX_SCALE']
 
     # Maximum radius is based on the maximum distance to a detected router
-    user['radius'] = (max_dist / cfg['PX_SCALE']) * user['precision']
+    user['radius'] = (max_dist / cfg['PX_SCALE']) * user['precision'] / cfg['PX_SCALE']
 
     # Clamp radius to avoid unrealistic values
     user['radius'] = min(user['radius'], cfg['RAD_THRESHOLD'])

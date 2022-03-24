@@ -36,6 +36,9 @@ def scan_macos():
         if idx == 0 or row[0] == '':
             continue
 
+        if not row[2].startswith('-'):
+            continue
+
         # Check if any of the desired values are empty
         for i in range(0,3):
             if row[i] == '':
@@ -82,7 +85,7 @@ def scan_linux(adapter):
             new_network['SSID'] = row[6:]
 
         if adding and row.startswith('signal:'):
-            new_network['RSSI'] = int(row[8:14])
+            new_network['RSSI'] = int(row[8:11])
 
     networks.append(new_network)
     return networks

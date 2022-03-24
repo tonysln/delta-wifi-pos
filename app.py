@@ -10,30 +10,16 @@ Initialize the GUI and other components.
 
 
 # Packages
-from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint, QPointF, QTimer, Signal
+from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint, QTimer
 from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont
-from PySide6.QtWidgets import QApplication, QGraphicsScene
+from PySide6.QtWidgets import QApplication
 from PySide6.QtUiTools import QUiLoader
 from scipy.interpolate import interp1d
+import ui.components as uic
 import scanner
 import locator
 import json
 import sys
-
-
-
-class CGraphicsScene(QGraphicsScene):
-    # Custom GraphicsScene class to capture the mouse
-    # clicks for easily adding new routers.
-
-    signalMousePos = Signal(QPointF)
-
-    def __init__(self, parent):
-        super(CGraphicsScene, self).__init__(parent)
-
-    def mouseReleaseEvent(self, QGraphicsSceneMouseEvent):
-        pos = QGraphicsSceneMouseEvent.lastScenePos()
-        self.signalMousePos.emit(pos)
 
 
 
@@ -49,7 +35,7 @@ class MapRenderer(object):
         self.img_h = cfg['IMG_H']
 
         # Font used to draw on map
-        self.font = QFont('Arial', 32)
+        self.font = QFont('Arial', 38)
 
         # User location and router details
         self.user = {
@@ -66,7 +52,11 @@ class MapRenderer(object):
         self.new_router = {
             'x': 0,
             'y': 0,
-            'floor': 1
+            'floor': 1,
+            'location': '',
+            'frequency': 2,
+            'SSID': '',
+            'MAC': ''
         }
 
     
@@ -91,7 +81,29 @@ class MapRenderer(object):
 
         self.render()
 
-    
+
+    def remap_coords(self, reverse=False):
+        # Remap coordinates based on the current map scale
+        # Returns a tuple of interpolation functions for use
+        # with x and y coordinates.
+         
+        scaled_w_range = [0, self.window.mapView.width() * self.map_scale]
+        scaled_h_range = [0, self.window.mapView.height() * self.map_scale]
+        img_w_range = [0, self.img_w]
+        img_h_range = [0, self.img_h]
+        
+        # Map from scaled map to original map
+        if reverse:
+            rc_x = interp1d(scaled_w_range, img_w_range)
+            rc_y = interp1d(scaled_h_range, img_h_range)
+            return rc_x,rc_y
+
+        # Map from original map to scaled map
+        rc_x = interp1d(img_w_range, scaled_w_range)
+        rc_y = interp1d(img_h_range, scaled_h_range)
+        return rc_x,rc_y
+
+
     def render(self):
         # Render the map
         print('Rendering...')
@@ -103,21 +115,22 @@ class MapRenderer(object):
         painter = QPainter(pix)
         painter.setFont(self.font)
 
-        # Draw the user, routers and other information
-
+        # Highlight all detected routers
         for router in self.nearby_routers:
             self.highlight_router(painter, self.routers[router['MAC']])
 
+        # Draw all routers on this floor
         for mac,router in self.routers.items():
             if router['floor'] == self.user['floor']:
                 self.draw_router(painter, router)
-                # Draw router location name on map, offset
-                painter.drawText(router['x'] - 38, router['y'] - 24, self.locations[mac[:-1]])
+
+                # Draw router location name on map
+                painter.drawText(router['x'] - 40, router['y'] - 28, self.locations[mac[:-1]])
 
         self.draw_user(painter)
 
         # Init custom graphics scene
-        scene = CGraphicsScene(None)
+        scene = uic.CGraphicsScene()
         # Forward mouse click signals to update new router location info
         scene.signalMousePos.connect(lambda pos: self.add_router_on_click(pos))
         # If new router add mode is engaged, draw new router location
@@ -131,9 +144,8 @@ class MapRenderer(object):
 
 
         # Scale map based on current zoom
-        scaled_w = self.window.mapView.width() * self.map_scale
-        scaled_h = self.window.mapView.height() * self.map_scale
-        pix = pix.scaled(scaled_w, scaled_h, 
+        pix = pix.scaled(self.window.mapView.width() * self.map_scale,
+                         self.window.mapView.height() * self.map_scale, 
                          Qt.AspectRatioMode.KeepAspectRatio,
                          Qt.TransformationMode.SmoothTransformation)
         
@@ -145,11 +157,18 @@ class MapRenderer(object):
         self.window.mapView.setSceneRect(-100, -100, scene.width() + 200, scene.height() + 200)
 
         # Remap center coordinates based on the current map scale
-        rc_x = interp1d([0, self.img_w], [0, scaled_w])
-        rc_y = interp1d([0, self.img_h], [0, scaled_h])
+        rc_x,rc_y = self.remap_coords()
 
-        # Center map view on the user's location 
-        self.window.mapView.centerOn(rc_x(self.user['x']), rc_y(self.user['y']))
+        # Center map view on the user's location if not editing routers
+        if not self.add_new_router_mode:
+            center_x = rc_x(self.user['x'])
+            center_y = rc_y(self.user['y'])
+        else:
+            # Otherwise, center on the new router
+            center_x = rc_x(self.new_router['x'])
+            center_y = rc_y(self.new_router['y'])
+        
+        self.window.mapView.centerOn(center_x, center_y)
         self.window.mapView.show()
 
         self.update_labels()
@@ -159,14 +178,13 @@ class MapRenderer(object):
 
     def add_router_on_click(self, new_pos):
         # Handle clicks on map in case "add new router" mode is engaged
-        # TODO fix offset 
-        self.new_router = {
-            'x': new_pos.x(),
-            'y': new_pos.y(),
-            'floor': self.user["floor"]
-        }
+
+        rc_x,rc_y = self.remap_coords(reverse=True)
+        self.new_router['x'] = int(rc_x(new_pos.x()))
+        self.new_router['y'] = int(rc_y(new_pos.y()))
+        self.new_router['floor'] = self.user["floor"]
+
         if self.add_new_router_mode:
-            print('New router:', self.new_router)
             self.render()
 
 
@@ -223,10 +241,9 @@ class MapRenderer(object):
     def update_labels(self):
         # Write updated values to labels in sidebar menu
         # Only after the values have been loaded in
-        self.window.scaleLabel.setText(str(self.map_scale))
-        self.window.coordsLabel.setText(f'x: {round(self.user["x"], 2)}, y: {round(self.user["y"], 2)}')
+        self.window.coordsLabel.setText(f'x: {round(self.user["x"])}, y: {round(self.user["y"])}')
+        self.window.newRouterCoordsLabel.setText(f'x: {round(self.new_router["x"])}, y: {round(self.new_router["y"])}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
-        self.window.floorChoiceLabel.setText(str(self.user["floor"]))
         self.window.locationLabel.setText(self.user["location"])
         self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
         self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"], 2)} m')
@@ -235,10 +252,9 @@ class MapRenderer(object):
     def reset_labels(self):
         # Reset map and all label values
         self.window.mapView.items().clear()
-        self.window.scaleLabel.setText(str(self.map_scale))
         self.window.coordsLabel.setText('x: --, y: --')
+        self.window.newRouterCoordsLabel.setText('x: --, y: --')
         self.window.floorLabel.setText('Floor -')
-        self.window.floorChoiceLabel.setText('1')
         self.window.locationLabel.setText('---')
         self.window.precLabel.setText('Precision: -- m')
         self.window.radiusLabel.setText('Radius: -- m')
@@ -280,9 +296,13 @@ def begin_scan(renderer, adapter=None):
     # Filter out too weak and unknown routers
     print('Excluding:')
     for router in reversed(nearby):
-        if router['RSSI'] < cfg['RSSI_MIN'] or router['MAC'] not in renderer.routers.keys():
-            print(router)
-            nearby.remove(router)
+        try:
+            if router['RSSI'] < cfg['RSSI_MIN'] or router['MAC'] not in renderer.routers.keys():
+                print(router)
+                nearby.remove(router)
+        except KeyError:
+            print('[!] Malformed routers list')
+            return
     
     print()
 
@@ -395,9 +415,23 @@ def add_new_router(renderer):
     # will enable mouse click capture on map
 
     isChecked = renderer.window.addNewRouterButton.isChecked()
-    print('New router add mode:', isChecked)
     renderer.add_new_router_mode = isChecked
+    renderer.window.newRouterBox.setEnabled(isChecked)
     renderer.render()
+
+
+def save_new_router(renderer, nr_dialog):
+    # Save new router information
+    print(renderer.new_router)
+    data, ok = nr_dialog.launch()
+    if ok:
+        print(data)
+        # Un-check new router mode
+        # TODO bad, change to finished()
+        renderer.window.addNewRouterButton.setChecked(False)
+        # Refresh status and re-render map
+        add_new_router(renderer)
+
 
 
 if __name__ == "__main__":
@@ -428,6 +462,8 @@ if __name__ == "__main__":
 
     # Init the main renderer class
     mr = MapRenderer(window, routers, locations)
+    # Init new router dialog window
+    nr_dialog = uic.NewRouterDialog()
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
@@ -438,6 +474,7 @@ if __name__ == "__main__":
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
     window.floorPlusButton.clicked.connect(lambda: mr.change_displayed_floor(True))
     window.floorMinusButton.clicked.connect(lambda: mr.change_displayed_floor(False))
+    window.saveNewRouterButton.clicked.connect(lambda: save_new_router(mr, nr_dialog))
 
     # Display window and start app
     window.show()
