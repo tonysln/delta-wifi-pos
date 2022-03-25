@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QDialogButtonBox, QGraphicsScene, QLabel, QLineEdit, QRadioButton
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QDialogButtonBox, QGraphicsScene, QLabel, QLineEdit, QRadioButton, QPushButton
 from PySide6.QtCore import Qt, QPointF, Signal
 
 
@@ -28,39 +28,56 @@ class NewRouterDialog(QDialog):
 
         self.setWindowModality(Qt.NonModal)
         self.setWindowTitle('New Router Details')
+        self.setFixedSize(340, 280)
 
         # SSID
         self.ssidRow = QHBoxLayout()
         self.ssidRow.addWidget(QLabel('SSID'))
-        ssidInputBox = QLineEdit()
-        ssidInputBox.setFixedWidth(140)
-        self.ssidRow.addWidget(ssidInputBox)
+        self.ssidInputBox = QLineEdit()
+        self.ssidInputBox.setFixedWidth(140)
+        self.ssidRow.addWidget(self.ssidInputBox)
         layout.addLayout(self.ssidRow)
 
         # MAC
         self.macRow = QHBoxLayout()
         self.macRow.addWidget(QLabel('MAC'))
-        macInputBox = QLineEdit()
-        macInputBox.setFixedWidth(140)
-        self.macRow.addWidget(macInputBox)
+        self.macInputBox = QLineEdit()
+        self.macInputBox.setFixedWidth(140)
+        self.macRow.addWidget(self.macInputBox)
         layout.addLayout(self.macRow)
 
         # Location name
         self.nameRow = QHBoxLayout()
         self.nameRow.addWidget(QLabel('Name'))
-        nameInputBox = QLineEdit()
-        nameInputBox.setFixedWidth(140)
-        self.nameRow.addWidget(nameInputBox)
+        self.nameInputBox = QLineEdit()
+        self.nameInputBox.setFixedWidth(140)
+        self.nameRow.addWidget(self.nameInputBox)
         layout.addLayout(self.nameRow)
 
         # Frequency
         self.freqRow = QHBoxLayout()
         self.freqRow.addWidget(QLabel('Frequency'))
-        freq2Choice = QRadioButton('2 GHz')
-        freq5Choice = QRadioButton('5 GHz')
-        self.freqRow.addWidget(freq2Choice)
-        self.freqRow.addWidget(freq5Choice)
+        self.freq2Choice = QRadioButton('2 GHz')
+        self.freq2Choice.setChecked(True)
+        self.freq5Choice = QRadioButton('5 GHz')
+        self.freqRow.addWidget(self.freq2Choice)
+        self.freqRow.addWidget(self.freq5Choice)
         layout.addLayout(self.freqRow)
+
+        # Floor
+        self.floorRow = QHBoxLayout()
+        self.floorRow.addWidget(QLabel('Floor'))
+        self.floorDownButton = QPushButton('<')
+        self.floorDownButton.setFixedWidth(50)
+        self.floorUpButton = QPushButton('>')
+        self.floorUpButton.setFixedWidth(50)
+        self.floorRow.addWidget(self.floorDownButton)
+        self.floorRow.addWidget(self.floorUpButton)
+        layout.addLayout(self.floorRow)
+
+        # Coordinates
+        self.coords = QLabel('x: 0, y: 0')
+        layout.addWidget(self.coords)
 
         # OK and Cancel
         self.buttons = QDialogButtonBox(
@@ -73,11 +90,36 @@ class NewRouterDialog(QDialog):
         self.buttons.rejected.connect(self.reject)
 
 
-    def launch(self):
-        res = self.open()
-        # TODO connect to finished() 
-        # TODO collect data from input boxes
-        # TODO validate
-        ok = res == QDialog.Accepted
-        data = {}
-        return (data, ok)
+    def get_fields(self):
+        # Collect text and choice from fields and radio buttons.
+        # Returns a status boolean (all fields OK or not) and data
+
+        data = {
+            'SSID': self.ssidInputBox.text(),
+            'MAC': self.macInputBox.text(),
+            'name': self.nameInputBox.text(),
+            'freq': 2 if self.freq2Choice.isChecked() else 5
+        }
+
+        status_ok = True
+
+        # Check inputs for missed fields
+        if len(data['SSID']) == 0 or len(data['MAC']) == 0 or len(data['name']) == 0:
+            print('[!] All new router fields must be filled in')
+            status_ok = False
+
+        if len(data['MAC']) != 17:
+            print('[!] Malformed new router MAC address')
+            status_ok = False
+
+        return (status_ok,data)
+
+
+    def reset(self):
+        # Reset all fields
+
+        self.ssidInputBox.setText('')
+        self.macInputBox.setText('')
+        self.nameInputBox.setText('')
+        self.coords.setText('x: 0, y: 0')
+

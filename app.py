@@ -52,11 +52,7 @@ class MapRenderer(object):
         self.new_router = {
             'x': 0,
             'y': 0,
-            'floor': 1,
-            'location': '',
-            'frequency': 2,
-            'SSID': '',
-            'MAC': ''
+            'floor': 1
         }
 
     
@@ -179,12 +175,11 @@ class MapRenderer(object):
     def add_router_on_click(self, new_pos):
         # Handle clicks on map in case "add new router" mode is engaged
 
-        rc_x,rc_y = self.remap_coords(reverse=True)
-        self.new_router['x'] = int(rc_x(new_pos.x()))
-        self.new_router['y'] = int(rc_y(new_pos.y()))
-        self.new_router['floor'] = self.user["floor"]
-
         if self.add_new_router_mode:
+            rc_x,rc_y = self.remap_coords(reverse=True)
+            self.new_router['x'] = int(rc_x(new_pos.x()))
+            self.new_router['y'] = int(rc_y(new_pos.y()))
+            self.nr.coords.setText(f'x: {self.new_router["x"]}, y: {self.new_router["y"]}')
             self.render()
 
 
@@ -242,7 +237,6 @@ class MapRenderer(object):
         # Write updated values to labels in sidebar menu
         # Only after the values have been loaded in
         self.window.coordsLabel.setText(f'x: {round(self.user["x"])}, y: {round(self.user["y"])}')
-        self.window.newRouterCoordsLabel.setText(f'x: {round(self.new_router["x"])}, y: {round(self.new_router["y"])}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
         self.window.locationLabel.setText(self.user["location"])
         self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
@@ -253,7 +247,6 @@ class MapRenderer(object):
         # Reset map and all label values
         self.window.mapView.items().clear()
         self.window.coordsLabel.setText('x: --, y: --')
-        self.window.newRouterCoordsLabel.setText('x: --, y: --')
         self.window.floorLabel.setText('Floor -')
         self.window.locationLabel.setText('---')
         self.window.precLabel.setText('Precision: -- m')
@@ -366,6 +359,11 @@ def load_routers(path):
     return routers_dict
 
 
+def save_router(path, router):
+    # Save router entry TODO
+    pass
+
+
 def load_locations(path):
     # Load data for all locations from storage
 
@@ -392,6 +390,11 @@ def load_locations(path):
     return locations_dict
 
 
+def save_location(path, location):
+    # Save location entry TODO
+    pass
+
+
 def load_UI(path):
     # Open UI file at given path
     ui_file = QFile(path)
@@ -410,27 +413,39 @@ def load_UI(path):
     return window
 
 
-def add_new_router(renderer):
+def add_new_router(renderer, nr_dialog):
     # Toggle add new router mode in renderer,
     # will enable mouse click capture on map
 
-    isChecked = renderer.window.addNewRouterButton.isChecked()
-    renderer.add_new_router_mode = isChecked
-    renderer.window.newRouterBox.setEnabled(isChecked)
+    renderer.add_new_router_mode = True
     renderer.render()
+    nr_dialog.open()
 
 
-def save_new_router(renderer, nr_dialog):
-    # Save new router information
-    print(renderer.new_router)
-    data, ok = nr_dialog.launch()
-    if ok:
+def save_new_router(result_ok, renderer, nr_dialog):
+    # Save new router details from the popup window and
+    # save them to routers and locations data files
+    
+    data_ok, data = nr_dialog.get_fields()
+
+    # User clicked on 'OK' and all fields are correct
+    if result_ok and data_ok:
+        data['x'] = renderer.new_router['x']
+        data['y'] = renderer.new_router['y']
+        data['floor'] = renderer.new_router['floor']
+
+        # Reset labels and new router dict
+        nr_dialog.reset()
+        renderer.new_router = {'x': 0,'y': 0,'floor': 1}
         print(data)
-        # Un-check new router mode
-        # TODO bad, change to finished()
-        renderer.window.addNewRouterButton.setChecked(False)
-        # Refresh status and re-render map
-        add_new_router(renderer)
+    # User clicked on 'OK', but fields are not correct
+    elif result_ok and not data_ok:
+        add_new_router(renderer, nr_dialog)
+        return
+
+    # User clicked on 'Cancel', disable new router mode
+    renderer.add_new_router_mode = False
+    renderer.render()
 
 
 
@@ -464,17 +479,19 @@ if __name__ == "__main__":
     mr = MapRenderer(window, routers, locations)
     # Init new router dialog window
     nr_dialog = uic.NewRouterDialog()
+    nr_dialog.finished.connect(lambda res: save_new_router(res, mr, nr_dialog))
+    nr_dialog.floorUpButton.clicked.connect(lambda: mr.change_displayed_floor(True))
+    nr_dialog.floorDownButton.clicked.connect(lambda: mr.change_displayed_floor(False))
+    # Save new router dialog window object to the map renderer class
+    mr.nr = nr_dialog
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
     window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
     window.autoScanButton.clicked.connect(lambda: auto_scan(mr, adapter))
-    window.addNewRouterButton.clicked.connect(lambda: add_new_router(mr))
+    window.addNewRouterButton.clicked.connect(lambda: add_new_router(mr, nr_dialog))
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
-    window.floorPlusButton.clicked.connect(lambda: mr.change_displayed_floor(True))
-    window.floorMinusButton.clicked.connect(lambda: mr.change_displayed_floor(False))
-    window.saveNewRouterButton.clicked.connect(lambda: save_new_router(mr, nr_dialog))
 
     # Display window and start app
     window.show()
