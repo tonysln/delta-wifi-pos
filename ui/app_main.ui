@@ -18,6 +18,7 @@
   </property>
   <property name="font">
    <font>
+    <family>Arial</family>
     <kerning>false</kerning>
    </font>
   </property>
@@ -31,7 +32,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QHBoxLayout" name="mainLayout">
       <item>

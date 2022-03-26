@@ -90,14 +90,14 @@ class NewRouterDialog(QDialog):
         self.buttons.rejected.connect(self.reject)
 
 
-    def get_fields(self):
+    def get_fields(self, window):
         # Collect text and choice from fields and radio buttons.
         # Returns a status boolean (all fields OK or not) and data
 
         data = {
-            'SSID': self.ssidInputBox.text(),
-            'MAC': self.macInputBox.text(),
-            'name': self.nameInputBox.text(),
+            'SSID': self.ssidInputBox.text().strip(),
+            'MAC': self.macInputBox.text().strip(),
+            'name': self.nameInputBox.text().strip(),
             'freq': 2 if self.freq2Choice.isChecked() else 5
         }
 
@@ -105,11 +105,11 @@ class NewRouterDialog(QDialog):
 
         # Check inputs for missed fields
         if len(data['SSID']) == 0 or len(data['MAC']) == 0 or len(data['name']) == 0:
-            print('[!] All new router fields must be filled in')
+            window.status.showMessage('All new router fields must be filled in')
             status_ok = False
 
         if len(data['MAC']) != 17:
-            print('[!] Malformed new router MAC address')
+            window.status.showMessage('Malformed new router MAC address')
             status_ok = False
 
         return (status_ok,data)

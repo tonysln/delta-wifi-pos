@@ -12,7 +12,7 @@ Initialize the GUI and other components.
 # Packages
 from PySide6.QtCore import Qt, QFile, QIODevice, QCoreApplication, QPoint, QTimer
 from PySide6.QtGui import QPixmap, QPainter, QPen, QColor, QFont
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QStatusBar
 from PySide6.QtUiTools import QUiLoader
 from scipy.interpolate import interp1d
 import ui.components as uic
@@ -261,8 +261,6 @@ def begin_scan(renderer, adapter=None):
     # Custom adapter name to use in Linux, otherwise
     # adapter name is None and default is used
 
-    print('Starting scanner & locator...')
-
     # Check if trilateration or mean method is selected
     trilatOrMean = renderer.window.trilatMethod.isChecked()
 
@@ -278,7 +276,7 @@ def begin_scan(renderer, adapter=None):
         nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
-        print('[!] No nearby routers detected')
+        window.status.showMessage('No nearby routers detected')
         return
 
     print('Nearby:')
@@ -295,7 +293,7 @@ def begin_scan(renderer, adapter=None):
                 print(router)
                 nearby.remove(router)
         except KeyError:
-            print('[!] Malformed routers list')
+            window.status.showMessage('Malformed routers list')
             return
     
     print()
@@ -319,7 +317,8 @@ def auto_scan(renderer, adapter=None):
     # Automatic scan (auto-update)
 
     activated = renderer.window.autoScanButton.isChecked()
-    print('Auto-scan activated:', activated)
+    msg = 'Auto scan started' if activated else 'Auto scan stopped'
+    window.status.showMessage(msg)
 
     if activated:
         # Do a scan
@@ -436,13 +435,13 @@ def save_new_router(result_ok, renderer, nr_dialog):
     # Save new router details from the popup window and
     # save them to routers and locations data files
     
-    data_ok, data = nr_dialog.get_fields()
+    data_ok, data = nr_dialog.get_fields(window)
 
     # User clicked on 'OK' and all fields are correct
     if result_ok and data_ok:
         # Check if a router with the same MAC already exists
         if data['MAC'] in renderer.routers.keys():
-            print('[!] A router with the desired MAC already exists')
+            window.status.showMessage('A router with the desired MAC already exists')
             add_new_router(renderer, nr_dialog)
             return
 
@@ -495,6 +494,10 @@ if __name__ == "__main__":
     # Restrict window size
     window.setMinimumSize(window.width(), window.height())
 
+    # Create a status bar
+    window.status = QStatusBar()
+    window.setStatusBar(window.status)
+
     # Load all routers and locations
     routers = load_routers(cfg['ROUTERS_FILE_PATH'])
     locations = load_locations(cfg['LOCATIONS_FILE_PATH'])
@@ -518,5 +521,6 @@ if __name__ == "__main__":
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
 
     # Display window and start app
+    window.status.showMessage('Ready')
     window.show()
     sys.exit(app.exec())
