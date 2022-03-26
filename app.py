@@ -179,6 +179,7 @@ class MapRenderer(object):
             rc_x,rc_y = self.remap_coords(reverse=True)
             self.new_router['x'] = int(rc_x(new_pos.x()))
             self.new_router['y'] = int(rc_y(new_pos.y()))
+            self.new_router['floor'] = self.user['floor']
             self.nr.coords.setText(f'x: {self.new_router["x"]}, y: {self.new_router["y"]}')
             self.render()
 
@@ -359,9 +360,14 @@ def load_routers(path):
     return routers_dict
 
 
-def save_router(path, router):
-    # Save router entry TODO
-    pass
+def save_router(path, rr):
+    # Save router (rr) entry
+    
+    router_str = f'\n{rr["x"]},{rr["y"]},{rr["MAC"]}' + \
+                 f',{rr["SSID"]},{rr["floor"]},{rr["freq"]}'
+    
+    with open(path, 'a+') as f:
+        f.write(router_str)
 
 
 def load_locations(path):
@@ -390,9 +396,13 @@ def load_locations(path):
     return locations_dict
 
 
-def save_location(path, location):
-    # Save location entry TODO
-    pass
+def save_location(path, router):
+    # Save location entry
+
+    location_str = f'\n{router["MAC"]},{router["name"]}'
+    
+    with open(path, 'a+') as f:
+        f.write(location_str)
 
 
 def load_UI(path):
@@ -430,14 +440,28 @@ def save_new_router(result_ok, renderer, nr_dialog):
 
     # User clicked on 'OK' and all fields are correct
     if result_ok and data_ok:
+        # Check if a router with the same MAC already exists
+        if data['MAC'] in renderer.routers.keys():
+            print('[!] A router with the desired MAC already exists')
+            add_new_router(renderer, nr_dialog)
+            return
+
+
         data['x'] = renderer.new_router['x']
         data['y'] = renderer.new_router['y']
         data['floor'] = renderer.new_router['floor']
 
+        # Save the new router entry
+        save_router(cfg['ROUTERS_FILE_PATH'], data)
+        save_location(cfg['LOCATIONS_FILE_PATH'], data)
+        renderer.routers = load_routers(cfg['ROUTERS_FILE_PATH'])
+        renderer.locations = load_locations(cfg['LOCATIONS_FILE_PATH'])
+
         # Reset labels and new router dict
         nr_dialog.reset()
         renderer.new_router = {'x': 0,'y': 0,'floor': 1}
-        print(data)
+
+
     # User clicked on 'OK', but fields are not correct
     elif result_ok and not data_ok:
         add_new_router(renderer, nr_dialog)
