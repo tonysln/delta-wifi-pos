@@ -11,29 +11,26 @@ Script for performing positioning calculations.
 # Packages
 import numpy as np
 import math
+import json
 
 
-# Constants
-DIST_THRESHOLD = 900.0
-PX_SCALE = 11.0
-POWER = 1.68
-PATH_LOSS = 2.2
+# Load constants from config
+with open('config.json', 'r') as f:
+    cfg = json.load(f)
 
 
 def RSSI_to_dist(rssi):
+    # Convert RSSI (signal strength) to distance in pixels.
     # https://stackoverflow.com/questions/62399361/swift-converting-rssi-to-distance
     # https://en.wikipedia.org/wiki/True-range_multilateration
     # https://en.wikipedia.org/wiki/Log-distance_path_loss_model
     # https://appelsiini.net/2017/trilateration-with-n-points/
 
-    dist = 10 ** ((POWER - rssi)/(10 * PATH_LOSS))
-
-    # NB Mention in paper -> constants and variables very
-    # important, need calibration and setup to ensure best
-    # result with the type of building and layout.
-    # More routers -> better, less routers -> tweak vars
-    
-    return dist / PX_SCALE
+    # Formula based on ...
+    # Power stands for router power (max?)
+    # Path loss is different for each environment and must be tweaked
+    dist = 10 ** ((cfg['POWER'] - rssi)/(10 * cfg['PATH_LOSS']))
+    return dist / cfg['PX_SCALE']
 
 
 def calc_w_avg_point(locations, weights):
@@ -97,38 +94,43 @@ def locate(routers, nearby_routers, trilatOrMean):
         
         # Distance from RSSI
         dist = RSSI_to_dist(router['RSSI'])
-        router['DIST'] = dist / PX_SCALE # ?! TODO
+        router['DIST'] = dist / cfg['PX_SCALE']
 
-        if dist < DIST_THRESHOLD:
+        if dist < cfg['DIST_THRESHOLD']:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
-            weight = 1 / router['RSSI'] # TODO make heavier
+            # Weight formula for the weighted mean method
+            weight = 1 / router['RSSI']
             near_weights.append(weight)
 
-            # For trilat, temporary
             if dist > max_dist:
                 max_dist = dist
 
     
-    # -============ Trilateration ============-
+    # -================== Trilateration ==================-
     if trilatOrMean:
         # Apply multilateration formulas to the formed circles
-        # https://handwiki.org/wiki/Trilateration
         r1 = nearby_routers[0]['DIST']
         r2 = nearby_routers[1]['DIST']
         r3 = nearby_routers[2]['DIST']
-        Ux,_ = scr_to_cart(near_coords[1][0], 0, 5300, 5553)
-        Vx,Vy = scr_to_cart(near_coords[2][0], near_coords[2][1], 5300, 5553)
+
+        # Transform to cartestian coordinates for formula
+        Ux,_ = scr_to_cart(near_coords[1][0], 0, cfg['IMG_W'], cfg['IMG_H'])
+        Vx,Vy = scr_to_cart(near_coords[2][0], near_coords[2][1], cfg['IMG_W'], cfg['IMG_H'])
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
 
-        x -= near_coords[1][1] # ?! TODO
-        x,y = cart_to_scr(x, y, 5300, 5553)
-        
-        user['precision'] = 20.0
-        user['radius'] = user['precision']
+        # Fix result by offsetting
+        xf = 1
+        yf = 1
+        sf = -1
+        x += near_coords[xf][yf] * sf
+
+        # Adjust back to screen coordinates
+        x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
 
 
-    # -============ Weighted Mean ============-
+
+    # -================== Weighted Mean ==================-
     else:
         # Weighted average
         x,y = calc_w_avg_point(near_coords, near_weights)
@@ -138,16 +140,25 @@ def locate(routers, nearby_routers, trilatOrMean):
             rx,ry = router
             dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
 
-            if dist_to_mean > DIST_THRESHOLD:
+            if dist_to_mean > cfg['DIST_THRESHOLD']:
                 print(dist_to_mean, router)
 
             # Custom dist precision for mean
             if dist_to_mean > max_dist:
                 max_dist = dist_to_mean
 
-        user['precision'] = (max_dist / PX_SCALE) * 0.5
-        user['radius'] = user['precision']
 
+    n = len(near_coords)
+    # Precision is increased if more routers are nearby,
+    # by 0.01 for each 10 additional routers
+    coef = cfg['RAD_NORM'] - (math.ceil(n / 100) if n < 10 else math.floor(n / 10)) / 100
+    user['precision'] = cfg['PX_SCALE'] * coef * cfg['PX_SCALE']
+
+    # Maximum radius is based on the maximum distance to a detected router
+    user['radius'] = (max_dist / cfg['PX_SCALE']) * user['precision'] / cfg['PX_SCALE']
+
+    # Clamp radius to avoid unrealistic values
+    user['radius'] = min(user['radius'], cfg['RAD_THRESHOLD'])
 
     user['x'] = x
     user['y'] = y

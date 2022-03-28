@@ -15,7 +15,7 @@ Returned data is in the form of a list of dict objects.
 
 
 # Packages
-from re import L
+from scipy.interpolate import interp1d
 import subprocess as sp
 import sys
 
@@ -36,8 +36,7 @@ def scan_macos():
         if idx == 0 or row[0] == '':
             continue
 
-        # For now, do not include unknown networks
-        if row[0] not in ['eduroam', 'ut-public']:
+        if not row[2].startswith('-'):
             continue
 
         # Check if any of the desired values are empty
@@ -61,6 +60,8 @@ def scan_macos():
 
 
 def scan_linux(adapter):
+    # Run the iw utility and parse output (despite being not recommended)
+    # to get a list of nearby networks.
     # Custom adapter name given as app argument
 
     res = sp.run(['iw', adapter, 'scan'], capture_output=True)
@@ -84,13 +85,15 @@ def scan_linux(adapter):
             new_network['SSID'] = row[6:]
 
         if adding and row.startswith('signal:'):
-            new_network['RSSI'] = int(row[8:14])
+            new_network['RSSI'] = int(row[8:11])
 
     networks.append(new_network)
     return networks
 
 
 def scan_win():
+    # Run the netsh utility and parse output to get a list
+    # of nearby networks as detected by Wi-Fi adapter
     res = sp.run(['netsh', 'wlan', 'show', 'all'], capture_output=True)
     result = res.stdout.decode(encoding='cp1252').split('\n')
 
@@ -121,8 +124,12 @@ def scan_win():
             new_network['MAC'] = row.split(':', 1)[1].strip()
 
         if adding and row.startswith('signal'):
-            # NB TODO
-            new_network['RSSI'] = row.split(':')[1].strip()
+            # https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_association_attributes
+            # Interpolate signal strength % to dBm
+            conversion = interp1d([0, 100], [-100, -50])
+            percent = int(row.split(':')[1].strip()[:-1])
+            new_network['RSSI'] = conversion(percent)
+
 
     networks.append(new_network)
     return networks

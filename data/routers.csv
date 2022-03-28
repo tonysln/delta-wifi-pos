@@ -1,4 +1,4 @@
-mac,x,y,floor,ssid,frequency
+x,y,mac,ssid,floor,frequency
 
 730,440,7c:21:0d:2e:d4:40,eduroam,0,2
 730,440,7c:21:0d:2e:d4:4f,eduroam,0,5

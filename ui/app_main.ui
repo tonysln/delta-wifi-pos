@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>978</width>
-    <height>769</height>
+    <height>760</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,6 +18,7 @@
   </property>
   <property name="font">
    <font>
+    <family>Arial</family>
     <kerning>false</kerning>
    </font>
   </property>
@@ -31,7 +32,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QHBoxLayout" name="mainLayout">
       <item>
@@ -49,7 +50,7 @@
          </size>
         </property>
         <property name="cursor" stdset="0">
-         <cursorShape>CrossCursor</cursorShape>
+         <cursorShape>ArrowCursor</cursorShape>
         </property>
         <property name="mouseTracking">
          <bool>true</bool>
@@ -81,7 +82,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="sideMenuLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0">
+       <layout class="QVBoxLayout" name="sideMenuLayout" stretch="0,0,0,0,0,0,0,0,0,0,0">
         <property name="spacing">
          <number>-1</number>
         </property>
@@ -108,8 +109,13 @@
           <property name="minimumSize">
            <size>
             <width>230</width>
-            <height>160</height>
+            <height>146</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
           </property>
           <property name="title">
            <string>Location</string>
@@ -125,6 +131,7 @@
            </property>
            <property name="font">
             <font>
+             <family>Arial</family>
              <pointsize>18</pointsize>
             </font>
            </property>
@@ -143,7 +150,8 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <family>Arial</family>
+             <pointsize>15</pointsize>
             </font>
            </property>
            <property name="text">
@@ -154,13 +162,14 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>90</y>
+             <y>80</y>
              <width>191</width>
              <height>16</height>
             </rect>
            </property>
            <property name="font">
             <font>
+             <family>Arial</family>
              <pointsize>13</pointsize>
             </font>
            </property>
@@ -172,10 +181,15 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>110</y>
+             <y>100</y>
              <width>191</width>
              <height>16</height>
             </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Arial</family>
+            </font>
            </property>
            <property name="text">
             <string>Precision: 6.5 m</string>
@@ -185,10 +199,15 @@
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>130</y>
+             <y>120</y>
              <width>191</width>
              <height>16</height>
             </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Arial</family>
+            </font>
            </property>
            <property name="text">
             <string>Radius: 12 m</string>
@@ -207,7 +226,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>8</height>
+            <height>10</height>
            </size>
           </property>
          </spacer>
@@ -226,6 +245,11 @@
             <height>190</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
           <property name="title">
            <string>Routers</string>
           </property>
@@ -240,11 +264,15 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>11</pointsize>
+             <family>Arial</family>
+             <pointsize>10</pointsize>
             </font>
            </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="scaledContents">
+            <bool>false</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -263,78 +291,82 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>8</height>
+            <height>10</height>
            </size>
           </property>
          </spacer>
         </item>
         <item>
-         <widget class="QGroupBox" name="controlsBox">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>230</width>
-            <height>70</height>
-           </size>
-          </property>
-          <property name="title">
-           <string>Map Zoom</string>
-          </property>
-          <widget class="QWidget" name="horizontalLayoutWidget_3">
-           <property name="geometry">
-            <rect>
-             <x>20</x>
-             <y>30</y>
-             <width>191</width>
-             <height>34</height>
-            </rect>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QPushButton" name="scalePlusButton">
-              <property name="text">
-               <string>+</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="scaleLabel">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-               </font>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::Box</enum>
-              </property>
-              <property name="text">
-               <string>3</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="scaleMinusButton">
-              <property name="text">
-               <string>-</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Map Zoom</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="scalePlusButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>30</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="scaleMinusButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>30</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>-</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="mainControlsLayout">
           <property name="topMargin">
-           <number>10</number>
+           <number>0</number>
           </property>
           <property name="bottomMargin">
            <number>0</number>
@@ -347,6 +379,11 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+             </font>
+            </property>
             <property name="text">
              <string>Scan</string>
             </property>
@@ -355,13 +392,18 @@
           <item>
            <widget class="QPushButton" name="autoScanButton">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+             </font>
             </property>
             <property name="text">
              <string>Auto Scan</string>
@@ -384,6 +426,11 @@
             <height>62</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
           <property name="title">
            <string>Method</string>
           </property>
@@ -395,6 +442,11 @@
              <width>100</width>
              <height>20</height>
             </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Arial</family>
+            </font>
            </property>
            <property name="text">
             <string>Trilateration</string>
@@ -411,6 +463,11 @@
              <width>121</width>
              <height>20</height>
             </rect>
+           </property>
+           <property name="font">
+            <font>
+             <family>Arial</family>
+            </font>
            </property>
            <property name="text">
             <string>Weighted Mean</string>
@@ -438,75 +495,9 @@
          </spacer>
         </item>
         <item>
-         <widget class="QGroupBox" name="floorBox">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>230</width>
-            <height>70</height>
-           </size>
-          </property>
-          <property name="title">
-           <string>Floor</string>
-          </property>
-          <widget class="QWidget" name="horizontalLayoutWidget_4">
-           <property name="geometry">
-            <rect>
-             <x>20</x>
-             <y>30</y>
-             <width>191</width>
-             <height>34</height>
-            </rect>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QPushButton" name="floorPlusButton">
-              <property name="text">
-               <string>&lt;-</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="floorChoiceLabel">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-               </font>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::Box</enum>
-              </property>
-              <property name="text">
-               <string>1</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="floorMinusButton">
-              <property name="text">
-               <string>-&gt;</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="addNewRouterButton">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -514,11 +505,16 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
           <property name="text">
            <string>Add New Router</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -533,7 +529,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>8</height>
+            <height>4</height>
            </size>
           </property>
          </spacer>
@@ -545,6 +541,11 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
           </property>
           <property name="text">
            <string>Quit App</string>
