@@ -2,9 +2,25 @@
 An indoor positioning system using lateration and geometric methods for use in the University of Tartu Delta Centre.
 
 
-## Project Structure
-
-....
+### Project Structure
+```shell
+/
+├── data
+│     ├── locations.csv        # Location names for all routers
+│     └── routers.csv          # Main routers database
+├── map
+│     ├── korrus-1-c.png       # Cleaned up and original versions
+│     ├── korrus-1.png         # of maps for every floor in Delta
+│     └── ...
+├── ui                      
+│     ├── app_main.ui          # Main app window UI file for PySide
+│     └── components.py        # Classes for various UI components
+├── app.py                     # Main app script file
+├── locator.py                 # All methods required for positioning
+├── config.json                # Configuration file
+├── requirements.txt           # List of Python packages to install
+└── scanner.py                 # Methods for envoking and parsing network scans
+```
 
 
 ### Installing
@@ -44,7 +60,7 @@ You might need to install the `libopengl0` library to fix this.
 
 ### Configuration
 
-All constant variables used throughout the app are saved in `config.ini` and can be changed to possibly improve the accuracy. 
+All constant variables used throughout the app are saved in `config.json` and can be changed to possibly improve the accuracy. 
 
 Some useful variables to configure:
 
