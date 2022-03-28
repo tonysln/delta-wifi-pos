@@ -1,5 +1,10 @@
-# delta-wifi-pos
-**Delta Wi-Fi Positioning System**
+# Delta Wi-Fi Positioning System
+An indoor positioning system using lateration and geometric methods for use in the University of Tartu Delta Centre.
+
+
+## Project Structure
+
+....
 
 
 ### Installing
@@ -44,6 +49,9 @@ All constant variables used throughout the app are saved in `config.ini` and can
 Some useful variables to configure:
 
 - `DIST_THRESHOLD` - expressed in pixels. All nearby routers above this value are ignored.
+- `RAD_THRESHOLD` - expressed in meters. Precision will be clamped by this value (max).
+- `PX_SCALE` - the amount of pixels to cover one meter of real distance.
 - `RSSI_MIN` - expressed in dBm. All nearby routers below this value are excluded.
 - `PATH_LOSS` exponent. Influences the conversion algorithm between RSSI and distance.
+- `POWER` value. Influences the conversion between RSSI and distance.
 - `AUTO_SEC` - expressed in seconds. Number of seconds between auto-scan activations.

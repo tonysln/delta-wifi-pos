@@ -105,11 +105,11 @@ class NewRouterDialog(QDialog):
 
         # Check inputs for missed fields
         if len(data['SSID']) == 0 or len(data['MAC']) == 0 or len(data['name']) == 0:
-            window.status.showMessage('All new router fields must be filled in')
+            window.status.showMessage('All new router fields must be filled in', 3000)
             status_ok = False
 
         if len(data['MAC']) != 17:
-            window.status.showMessage('Malformed new router MAC address')
+            window.status.showMessage('Malformed new router MAC address', 3000)
             status_ok = False
 
         return (status_ok,data)

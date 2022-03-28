@@ -94,12 +94,11 @@ def locate(routers, nearby_routers, trilatOrMean):
         
         # Distance from RSSI
         dist = RSSI_to_dist(router['RSSI'])
-        router['DIST'] = dist / cfg['PX_SCALE'] # ?! TODO
+        router['DIST'] = dist / cfg['PX_SCALE']
 
         if dist < cfg['DIST_THRESHOLD']:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))
             # Weight formula for the weighted mean method
-            # TODO make heavier
             weight = 1 / router['RSSI']
             near_weights.append(weight)
 
@@ -110,7 +109,6 @@ def locate(routers, nearby_routers, trilatOrMean):
     # -================== Trilateration ==================-
     if trilatOrMean:
         # Apply multilateration formulas to the formed circles
-        # https://handwiki.org/wiki/Trilateration
         r1 = nearby_routers[0]['DIST']
         r2 = nearby_routers[1]['DIST']
         r3 = nearby_routers[2]['DIST']
@@ -122,7 +120,6 @@ def locate(routers, nearby_routers, trilatOrMean):
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
 
         # Fix result by offsetting
-        # TODO adjust vals dynamically
         xf = 1
         yf = 1
         sf = -1

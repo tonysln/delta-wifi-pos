@@ -276,7 +276,7 @@ def begin_scan(renderer, adapter=None):
         nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
-        window.status.showMessage('No nearby routers detected')
+        window.status.showMessage('No nearby routers detected', 3000)
         return
 
     print('Nearby:')
@@ -293,7 +293,7 @@ def begin_scan(renderer, adapter=None):
                 print(router)
                 nearby.remove(router)
         except KeyError:
-            window.status.showMessage('Malformed routers list')
+            window.status.showMessage('Malformed routers list', 3000)
             return
     
     print()
@@ -318,7 +318,7 @@ def auto_scan(renderer, adapter=None):
 
     activated = renderer.window.autoScanButton.isChecked()
     msg = 'Auto scan started' if activated else 'Auto scan stopped'
-    window.status.showMessage(msg)
+    window.status.showMessage(msg, 3000)
 
     if activated:
         # Do a scan
@@ -441,7 +441,7 @@ def save_new_router(result_ok, renderer, nr_dialog):
     if result_ok and data_ok:
         # Check if a router with the same MAC already exists
         if data['MAC'] in renderer.routers.keys():
-            window.status.showMessage('A router with the desired MAC already exists')
+            window.status.showMessage('A router with the desired MAC already exists', 3000)
             add_new_router(renderer, nr_dialog)
             return
 
@@ -521,6 +521,6 @@ if __name__ == "__main__":
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
 
     # Display window and start app
-    window.status.showMessage('Ready')
+    window.status.showMessage('Ready', 3000)
     window.show()
     sys.exit(app.exec())
