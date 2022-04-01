@@ -253,29 +253,34 @@
           <property name="title">
            <string>Routers</string>
           </property>
-          <widget class="QLabel" name="routersListLabel">
+          <widget class="QTextBrowser" name="routersListLabel">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>30</y>
-             <width>211</width>
-             <height>151</height>
+             <x>0</x>
+             <y>20</y>
+             <width>231</width>
+             <height>171</height>
             </rect>
            </property>
            <property name="font">
             <font>
-             <family>Arial</family>
-             <pointsize>10</pointsize>
+             <pointsize>12</pointsize>
             </font>
            </property>
-           <property name="text">
-            <string/>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
            </property>
-           <property name="scaledContents">
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="lineWrapMode">
+            <enum>QTextEdit::NoWrap</enum>
+           </property>
+           <property name="openLinks">
             <bool>false</bool>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
            </property>
           </widget>
          </widget>

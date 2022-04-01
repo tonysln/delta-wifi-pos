@@ -59,9 +59,9 @@ class MapRenderer(object):
     def scale_map(self, up):
         # Change map scaling
         
-        if up and self.map_scale <= 5:
+        if not up and self.map_scale <= 4:
             self.map_scale += 1
-        elif not up and self.map_scale > 1:
+        elif up and self.map_scale > 1:
             self.map_scale -= 1
 
         self.render()
@@ -83,8 +83,8 @@ class MapRenderer(object):
         # Returns a tuple of interpolation functions for use
         # with x and y coordinates.
          
-        scaled_w_range = [0, self.window.mapView.width() * self.map_scale]
-        scaled_h_range = [0, self.window.mapView.height() * self.map_scale]
+        scaled_w_range = [0, self.img_w / self.map_scale]
+        scaled_h_range = [0, self.img_h / self.map_scale]
         img_w_range = [0, self.img_w]
         img_h_range = [0, self.img_h]
         
@@ -140,8 +140,8 @@ class MapRenderer(object):
 
 
         # Scale map based on current zoom
-        pix = pix.scaled(self.window.mapView.width() * self.map_scale,
-                         self.window.mapView.height() * self.map_scale, 
+        pix = pix.scaled(self.img_w / self.map_scale,
+                         self.img_h / self.map_scale, 
                          Qt.AspectRatioMode.KeepAspectRatio,
                          Qt.TransformationMode.SmoothTransformation)
         
@@ -177,8 +177,8 @@ class MapRenderer(object):
 
         if self.add_new_router_mode:
             rc_x,rc_y = self.remap_coords(reverse=True)
-            self.new_router['x'] = int(rc_x(new_pos.x()))
-            self.new_router['y'] = int(rc_y(new_pos.y()))
+            self.new_router['x'] = rc_x(new_pos.x()).round()
+            self.new_router['y'] = rc_y(new_pos.y()).round()
             self.new_router['floor'] = self.user['floor']
             self.nr.coords.setText(f'x: {self.new_router["x"]}, y: {self.new_router["y"]}')
             self.render()
@@ -227,9 +227,10 @@ class MapRenderer(object):
         rl = ''
         for router in self.nearby_routers:
             mac = router['MAC']
-            #loc = self.locations[mac[:-1]]
+            loc = self.locations[mac[:-1]]
             dist = router['DIST']
-            rl +=  f'{mac}   ({round(dist, 1)} m)\n'
+            # Formatted line
+            rl +=  f'{loc}   ({round(dist, 1)} m)   {mac[-5:]}\n'
 
         self.window.routersListLabel.setText(rl)
 
@@ -336,7 +337,7 @@ def load_routers(path):
         rows = f.read().splitlines()
 
     # Skip first row
-    if rows[0].startswith('mac'):
+    if rows[0].startswith('x'):
         rows = rows[1:]
 
     # Save router data into a dictionary

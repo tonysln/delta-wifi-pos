@@ -26,9 +26,6 @@ def RSSI_to_dist(rssi):
     # https://en.wikipedia.org/wiki/Log-distance_path_loss_model
     # https://appelsiini.net/2017/trilateration-with-n-points/
 
-    # Formula based on ...
-    # Power stands for router power (max?)
-    # Path loss is different for each environment and must be tweaked
     dist = 10 ** ((cfg['POWER'] - rssi)/(10 * cfg['PATH_LOSS']))
     return dist / cfg['PX_SCALE']
 
@@ -114,6 +111,7 @@ def locate(routers, nearby_routers, trilatOrMean):
         r3 = nearby_routers[2]['DIST']
 
         # Transform to cartestian coordinates for formula
+        # Using Fang's method where A = (0,0,0), B = (x2, 0, 0), C = (x3, y3, 0)
         Ux,_ = scr_to_cart(near_coords[1][0], 0, cfg['IMG_W'], cfg['IMG_H'])
         Vx,Vy = scr_to_cart(near_coords[2][0], near_coords[2][1], cfg['IMG_W'], cfg['IMG_H'])
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
@@ -124,6 +122,7 @@ def locate(routers, nearby_routers, trilatOrMean):
         yf = 1
         sf = -1
         x += near_coords[xf][yf] * sf
+        y += near_coords[xf][0] * sf
 
         # Adjust back to screen coordinates
         x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
