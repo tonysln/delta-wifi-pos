@@ -26,8 +26,8 @@ def RSSI_to_dist(rssi):
     # https://en.wikipedia.org/wiki/Log-distance_path_loss_model
     # https://appelsiini.net/2017/trilateration-with-n-points/
 
-    dist = 10 ** ((cfg['POWER'] - rssi)/(10 * cfg['PATH_LOSS']))
-    return dist / cfg['PX_SCALE']
+    dist_m = 10 ** ((cfg['POWER'] - rssi)/(10 * cfg['PATH_LOSS']))
+    return dist_m / cfg['PX_SCALE']
 
 
 def calc_w_avg_point(locations, weights):
@@ -91,7 +91,7 @@ def locate(routers, nearby_routers, trilatOrMean):
         
         # Distance from RSSI
         dist = RSSI_to_dist(router['RSSI'])
-        router['DIST'] = dist / cfg['PX_SCALE']
+        router['DIST'] = dist * cfg['PX_SCALE']
 
         if dist < cfg['DIST_THRESHOLD']:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))

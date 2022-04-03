@@ -104,8 +104,10 @@ class MapRenderer(object):
         # Render the map
         print('Rendering...')
 
+        # Use a simple/clean or full map
+        map_mode = '-c' if self.window.simpleMapView.isChecked() else ''
         # Load map for the current floor
-        path = f'map/korrus-{self.user["floor"]}-c.png'
+        path = f'map/korrus-{self.user["floor"]}{map_mode}.png'
         # Init a pixmap for the map
         pix = QPixmap(path)
         painter = QPainter(pix)
@@ -520,6 +522,7 @@ if __name__ == "__main__":
     window.addNewRouterButton.clicked.connect(lambda: add_new_router(mr, nr_dialog))
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
+    window.simpleMapView.clicked.connect(lambda: mr.render())
 
     # Display window and start app
     window.status.showMessage('Ready', 3000)
