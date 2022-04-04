@@ -91,7 +91,7 @@ def locate(routers, nearby_routers, trilatOrMean):
         
         # Distance from RSSI
         dist = RSSI_to_dist(router['RSSI'])
-        router['DIST'] = dist * cfg['PX_SCALE']
+        router['DIST'] = dist / cfg['PX_SCALE']
 
         if dist < cfg['DIST_THRESHOLD']:
             near_coords.append((routers[mac]['x'], routers[mac]['y']))

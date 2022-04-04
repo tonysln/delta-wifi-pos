@@ -157,14 +157,9 @@ class MapRenderer(object):
         # Remap center coordinates based on the current map scale
         rc_x,rc_y = self.remap_coords()
 
-        # Center map view on the user's location if not editing routers
-        if not self.add_new_router_mode:
-            center_x = rc_x(self.user['x'])
-            center_y = rc_y(self.user['y'])
-        else:
-            # Otherwise, center on the new router
-            center_x = rc_x(self.new_router['x'])
-            center_y = rc_y(self.new_router['y'])
+        # Center map view on the user's location
+        center_x = rc_x(self.user['x'])
+        center_y = rc_y(self.user['y'])
         
         self.window.mapView.centerOn(center_x, center_y)
         self.window.mapView.show()
@@ -341,6 +336,8 @@ def load_routers(path):
     # Skip first row
     if rows[0].startswith('x'):
         rows = rows[1:]
+
+    # TODO check overlapping names? idk
 
     # Save router data into a dictionary
     routers_dict = {}

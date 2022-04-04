@@ -88,6 +88,7 @@ def scan_linux(adapter):
             new_network['RSSI'] = int(row[8:11])
 
     networks.append(new_network)
+    networks.sort(key=lambda x:x['RSSI'], reverse=True)
     return networks
 
 
@@ -132,6 +133,7 @@ def scan_win():
 
 
     networks.append(new_network)
+    networks.sort(key=lambda x:x['RSSI'], reverse=True)
     return networks
 
 
