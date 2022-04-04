@@ -7,7 +7,7 @@
     "DIST_THRESHOLD": 900,
     "RAD_THRESHOLD": 50,
     "RAD_NORM": 0.045,
-    "PX_SCALE": 40,
+    "PX_SCALE": 11,
     "POWER": 1.68,
     "PATH_LOSS": 2.25,
     "RSSI_MIN": -77,

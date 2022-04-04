@@ -179,8 +179,8 @@ class MapRenderer(object):
 
         if self.add_new_router_mode:
             rc_x,rc_y = self.remap_coords(reverse=True)
-            self.new_router['x'] = rc_x(new_pos.x()).round()
-            self.new_router['y'] = rc_y(new_pos.y()).round()
+            self.new_router['x'] = int(rc_x(new_pos.x()).round())
+            self.new_router['y'] = int(rc_y(new_pos.y()).round())
             self.new_router['floor'] = self.user['floor']
             self.nr.coords.setText(f'x: {self.new_router["x"]}, y: {self.new_router["y"]}')
             self.render()
