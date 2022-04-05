@@ -24,10 +24,9 @@ import sys
 
 
 class MapRenderer(object):
-    def __init__(self, window, routers, locations):
+    def __init__(self, window, routers):
         self.window = window
-        self.routers = routers # routers dictionary, mac[:]
-        self.locations = locations # locations dictionary, mac[:-1]
+        self.routers = routers # routers dictionary
 
         # Map details
         self.map_scale = 3
@@ -123,7 +122,7 @@ class MapRenderer(object):
                 self.draw_router(painter, router)
 
                 # Draw router location name on map
-                painter.drawText(router['x'] - 40, router['y'] - 28, self.locations[mac[:-1]])
+                painter.drawText(router['x'] - 40, router['y'] - 28, router['name'])
 
         self.draw_user(painter)
 
@@ -158,10 +157,11 @@ class MapRenderer(object):
         rc_x,rc_y = self.remap_coords()
 
         # Center map view on the user's location
-        center_x = rc_x(self.user['x'])
-        center_y = rc_y(self.user['y'])
-        
-        self.window.mapView.centerOn(center_x, center_y)
+        if not self.add_new_router_mode:
+            center_x = rc_x(self.user['x'])
+            center_y = rc_y(self.user['y'])
+            self.window.mapView.centerOn(center_x, center_y)
+            
         self.window.mapView.show()
 
         self.update_labels()
@@ -224,7 +224,7 @@ class MapRenderer(object):
         rl = ''
         for router in self.nearby_routers:
             mac = router['MAC']
-            loc = self.locations[mac[:-1]]
+            loc = self.routers[router['MAC']]['name']
             dist = router['DIST']
             # Formatted line
             rl +=  f'{loc}   ({round(dist, 1)} m)   {mac[-5:]}\n'
@@ -301,7 +301,7 @@ def begin_scan(renderer, adapter=None):
     user = locator.locate(renderer.routers, nearby, trilatOrMean)
 
     # Set user location name based on nearest router
-    user['location'] = renderer.locations[nearby[0]['MAC'][:-1]]
+    user['location'] = renderer.routers[nearby[0]['MAC']]['name']
 
     # Pass data to renderer and draw
     renderer.nearby_routers = nearby
@@ -337,8 +337,6 @@ def load_routers(path):
     if rows[0].startswith('x'):
         rows = rows[1:]
 
-    # TODO check overlapping names? idk
-
     # Save router data into a dictionary
     routers_dict = {}
     for row in rows:
@@ -353,7 +351,8 @@ def load_routers(path):
             'y': int(row[1]),
             'SSID': row[3],
             'floor': int(row[4]),
-            'freq': int(row[5])
+            'freq': int(row[5]),
+            'name': row[6].strip()
         }
 
     return routers_dict
@@ -363,45 +362,10 @@ def save_router(path, rr):
     # Save router (rr) entry
     
     router_str = f'\n{rr["x"]},{rr["y"]},{rr["MAC"]}' + \
-                 f',{rr["SSID"]},{rr["floor"]},{rr["freq"]}'
+                 f',{rr["SSID"]},{rr["floor"]},{rr["freq"]},{rr["name"]}'
     
     with open(path, 'a+') as f:
         f.write(router_str)
-
-
-def load_locations(path):
-    # Load data for all locations from storage
-
-    # Open and read file
-    with open(path, 'r') as f:
-        rows = f.read().splitlines()
-
-    # Skip first row
-    if rows[0].startswith('mac'):
-        rows = rows[1:]
-    
-    # Save locations into a dictionary with
-    locations_dict = {}
-    for row in rows:
-        if len(row) == 0 or not row:
-            continue
-
-        row = row.split(',')
-
-        mac = row[0][:-1]
-        loc = row[1]
-        locations_dict[mac] = loc
-
-    return locations_dict
-
-
-def save_location(path, router):
-    # Save location entry
-
-    location_str = f'\n{router["MAC"]},{router["name"]}'
-    
-    with open(path, 'a+') as f:
-        f.write(location_str)
 
 
 def load_UI(path):
@@ -452,9 +416,7 @@ def save_new_router(result_ok, renderer, nr_dialog):
 
         # Save the new router entry
         save_router(cfg['ROUTERS_FILE_PATH'], data)
-        save_location(cfg['LOCATIONS_FILE_PATH'], data)
         renderer.routers = load_routers(cfg['ROUTERS_FILE_PATH'])
-        renderer.locations = load_locations(cfg['LOCATIONS_FILE_PATH'])
 
         # Reset labels and new router dict
         nr_dialog.reset()
@@ -500,10 +462,9 @@ if __name__ == "__main__":
 
     # Load all routers and locations
     routers = load_routers(cfg['ROUTERS_FILE_PATH'])
-    locations = load_locations(cfg['LOCATIONS_FILE_PATH'])
 
     # Init the main renderer class
-    mr = MapRenderer(window, routers, locations)
+    mr = MapRenderer(window, routers)
     # Init new router dialog window
     nr_dialog = uic.NewRouterDialog()
     nr_dialog.finished.connect(lambda res: save_new_router(res, mr, nr_dialog))

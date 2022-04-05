@@ -6,7 +6,6 @@ An indoor positioning system using lateration and geometric methods for use in t
 ```shell
 /
 ├── data
-│     ├── locations.csv        # Location names for all routers
 │     └── routers.csv          # Main routers database
 ├── map
 │     ├── korrus-1-c.png       # Cleaned up and original versions

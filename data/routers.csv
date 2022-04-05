@@ -1,420 +1,420 @@
 x,y,mac,ssid,floor,frequency
 
-730,440,7c:21:0d:2e:d4:40,eduroam,0,2
-730,440,7c:21:0d:2e:d4:4f,eduroam,0,5
-730,440,7c:21:0d:2e:d4:41,ut-public,0,2
-730,440,7c:21:0d:2e:d4:4e,ut-public,0,5
-
-
-2020,160,7c:21:0d:2f:56:80,eduroam,1,2
-2020,160,7c:21:0d:2f:56:8f,eduroam,1,5
-2020,160,7c:21:0d:2f:56:81,ut-public,1,2
-2020,160,7c:21:0d:2f:56:8e,ut-public,1,5
-
-2450,160,7c:21:0d:2f:1a:e0,eduroam,1,2
-2450,160,7c:21:0d:2f:1a:ef,eduroam,1,5
-2450,160,7c:21:0d:2f:1a:e1,ut-public,1,2
-2450,160,7c:21:0d:2f:1a:ee,ut-public,1,5
-
-2860,160,7c:21:0d:2f:11:e0,eduroam,1,2
-2860,160,7c:21:0d:2f:11:ef,eduroam,1,5
-2860,160,7c:21:0d:2f:11:e1,ut-public,1,2
-2860,160,7c:21:0d:2f:11:ee,ut-public,1,5
-
-3920,160,7c:21:0d:2f:39:00,eduroam,1,2
-3920,160,7c:21:0d:2f:39:0f,eduroam,1,5
-3920,160,7c:21:0d:2f:39:01,ut-public,1,2
-3920,160,7c:21:0d:2f:39:0e,ut-public,1,5
-
-3710,160,7c:21:0d:2e:5e:80,eduroam,1,2
-3710,160,7c:21:0d:2e:5e:8f,eduroam,1,5
-3710,160,7c:21:0d:2e:5e:81,ut-public,1,2
-3710,160,7c:21:0d:2e:5e:8e,ut-public,1,5
-
-4450,160,1c:d1:e0:42:4c:e0,eduroam,1,2
-4450,160,1c:d1:e0:42:4c:ef,eduroam,1,5
-4450,160,1c:d1:e0:42:4c:e1,ut-public,1,2
-4450,160,1c:d1:e0:42:4c:ee,ut-public,1,5
-
-4740,600,1c:d1:e0:3c:d5:e0,eduroam,1,2
-4740,600,1c:d1:e0:3c:d5:ef,eduroam,1,5
-4740,600,1c:d1:e0:3c:d5:e1,ut-public,1,2
-4740,600,1c:d1:e0:3c:d5:ee,ut-public,1,5
-
-3940,740,7c:21:0d:2f:49:e0,eduroam,1,2
-3940,740,7c:21:0d:2f:49:ef,eduroam,1,5
-3940,740,7c:21:0d:2f:49:e1,ut-public,1,2
-3940,740,7c:21:0d:2f:49:ee,ut-public,1,5
-
-3130,1120,7c:21:0d:2f:6e:20,eduroam,1,2
-3130,1120,7c:21:0d:2f:6e:2f,eduroam,1,5
-3130,1120,7c:21:0d:2f:6e:21,ut-public,1,2
-3130,1120,7c:21:0d:2f:6e:2e,ut-public,1,5
-
-2640,1140,7c:21:0d:2f:52:80,eduroam,1,2
-2640,1140,7c:21:0d:2f:52:8f,eduroam,1,5
-2640,1140,7c:21:0d:2f:52:81,ut-public,1,2
-2640,1140,7c:21:0d:2f:52:8e,ut-public,1,5
-
-2160,1000,7c:21:0d:2f:4c:a0,eduroam,1,2
-2160,1000,7c:21:0d:2f:4c:af,eduroam,1,5
-2160,1000,7c:21:0d:2f:4c:a1,ut-public,1,2
-2160,1000,7c:21:0d:2f:4c:ae,ut-public,1,5
-
-1180,820,7c:21:0d:2f:46:e0,eduroam,1,2
-1180,820,7c:21:0d:2f:46:ef,eduroam,1,5
-1180,820,7c:21:0d:2f:46:e1,ut-public,1,2
-1180,820,7c:21:0d:2f:46:ee,ut-public,1,5
-
-1020,1630,1c:d1:e0:3d:0b:a0,eduroam,1,2
-1020,1630,1c:d1:e0:3d:0b:af,eduroam,1,5
-1020,1630,1c:d1:e0:3d:0b:a1,ut-public,1,2
-1020,1630,1c:d1:e0:3d:0b:ae,ut-public,1,5
-
-870,2200,1c:d1:e0:43:3a:20,eduroam,1,2
-870,2200,1c:d1:e0:43:3a:2f,eduroam,1,5
-870,2200,1c:d1:e0:43:3a:21,ut-public,1,2
-870,2200,1c:d1:e0:43:3a:2e,ut-public,1,5
-
-620,3100,1c:d1:e0:3d:82:20,eduroam,1,2
-620,3100,1c:d1:e0:3d:82:2f,eduroam,1,5
-620,3100,1c:d1:e0:3d:82:21,ut-public,1,2
-620,3100,1c:d1:e0:3d:82:2e,ut-public,1,5
-
-460,2500,1c:d1:e0:3d:38:a0,eduroam,1,2
-460,2500,1c:d1:e0:3d:38:af,eduroam,1,5
-460,2500,1c:d1:e0:3d:38:a1,ut-public,1,2
-460,2500,1c:d1:e0:3d:38:ae,ut-public,1,5
-
-730,1200,7c:21:0d:2e:d5:20,eduroam,1,2
-730,1200,7c:21:0d:2e:d5:2f,eduroam,1,5
-730,1200,7c:21:0d:2e:d5:21,ut-public,1,2
-730,1200,7c:21:0d:2e:d5:2e,ut-public,1,5
-
-30,550,7c:21:0d:2f:53:80,eduroam,1,2
-30,550,7c:21:0d:2f:53:8f,eduroam,1,5
-30,550,7c:21:0d:2f:53:81,ut-public,1,2
-30,550,7c:21:0d:2f:53:8e,ut-public,1,5
-
-
-1750,400,7c:21:0d:2f:4f:00,eduroam,2,2
-1750,400,7c:21:0d:2f:4f:0f,eduroam,2,5
-1750,400,7c:21:0d:2f:4f:01,ut-public,2,2
-1750,400,7c:21:0d:2f:4f:0e,ut-public,2,5
-
-2660,500,7c:21:0d:2f:17:e0,eduroam,2,2
-2660,500,7c:21:0d:2f:17:ef,eduroam,2,5
-2660,500,7c:21:0d:2f:17:e1,ut-public,2,2
-2660,500,7c:21:0d:2f:17:ee,ut-public,2,5
-
-3450,350,1c:d1:e0:45:06:c0,eduroam,2,2
-3450,350,1c:d1:e0:45:06:cf,eduroam,2,5
-3450,350,1c:d1:e0:45:06:c1,ut-public,2,2
-3450,350,1c:d1:e0:45:06:ce,ut-public,2,5
-
-4430,530,7c:21:0d:2e:4d:a0,eduroam,2,2
-4430,530,7c:21:0d:2e:4d:af,eduroam,2,5
-4430,530,7c:21:0d:2e:4d:a1,ut-public,2,2
-4430,530,7c:21:0d:2e:4d:ae,ut-public,2,5
-
-4120,900,1c:d1:e0:3d:3c:20,eduroam,2,2
-4120,900,1c:d1:e0:3d:3c:2f,eduroam,2,5
-4120,900,1c:d1:e0:3d:3c:21,ut-public,2,2
-4120,900,1c:d1:e0:3d:3c:2e,ut-public,2,5
-
-3380,860,7c:21:0d:2f:1e:a0,eduroam,2,2
-3380,860,7c:21:0d:2f:1e:af,eduroam,2,5
-3380,860,7c:21:0d:2f:1e:a1,ut-public,2,2
-3380,860,7c:21:0d:2f:1e:ae,ut-public,2,5
-
-2920,940,7c:21:0d:2f:33:80,eduroam,2,2
-2920,940,7c:21:0d:2f:33:8f,eduroam,2,5
-2920,940,7c:21:0d:2f:33:81,ut-public,2,2
-2920,940,7c:21:0d:2f:33:8e,ut-public,2,5
-
-2780,1000,5c:71:0d:4c:26:80,eduroam,2,2
-2780,1000,5c:71:0d:4c:26:8f,eduroam,2,5
-2780,1000,5c:71:0d:4c:26:81,ut-public,2,2
-2780,1000,5c:71:0d:4c:26:8e,ut-public,2,5
-
-1900,860,1c:d1:e0:3d:4a:80,eduroam,2,2
-1900,860,1c:d1:e0:3d:4a:8f,eduroam,2,5
-1900,860,1c:d1:e0:3d:4a:81,ut-public,2,2
-1900,860,1c:d1:e0:3d:4a:8e,ut-public,2,5
-
-1140,900,7c:21:0d:2f:75:20,eduroam,2,2
-1140,900,7c:21:0d:2f:75:2f,eduroam,2,5
-1140,900,7c:21:0d:2f:75:21,ut-public,2,2
-1140,900,7c:21:0d:2f:75:2e,ut-public,2,5
-
-40,1690,7c:21:0d:2f:73:a0,eduroam,2,2
-40,1690,7c:21:0d:2f:73:af,eduroam,2,5
-40,1690,7c:21:0d:2f:73:a1,ut-public,2,2
-40,1690,7c:21:0d:2f:73:ae,ut-public,2,5
-
-460,1110,7c:21:0d:2e:e5:20,eduroam,2,2
-460,1110,7c:21:0d:2e:e5:2f,eduroam,2,5
-460,1110,7c:21:0d:2e:e5:21,ut-public,2,2
-460,1110,7c:21:0d:2e:e5:2e,ut-public,2,5
-
-400,340,7c:21:0d:2e:da:40,eduroam,2,2
-400,340,7c:21:0d:2e:da:4f,eduroam,2,5
-400,340,7c:21:0d:2e:da:41,ut-public,2,2
-400,340,7c:21:0d:2e:da:4e,ut-public,2,5
-
-980,2040,7c:21:0d:2f:54:60,eduroam,2,2
-980,2040,7c:21:0d:2f:54:6f,eduroam,2,5
-980,2040,7c:21:0d:2f:54:61,ut-public,2,2
-980,2040,7c:21:0d:2f:54:6e,ut-public,2,5
-
-940,3080,7c:21:0d:2f:10:40,eduroam,2,2
-940,3080,7c:21:0d:2f:10:4f,eduroam,2,5
-940,3080,7c:21:0d:2f:10:41,ut-public,2,2
-940,3080,7c:21:0d:2f:10:4e,ut-public,2,5
-
-280,2760,1c:d1:e0:44:97:e0,eduroam,2,2
-280,2760,1c:d1:e0:44:97:ef,eduroam,2,5
-280,2760,1c:d1:e0:44:97:e1,ut-public,2,2
-280,2760,1c:d1:e0:44:97:ee,ut-public,2,5
-
-270,3740,1c:d1:e0:3f:16:40,eduroam,2,2
-270,3740,1c:d1:e0:3f:16:4f,eduroam,2,5
-270,3740,1c:d1:e0:3f:16:41,ut-public,2,2
-270,3740,1c:d1:e0:3f:16:4e,ut-public,2,5
-
-380,4240,1c:d1:e0:44:97:c0,eduroam,2,2
-380,4240,1c:d1:e0:44:97:cf,eduroam,2,5
-380,4240,1c:d1:e0:44:97:c1,ut-public,2,2
-380,4240,1c:d1:e0:44:97:ce,ut-public,2,5
-
-130,4810,1c:d1:e0:3c:fb:a0,eduroam,2,2
-130,4810,1c:d1:e0:3c:fb:af,eduroam,2,5
-130,4810,1c:d1:e0:3c:fb:a1,ut-public,2,2
-130,4810,1c:d1:e0:3c:fb:ae,ut-public,2,5
-
-
-1480,320,1c:d1:e0:42:7d:a0,eduroam,3,2
-1480,320,1c:d1:e0:42:7d:af,eduroam,3,5
-1480,320,1c:d1:e0:42:7d:a1,ut-public,3,2
-1480,320,1c:d1:e0:42:7d:ae,ut-public,3,5
-
-3470,1070,1c:d1:e0:3f:98:c0,eduroam,3,2
-3470,1070,1c:d1:e0:3f:98:cf,eduroam,3,5
-3470,1070,1c:d1:e0:3f:98:c1,ut-public,3,2
-3470,1070,1c:d1:e0:3f:98:ce,ut-public,3,5
-
-1520,1060,1c:d1:e0:41:39:60,eduroam,3,2
-1520,1060,1c:d1:e0:41:39:6f,eduroam,3,5
-1520,1060,1c:d1:e0:41:39:61,ut-public,3,2
-1520,1060,1c:d1:e0:41:39:6e,ut-public,3,5
-
-2100,50,1c:d1:e0:44:83:60,eduroam,3,2
-2100,50,1c:d1:e0:44:83:6f,eduroam,3,5
-2100,50,1c:d1:e0:44:83:61,ut-public,3,2
-2100,50,1c:d1:e0:44:83:6e,ut-public,3,5
-
-2400,600,1c:d1:e0:43:80:40,eduroam,3,2
-2400,600,1c:d1:e0:43:80:4f,eduroam,3,5
-2400,600,1c:d1:e0:43:80:41,ut-public,3,2
-2400,600,1c:d1:e0:43:80:4e,ut-public,3,5
-
-2850,350,1c:d1:e0:3d:28:a0,eduroam,3,2
-2850,350,1c:d1:e0:3d:28:af,eduroam,3,5
-2850,350,1c:d1:e0:3d:28:a1,ut-public,3,2
-2850,350,1c:d1:e0:3d:28:ae,ut-public,3,5
-
-3300,600,1c:d1:e0:3d:68:60,eduroam,3,2
-3300,600,1c:d1:e0:3d:68:6f,eduroam,3,5
-3300,600,1c:d1:e0:3d:68:61,ut-public,3,2
-3300,600,1c:d1:e0:3d:68:6e,ut-public,3,5
-
-3850,250,1c:d1:e0:40:41:20,eduroam,3,2
-3850,250,1c:d1:e0:40:41:2f,eduroam,3,5
-3850,250,1c:d1:e0:40:41:21,ut-public,3,2
-3850,250,1c:d1:e0:40:41:2e,ut-public,3,5
-
-4700,250,1c:d1:e0:44:10:40,eduroam,3,2
-4700,250,1c:d1:e0:44:10:4f,eduroam,3,5
-4700,250,1c:d1:e0:44:10:41,ut-public,3,2
-4700,250,1c:d1:e0:44:10:4e,ut-public,3,5
-
-4450,500,1c:d1:e0:3d:02:60,eduroam,3,2
-4450,500,1c:d1:e0:3d:02:6f,eduroam,3,5
-4450,500,1c:d1:e0:3d:02:61,ut-public,3,2
-4450,500,1c:d1:e0:3d:02:6e,ut-public,3,5
-
-4150,1000,1c:d1:e0:3d:34:c0,eduroam,3,2
-4150,1000,1c:d1:e0:3d:34:cf,eduroam,3,5
-4150,1000,1c:d1:e0:3d:34:c1,ut-public,3,2
-4150,1000,1c:d1:e0:3d:34:ce,ut-public,3,5
-
-2950,800,1c:d1:e0:43:08:c0,eduroam,3,2
-2950,800,1c:d1:e0:43:08:cf,eduroam,3,5
-2950,800,1c:d1:e0:43:08:c1,ut-public,3,2
-2950,800,1c:d1:e0:43:08:ce,ut-public,3,5
-
-2300,1350,1c:d1:e0:41:e2:00,eduroam,3,2
-2300,1350,1c:d1:e0:41:e2:0f,eduroam,3,5
-2300,1350,1c:d1:e0:41:e2:01,ut-public,3,2
-2300,1350,1c:d1:e0:41:e2:0e,ut-public,3,5
-
-1800,800,1c:d1:e0:42:fe:c0,eduroam,3,2
-1800,800,1c:d1:e0:42:fe:cf,eduroam,3,5
-1800,800,1c:d1:e0:42:fe:c1,ut-public,3,2
-1800,800,1c:d1:e0:42:fe:ce,ut-public,3,5
-
-1150,1600,1c:d1:e0:3d:7b:a0,eduroam,3,2
-1150,1600,1c:d1:e0:3d:7b:af,eduroam,3,5
-1150,1600,1c:d1:e0:3d:7b:a1,ut-public,3,2
-1150,1600,1c:d1:e0:3d:7b:ae,ut-public,3,5
-
-1000,2250,1c:d1:e0:3d:51:a0,eduroam,3,2
-1000,2250,1c:d1:e0:3d:51:af,eduroam,3,5
-1000,2250,1c:d1:e0:3d:51:a1,ut-public,3,2
-1000,2250,1c:d1:e0:3d:51:ae,ut-public,3,5
-
-750,3100,1c:d1:e0:45:1b:40,eduroam,3,2
-750,3100,1c:d1:e0:45:1b:4f,eduroam,3,5
-750,3100,1c:d1:e0:45:1b:41,ut-public,3,2
-750,3100,1c:d1:e0:45:1b:4e,ut-public,3,5
-
-350,4150,1c:d1:e0:3c:99:80,eduroam,3,2
-350,4150,1c:d1:e0:3c:99:8f,eduroam,3,5
-350,4150,1c:d1:e0:3c:99:81,ut-public,3,2
-350,4150,1c:d1:e0:3c:99:8e,ut-public,3,5
-
-150,4950,1c:d1:e0:43:36:00,eduroam,3,2
-150,4950,1c:d1:e0:43:36:0f,eduroam,3,5
-150,4950,1c:d1:e0:43:36:01,ut-public,3,2
-150,4950,1c:d1:e0:43:36:0e,ut-public,3,5
-
-200,4200,68:9e:0b:5c:e8:20,eduroam,3,2
-200,4200,68:9e:0b:5c:e8:2f,eduroam,3,5
-200,4200,68:9e:0b:5c:e8:21,ut-public,3,2
-200,4200,68:9e:0b:5c:e8:2e,ut-public,3,5
-
-300,2700,1c:d1:e0:3c:16:40,eduroam,3,2
-300,2700,1c:d1:e0:3c:16:4f,eduroam,3,5
-300,2700,1c:d1:e0:3c:16:41,ut-public,3,2
-300,2700,1c:d1:e0:3c:16:4e,ut-public,3,5
-
-350,2100,1c:d1:e0:42:b9:60,eduroam,3,2
-350,2100,1c:d1:e0:42:b9:6f,eduroam,3,5
-350,2100,1c:d1:e0:42:b9:61,ut-public,3,2
-350,2100,1c:d1:e0:42:b9:6e,ut-public,3,5
-
-25,1500,1c:d1:e0:42:a8:60,eduroam,3,2
-25,1500,1c:d1:e0:42:a8:6f,eduroam,3,5
-25,1500,1c:d1:e0:42:a8:61,ut-public,3,2
-25,1500,1c:d1:e0:42:a8:6e,ut-public,3,5
-
-625,1150,b8:11:4b:bf:37:00,eduroam,3,2
-625,1150,b8:11:4b:bf:37:0f,eduroam,3,5
-625,1150,b8:11:4b:bf:37:01,ut-public,3,2
-625,1150,b8:11:4b:bf:37:0e,ut-public,3,5
-
-250,300,1c:d1:e0:44:af:c0,eduroam,3,2
-250,300,1c:d1:e0:44:af:cf,eduroam,3,5
-250,300,1c:d1:e0:44:af:c1,ut-public,3,2
-250,300,1c:d1:e0:44:af:ce,ut-public,3,5
-
-
-1450,300,1c:d1:e0:44:0c:a0,eduroam,4,2
-1450,300,1c:d1:e0:44:0c:af,eduroam,4,5
-1450,300,1c:d1:e0:44:0c:a1,ut-public,4,2
-1450,300,1c:d1:e0:44:0c:ae,ut-public,4,5
-
-2050,50,1c:d1:e0:3d:4c:c0,eduroam,4,2
-2050,50,1c:d1:e0:3d:4c:cf,eduroam,4,5
-2050,50,1c:d1:e0:3d:4c:c1,ut-public,4,2
-2050,50,1c:d1:e0:3d:4c:ce,ut-public,4,5
-
-2650,300,1c:d1:e0:44:7a:20,eduroam,4,2
-2650,300,1c:d1:e0:44:7a:2f,eduroam,4,5
-2650,300,1c:d1:e0:44:7a:21,ut-public,4,2
-2650,300,1c:d1:e0:44:7a:2e,ut-public,4,5
-
-3225,300,1c:d1:e0:3d:1e:80,eduroam,4,2
-3225,300,1c:d1:e0:3d:1e:8f,eduroam,4,5
-3225,300,1c:d1:e0:3d:1e:81,ut-public,4,2
-3225,300,1c:d1:e0:3d:1e:8e,ut-public,4,5
-
-3850,300,1c:d1:e0:3d:8f:e0,eduroam,4,2
-3850,300,1c:d1:e0:3d:8f:ef,eduroam,4,5
-3850,300,1c:d1:e0:3d:8f:e1,ut-public,4,2
-3850,300,1c:d1:e0:3d:8f:ee,ut-public,4,5
-
-4750,300,1c:d1:e0:42:e4:20,eduroam,4,2
-4750,300,1c:d1:e0:42:e4:2f,eduroam,4,5
-4750,300,1c:d1:e0:42:e4:21,ut-public,4,2
-4750,300,1c:d1:e0:42:e4:2e,ut-public,4,5
-
-4450,600,1c:d1:e0:3f:0c:a0,eduroam,4,2
-4450,600,1c:d1:e0:3f:0c:af,eduroam,4,5
-4450,600,1c:d1:e0:3f:0c:a1,ut-public,4,2
-4450,600,1c:d1:e0:3f:0c:ae,ut-public,4,5
-
-4250,850,1c:d1:e0:3d:2d:a0,eduroam,4,2
-4250,850,1c:d1:e0:3d:2d:af,eduroam,4,5
-4250,850,1c:d1:e0:3d:2d:a1,ut-public,4,2
-4250,850,1c:d1:e0:3d:2d:ae,ut-public,4,5
-
-3450,1050,1c:d1:e0:44:51:80,eduroam,4,2
-3450,1050,1c:d1:e0:44:51:8f,eduroam,4,5
-3450,1050,1c:d1:e0:44:51:81,ut-public,4,2
-3450,1050,1c:d1:e0:44:51:8e,ut-public,4,5
-
-2650,1000,1c:d1:e0:41:7e:e0,eduroam,4,2
-2650,1000,1c:d1:e0:41:7e:ef,eduroam,4,5
-2650,1000,1c:d1:e0:41:7e:e1,ut-public,4,2
-2650,1000,1c:d1:e0:41:7e:ee,ut-public,4,5
-
-2250,1150,1c:d1:e0:3d:4d:e0,eduroam,4,2
-2250,1150,1c:d1:e0:3d:4d:ef,eduroam,4,5
-2250,1150,1c:d1:e0:3d:4d:e1,ut-public,4,2
-2250,1150,1c:d1:e0:3d:4d:ee,ut-public,4,5
-
-1650,1050,1c:d1:e0:3c:60:e0,eduroam,4,2
-1650,1050,1c:d1:e0:3c:60:ef,eduroam,4,5
-1650,1050,1c:d1:e0:3c:60:e1,ut-public,4,2
-1650,1050,1c:d1:e0:3c:60:ee,ut-public,4,5
-
-1250,1400,1c:d1:e0:3d:a2:e0,eduroam,4,2
-1250,1400,1c:d1:e0:3d:a2:ef,eduroam,4,5
-1250,1400,1c:d1:e0:3d:a2:e1,ut-public,4,2
-1250,1400,1c:d1:e0:3d:a2:ee,ut-public,4,5
-
-1050,1900,1c:d1:e0:3d:b6:a0,eduroam,4,2
-1050,1900,1c:d1:e0:3d:b6:af,eduroam,4,5
-1050,1900,1c:d1:e0:3d:b6:a1,ut-public,4,2
-1050,1900,1c:d1:e0:3d:b6:ae,ut-public,4,5
-
-1250,2250,1c:d1:e0:3e:70:00,eduroam,4,2
-1250,2250,1c:d1:e0:3e:70:0f,eduroam,4,5
-1250,2250,1c:d1:e0:3e:70:01,ut-public,4,2
-1250,2250,1c:d1:e0:3e:70:0e,ut-public,4,5
-
-725,2850,1c:d1:e0:41:00:a0,eduroam,4,2
-725,2850,1c:d1:e0:41:00:af,eduroam,4,5
-725,2850,1c:d1:e0:41:00:a1,ut-public,4,2
-725,2850,1c:d1:e0:41:00:ae,ut-public,4,5
-
-40,2160,1c:d1:e0:43:02:60,eduroam,4,2
-40,2160,1c:d1:e0:43:02:6f,eduroam,4,5
-40,2160,1c:d1:e0:43:02:61,ut-public,4,2
-40,2160,1c:d1:e0:43:02:6e,ut-public,4,5
-
-325,1750,1c:d1:e0:3c:59:80,eduroam,4,2
-325,1750,1c:d1:e0:3c:59:8f,eduroam,4,5
-325,1750,1c:d1:e0:3c:59:81,ut-public,4,2
-325,1750,1c:d1:e0:3c:59:8e,ut-public,4,5
-
-450,1150,1c:d1:e0:40:02:40,eduroam,4,2
-450,1150,1c:d1:e0:40:02:4f,eduroam,4,5
-450,1150,1c:d1:e0:40:02:41,ut-public,4,2
-450,1150,1c:d1:e0:40:02:4e,ut-public,4,5
-
-250,300,1c:d1:e0:3d:81:a0,eduroam,4,2
-250,300,1c:d1:e0:3d:81:af,eduroam,4,5
-250,300,1c:d1:e0:3d:81:a1,ut-public,4,2
-250,300,1c:d1:e0:3d:81:ae,ut-public,4,5
+730,440,7c:21:0d:2e:d4:40,eduroam,0,2,Corridor Near 1037
+730,440,7c:21:0d:2e:d4:4f,eduroam,0,5,Corridor Near 1037
+730,440,7c:21:0d:2e:d4:41,ut-public,0,2,Corridor Near 1037
+730,440,7c:21:0d:2e:d4:4e,ut-public,0,5,Corridor Near 1037
+
+
+2020,160,7c:21:0d:2f:56:80,eduroam,1,2,1004
+2020,160,7c:21:0d:2f:56:8f,eduroam,1,5,1004
+2020,160,7c:21:0d:2f:56:81,ut-public,1,2,1004
+2020,160,7c:21:0d:2f:56:8e,ut-public,1,5,1004
+
+2450,160,7c:21:0d:2f:1a:e0,eduroam,1,2,1005
+2450,160,7c:21:0d:2f:1a:ef,eduroam,1,5,1005
+2450,160,7c:21:0d:2f:1a:e1,ut-public,1,2,1005
+2450,160,7c:21:0d:2f:1a:ee,ut-public,1,5,1005
+
+2860,160,7c:21:0d:2f:11:e0,eduroam,1,2,1006
+2860,160,7c:21:0d:2f:11:ef,eduroam,1,5,1006
+2860,160,7c:21:0d:2f:11:e1,ut-public,1,2,1006
+2860,160,7c:21:0d:2f:11:ee,ut-public,1,5,1006
+
+3920,160,7c:21:0d:2f:39:00,eduroam,1,2,1007
+3920,160,7c:21:0d:2f:39:0f,eduroam,1,5,1007
+3920,160,7c:21:0d:2f:39:01,ut-public,1,2,1007
+3920,160,7c:21:0d:2f:39:0e,ut-public,1,5,1007
+
+3710,160,7c:21:0d:2e:5e:80,eduroam,1,2,1008
+3710,160,7c:21:0d:2e:5e:8f,eduroam,1,5,1008
+3710,160,7c:21:0d:2e:5e:81,ut-public,1,2,1008
+3710,160,7c:21:0d:2e:5e:8e,ut-public,1,5,1008
+
+4450,160,1c:d1:e0:42:4c:e0,eduroam,1,2,Library
+4450,160,1c:d1:e0:42:4c:ef,eduroam,1,5,Library
+4450,160,1c:d1:e0:42:4c:e1,ut-public,1,2,Library
+4450,160,1c:d1:e0:42:4c:ee,ut-public,1,5,Library
+
+4740,600,1c:d1:e0:3c:d5:e0,eduroam,1,2,Library
+4740,600,1c:d1:e0:3c:d5:ef,eduroam,1,5,Library
+4740,600,1c:d1:e0:3c:d5:e1,ut-public,1,2,Library
+4740,600,1c:d1:e0:3c:d5:ee,ut-public,1,5,Library
+
+3940,740,7c:21:0d:2f:49:e0,eduroam,1,2,1017
+3940,740,7c:21:0d:2f:49:ef,eduroam,1,5,1017
+3940,740,7c:21:0d:2f:49:e1,ut-public,1,2,1017
+3940,740,7c:21:0d:2f:49:ee,ut-public,1,5,1017
+
+3130,1120,7c:21:0d:2f:6e:20,eduroam,1,2,1019
+3130,1120,7c:21:0d:2f:6e:2f,eduroam,1,5,1019
+3130,1120,7c:21:0d:2f:6e:21,ut-public,1,2,1019
+3130,1120,7c:21:0d:2f:6e:2e,ut-public,1,5,1019
+
+2640,1140,7c:21:0d:2f:52:80,eduroam,1,2,1020
+2640,1140,7c:21:0d:2f:52:8f,eduroam,1,5,1020
+2640,1140,7c:21:0d:2f:52:81,ut-public,1,2,1020
+2640,1140,7c:21:0d:2f:52:8e,ut-public,1,5,1020
+
+2160,1000,7c:21:0d:2f:4c:a0,eduroam,1,2,1021
+2160,1000,7c:21:0d:2f:4c:af,eduroam,1,5,1021
+2160,1000,7c:21:0d:2f:4c:a1,ut-public,1,2,1021
+2160,1000,7c:21:0d:2f:4c:ae,ut-public,1,5,1021
+
+1180,820,7c:21:0d:2f:46:e0,eduroam,1,2,1022
+1180,820,7c:21:0d:2f:46:ef,eduroam,1,5,1022
+1180,820,7c:21:0d:2f:46:e1,ut-public,1,2,1022
+1180,820,7c:21:0d:2f:46:ee,ut-public,1,5,1022
+
+1020,1630,1c:d1:e0:3d:0b:a0,eduroam,1,2,1024
+1020,1630,1c:d1:e0:3d:0b:af,eduroam,1,5,1024
+1020,1630,1c:d1:e0:3d:0b:a1,ut-public,1,2,1024
+1020,1630,1c:d1:e0:3d:0b:ae,ut-public,1,5,1024
+
+870,2200,1c:d1:e0:43:3a:20,eduroam,1,2,1026
+870,2200,1c:d1:e0:43:3a:2f,eduroam,1,5,1026
+870,2200,1c:d1:e0:43:3a:21,ut-public,1,2,1026
+870,2200,1c:d1:e0:43:3a:2e,ut-public,1,5,1026
+
+620,3100,1c:d1:e0:3d:82:20,eduroam,1,2,1030
+620,3100,1c:d1:e0:3d:82:2f,eduroam,1,5,1030
+620,3100,1c:d1:e0:3d:82:21,ut-public,1,2,1030
+620,3100,1c:d1:e0:3d:82:2e,ut-public,1,5,1030
+
+460,2500,1c:d1:e0:3d:38:a0,eduroam,1,2,Corridor Near 1034
+460,2500,1c:d1:e0:3d:38:af,eduroam,1,5,Corridor Near 1034
+460,2500,1c:d1:e0:3d:38:a1,ut-public,1,2,Corridor Near 1034
+460,2500,1c:d1:e0:3d:38:ae,ut-public,1,5,Corridor Near 1034
+
+730,1200,7c:21:0d:2e:d5:20,eduroam,1,2,Corridor Near 1037
+730,1200,7c:21:0d:2e:d5:2f,eduroam,1,5,Corridor Near 1037
+730,1200,7c:21:0d:2e:d5:21,ut-public,1,2,Corridor Near 1037
+730,1200,7c:21:0d:2e:d5:2e,ut-public,1,5,Corridor Near 1037
+
+30,550,7c:21:0d:2f:53:80,eduroam,1,2,1037
+30,550,7c:21:0d:2f:53:8f,eduroam,1,5,1037
+30,550,7c:21:0d:2f:53:81,ut-public,1,2,1037
+30,550,7c:21:0d:2f:53:8e,ut-public,1,5,1037
+
+
+1750,400,7c:21:0d:2f:4f:00,eduroam,2,2,2004
+1750,400,7c:21:0d:2f:4f:0f,eduroam,2,5,2004
+1750,400,7c:21:0d:2f:4f:01,ut-public,2,2,2004
+1750,400,7c:21:0d:2f:4f:0e,ut-public,2,5,2004
+
+2660,500,7c:21:0d:2f:17:e0,eduroam,2,2,2006
+2660,500,7c:21:0d:2f:17:ef,eduroam,2,5,2006
+2660,500,7c:21:0d:2f:17:e1,ut-public,2,2,2006
+2660,500,7c:21:0d:2f:17:ee,ut-public,2,5,2006
+
+3450,350,1c:d1:e0:45:06:c0,eduroam,2,2,2010
+3450,350,1c:d1:e0:45:06:cf,eduroam,2,5,2010
+3450,350,1c:d1:e0:45:06:c1,ut-public,2,2,2010
+3450,350,1c:d1:e0:45:06:ce,ut-public,2,5,2010
+
+4430,530,7c:21:0d:2e:4d:a0,eduroam,2,2,2017
+4430,530,7c:21:0d:2e:4d:af,eduroam,2,5,2017
+4430,530,7c:21:0d:2e:4d:a1,ut-public,2,2,2017
+4430,530,7c:21:0d:2e:4d:ae,ut-public,2,5,2017
+
+4120,900,1c:d1:e0:3d:3c:20,eduroam,2,2,2019
+4120,900,1c:d1:e0:3d:3c:2f,eduroam,2,5,2019
+4120,900,1c:d1:e0:3d:3c:21,ut-public,2,2,2019
+4120,900,1c:d1:e0:3d:3c:2e,ut-public,2,5,2019
+
+3380,860,7c:21:0d:2f:1e:a0,eduroam,2,2,Corridor Near 2021
+3380,860,7c:21:0d:2f:1e:af,eduroam,2,5,Corridor Near 2021
+3380,860,7c:21:0d:2f:1e:a1,ut-public,2,2,Corridor Near 2021
+3380,860,7c:21:0d:2f:1e:ae,ut-public,2,5,Corridor Near 2021
+
+2920,940,7c:21:0d:2f:33:80,eduroam,2,2,2022
+2920,940,7c:21:0d:2f:33:8f,eduroam,2,5,2022
+2920,940,7c:21:0d:2f:33:81,ut-public,2,2,2022
+2920,940,7c:21:0d:2f:33:8e,ut-public,2,5,2022
+
+2780,1000,5c:71:0d:4c:26:80,eduroam,2,2,2023
+2780,1000,5c:71:0d:4c:26:8f,eduroam,2,5,2023
+2780,1000,5c:71:0d:4c:26:81,ut-public,2,2,2023
+2780,1000,5c:71:0d:4c:26:8e,ut-public,2,5,2023
+
+1900,860,1c:d1:e0:3d:4a:80,eduroam,2,2,Corridor Near 2025
+1900,860,1c:d1:e0:3d:4a:8f,eduroam,2,5,Corridor Near 2025
+1900,860,1c:d1:e0:3d:4a:81,ut-public,2,2,Corridor Near 2025
+1900,860,1c:d1:e0:3d:4a:8e,ut-public,2,5,Corridor Near 2025
+
+1140,900,7c:21:0d:2f:75:20,eduroam,2,2,Corridor Near 2048
+1140,900,7c:21:0d:2f:75:2f,eduroam,2,5,Corridor Near 2048
+1140,900,7c:21:0d:2f:75:21,ut-public,2,2,Corridor Near 2048
+1140,900,7c:21:0d:2f:75:2e,ut-public,2,5,Corridor Near 2048
+
+40,1690,7c:21:0d:2f:73:a0,eduroam,2,2,2045
+40,1690,7c:21:0d:2f:73:af,eduroam,2,5,2045
+40,1690,7c:21:0d:2f:73:a1,ut-public,2,2,2045
+40,1690,7c:21:0d:2f:73:ae,ut-public,2,5,2045
+
+460,1110,7c:21:0d:2e:e5:20,eduroam,2,2,2047
+460,1110,7c:21:0d:2e:e5:2f,eduroam,2,5,2047
+460,1110,7c:21:0d:2e:e5:21,ut-public,2,2,2047
+460,1110,7c:21:0d:2e:e5:2e,ut-public,2,5,2047
+
+400,340,7c:21:0d:2e:da:40,eduroam,2,2,2051
+400,340,7c:21:0d:2e:da:4f,eduroam,2,5,2051
+400,340,7c:21:0d:2e:da:41,ut-public,2,2,2051
+400,340,7c:21:0d:2e:da:4e,ut-public,2,5,2051
+
+980,2040,7c:21:0d:2f:54:60,eduroam,2,2,2030
+980,2040,7c:21:0d:2f:54:6f,eduroam,2,5,2030
+980,2040,7c:21:0d:2f:54:61,ut-public,2,2,2030
+980,2040,7c:21:0d:2f:54:6e,ut-public,2,5,2030
+
+940,3080,7c:21:0d:2f:10:40,eduroam,2,2,2035
+940,3080,7c:21:0d:2f:10:4f,eduroam,2,5,2035
+940,3080,7c:21:0d:2f:10:41,ut-public,2,2,2035
+940,3080,7c:21:0d:2f:10:4e,ut-public,2,5,2035
+
+280,2760,1c:d1:e0:44:97:e0,eduroam,2,2,Student Area E
+280,2760,1c:d1:e0:44:97:ef,eduroam,2,5,Student Area E
+280,2760,1c:d1:e0:44:97:e1,ut-public,2,2,Student Area E
+280,2760,1c:d1:e0:44:97:ee,ut-public,2,5,Student Area E
+
+270,3740,1c:d1:e0:3f:16:40,eduroam,2,2,Student Area J
+270,3740,1c:d1:e0:3f:16:4f,eduroam,2,5,Student Area J
+270,3740,1c:d1:e0:3f:16:41,ut-public,2,2,Student Area J
+270,3740,1c:d1:e0:3f:16:4e,ut-public,2,5,Student Area J
+
+380,4240,1c:d1:e0:44:97:c0,eduroam,2,2,2040
+380,4240,1c:d1:e0:44:97:cf,eduroam,2,5,2040
+380,4240,1c:d1:e0:44:97:c1,ut-public,2,2,2040
+380,4240,1c:d1:e0:44:97:ce,ut-public,2,5,2040
+
+130,4810,1c:d1:e0:3c:fb:a0,eduroam,2,2,2042
+130,4810,1c:d1:e0:3c:fb:af,eduroam,2,5,2042
+130,4810,1c:d1:e0:3c:fb:a1,ut-public,2,2,2042
+130,4810,1c:d1:e0:3c:fb:ae,ut-public,2,5,2042
+
+
+1480,320,1c:d1:e0:42:7d:a0,eduroam,3,2,Corridor Near 3003
+1480,320,1c:d1:e0:42:7d:af,eduroam,3,5,Corridor Near 3003
+1480,320,1c:d1:e0:42:7d:a1,ut-public,3,2,Corridor Near 3003
+1480,320,1c:d1:e0:42:7d:ae,ut-public,3,5,Corridor Near 3003
+
+3470,1070,1c:d1:e0:3f:98:c0,eduroam,3,2,Corridor Near 3047
+3470,1070,1c:d1:e0:3f:98:cf,eduroam,3,5,Corridor Near 3047
+3470,1070,1c:d1:e0:3f:98:c1,ut-public,3,2,Corridor Near 3047
+3470,1070,1c:d1:e0:3f:98:ce,ut-public,3,5,Corridor Near 3047
+
+1520,1060,1c:d1:e0:41:39:60,eduroam,3,2,Corridor Near 3068
+1520,1060,1c:d1:e0:41:39:6f,eduroam,3,5,Corridor Near 3068
+1520,1060,1c:d1:e0:41:39:61,ut-public,3,2,Corridor Near 3068
+1520,1060,1c:d1:e0:41:39:6e,ut-public,3,5,Corridor Near 3068
+
+2100,50,1c:d1:e0:44:83:60,eduroam,3,2,3011
+2100,50,1c:d1:e0:44:83:6f,eduroam,3,5,3011
+2100,50,1c:d1:e0:44:83:61,ut-public,3,2,3011
+2100,50,1c:d1:e0:44:83:6e,ut-public,3,5,3011
+
+2400,600,1c:d1:e0:43:80:40,eduroam,3,2,3012
+2400,600,1c:d1:e0:43:80:4f,eduroam,3,5,3012
+2400,600,1c:d1:e0:43:80:41,ut-public,3,2,3012
+2400,600,1c:d1:e0:43:80:4e,ut-public,3,5,3012
+
+2850,350,1c:d1:e0:3d:28:a0,eduroam,3,2,Corridor Near 3018
+2850,350,1c:d1:e0:3d:28:af,eduroam,3,5,Corridor Near 3018
+2850,350,1c:d1:e0:3d:28:a1,ut-public,3,2,Corridor Near 3018
+2850,350,1c:d1:e0:3d:28:ae,ut-public,3,5,Corridor Near 3018
+
+3300,600,1c:d1:e0:3d:68:60,eduroam,3,2,3022
+3300,600,1c:d1:e0:3d:68:6f,eduroam,3,5,3022
+3300,600,1c:d1:e0:3d:68:61,ut-public,3,2,3022
+3300,600,1c:d1:e0:3d:68:6e,ut-public,3,5,3022
+
+3850,250,1c:d1:e0:40:41:20,eduroam,3,2,3028
+3850,250,1c:d1:e0:40:41:2f,eduroam,3,5,3028
+3850,250,1c:d1:e0:40:41:21,ut-public,3,2,3028
+3850,250,1c:d1:e0:40:41:2e,ut-public,3,5,3028
+
+4700,250,1c:d1:e0:44:10:40,eduroam,3,2,3033
+4700,250,1c:d1:e0:44:10:4f,eduroam,3,5,3033
+4700,250,1c:d1:e0:44:10:41,ut-public,3,2,3033
+4700,250,1c:d1:e0:44:10:4e,ut-public,3,5,3033
+
+4450,500,1c:d1:e0:3d:02:60,eduroam,3,2,Corridor Near 3039
+4450,500,1c:d1:e0:3d:02:6f,eduroam,3,5,Corridor Near 3039
+4450,500,1c:d1:e0:3d:02:61,ut-public,3,2,Corridor Near 3039
+4450,500,1c:d1:e0:3d:02:6e,ut-public,3,5,Corridor Near 3039
+
+4150,1000,1c:d1:e0:3d:34:c0,eduroam,3,2,3042
+4150,1000,1c:d1:e0:3d:34:cf,eduroam,3,5,3042
+4150,1000,1c:d1:e0:3d:34:c1,ut-public,3,2,3042
+4150,1000,1c:d1:e0:3d:34:ce,ut-public,3,5,3042
+
+2950,800,1c:d1:e0:43:08:c0,eduroam,3,2,3053
+2950,800,1c:d1:e0:43:08:cf,eduroam,3,5,3053
+2950,800,1c:d1:e0:43:08:c1,ut-public,3,2,3053
+2950,800,1c:d1:e0:43:08:ce,ut-public,3,5,3053
+
+2300,1350,1c:d1:e0:41:e2:00,eduroam,3,2,3059
+2300,1350,1c:d1:e0:41:e2:0f,eduroam,3,5,3059
+2300,1350,1c:d1:e0:41:e2:01,ut-public,3,2,3059
+2300,1350,1c:d1:e0:41:e2:0e,ut-public,3,5,3059
+
+1800,800,1c:d1:e0:42:fe:c0,eduroam,3,2,3066
+1800,800,1c:d1:e0:42:fe:cf,eduroam,3,5,3066
+1800,800,1c:d1:e0:42:fe:c1,ut-public,3,2,3066
+1800,800,1c:d1:e0:42:fe:ce,ut-public,3,5,3066
+
+1150,1600,1c:d1:e0:3d:7b:a0,eduroam,3,2,Corridor Near 3072
+1150,1600,1c:d1:e0:3d:7b:af,eduroam,3,5,Corridor Near 3072
+1150,1600,1c:d1:e0:3d:7b:a1,ut-public,3,2,Corridor Near 3072
+1150,1600,1c:d1:e0:3d:7b:ae,ut-public,3,5,Corridor Near 3072
+
+1000,2250,1c:d1:e0:3d:51:a0,eduroam,3,2,3080
+1000,2250,1c:d1:e0:3d:51:af,eduroam,3,5,3080
+1000,2250,1c:d1:e0:3d:51:a1,ut-public,3,2,3080
+1000,2250,1c:d1:e0:3d:51:ae,ut-public,3,5,3080
+
+750,3100,1c:d1:e0:45:1b:40,eduroam,3,2,Corridor Near 3091
+750,3100,1c:d1:e0:45:1b:4f,eduroam,3,5,Corridor Near 3091
+750,3100,1c:d1:e0:45:1b:41,ut-public,3,2,Corridor Near 3091
+750,3100,1c:d1:e0:45:1b:4e,ut-public,3,5,Corridor Near 3091
+
+350,4150,1c:d1:e0:3c:99:80,eduroam,3,2,3092
+350,4150,1c:d1:e0:3c:99:8f,eduroam,3,5,3092
+350,4150,1c:d1:e0:3c:99:81,ut-public,3,2,3092
+350,4150,1c:d1:e0:3c:99:8e,ut-public,3,5,3092
+
+150,4950,1c:d1:e0:43:36:00,eduroam,3,2,3095
+150,4950,1c:d1:e0:43:36:0f,eduroam,3,5,3095
+150,4950,1c:d1:e0:43:36:01,ut-public,3,2,3095
+150,4950,1c:d1:e0:43:36:0e,ut-public,3,5,3095
+
+200,4200,68:9e:0b:5c:e8:20,eduroam,3,2,Terrace
+200,4200,68:9e:0b:5c:e8:2f,eduroam,3,5,Terrace
+200,4200,68:9e:0b:5c:e8:21,ut-public,3,2,Terrace
+200,4200,68:9e:0b:5c:e8:2e,ut-public,3,5,Terrace
+
+300,2700,1c:d1:e0:3c:16:40,eduroam,3,2,Corridor Near 3097
+300,2700,1c:d1:e0:3c:16:4f,eduroam,3,5,Corridor Near 3097
+300,2700,1c:d1:e0:3c:16:41,ut-public,3,2,Corridor Near 3097
+300,2700,1c:d1:e0:3c:16:4e,ut-public,3,5,Corridor Near 3097
+
+350,2100,1c:d1:e0:42:b9:60,eduroam,3,2,3105
+350,2100,1c:d1:e0:42:b9:6f,eduroam,3,5,3105
+350,2100,1c:d1:e0:42:b9:61,ut-public,3,2,3105
+350,2100,1c:d1:e0:42:b9:6e,ut-public,3,5,3105
+
+25,1500,1c:d1:e0:42:a8:60,eduroam,3,2,3111
+25,1500,1c:d1:e0:42:a8:6f,eduroam,3,5,3111
+25,1500,1c:d1:e0:42:a8:61,ut-public,3,2,3111
+25,1500,1c:d1:e0:42:a8:6e,ut-public,3,5,3111
+
+625,1150,b8:11:4b:bf:37:00,eduroam,3,2,3115
+625,1150,b8:11:4b:bf:37:0f,eduroam,3,5,3115
+625,1150,b8:11:4b:bf:37:01,ut-public,3,2,3115
+625,1150,b8:11:4b:bf:37:0e,ut-public,3,5,3115
+
+250,300,1c:d1:e0:44:af:c0,eduroam,3,2,3121
+250,300,1c:d1:e0:44:af:cf,eduroam,3,5,3121
+250,300,1c:d1:e0:44:af:c1,ut-public,3,2,3121
+250,300,1c:d1:e0:44:af:ce,ut-public,3,5,3121
+
+
+1450,300,1c:d1:e0:44:0c:a0,eduroam,4,2,Corridor Near 4003
+1450,300,1c:d1:e0:44:0c:af,eduroam,4,5,Corridor Near 4003
+1450,300,1c:d1:e0:44:0c:a1,ut-public,4,2,Corridor Near 4003
+1450,300,1c:d1:e0:44:0c:ae,ut-public,4,5,Corridor Near 4003
+
+2050,50,1c:d1:e0:3d:4c:c0,eduroam,4,2,4007
+2050,50,1c:d1:e0:3d:4c:cf,eduroam,4,5,4007
+2050,50,1c:d1:e0:3d:4c:c1,ut-public,4,2,4007
+2050,50,1c:d1:e0:3d:4c:ce,ut-public,4,5,4007
+
+2650,300,1c:d1:e0:44:7a:20,eduroam,4,2,4012
+2650,300,1c:d1:e0:44:7a:2f,eduroam,4,5,4012
+2650,300,1c:d1:e0:44:7a:21,ut-public,4,2,4012
+2650,300,1c:d1:e0:44:7a:2e,ut-public,4,5,4012
+
+3225,300,1c:d1:e0:3d:1e:80,eduroam,4,2,Corridor Near 4017
+3225,300,1c:d1:e0:3d:1e:8f,eduroam,4,5,Corridor Near 4017
+3225,300,1c:d1:e0:3d:1e:81,ut-public,4,2,Corridor Near 4017
+3225,300,1c:d1:e0:3d:1e:8e,ut-public,4,5,Corridor Near 4017
+
+3850,300,1c:d1:e0:3d:8f:e0,eduroam,4,2,4025
+3850,300,1c:d1:e0:3d:8f:ef,eduroam,4,5,4025
+3850,300,1c:d1:e0:3d:8f:e1,ut-public,4,2,4025
+3850,300,1c:d1:e0:3d:8f:ee,ut-public,4,5,4025
+
+4750,300,1c:d1:e0:42:e4:20,eduroam,4,2,Corridor Near 4035
+4750,300,1c:d1:e0:42:e4:2f,eduroam,4,5,Corridor Near 4035
+4750,300,1c:d1:e0:42:e4:21,ut-public,4,2,Corridor Near 4035
+4750,300,1c:d1:e0:42:e4:2e,ut-public,4,5,Corridor Near 4035
+
+4450,600,1c:d1:e0:3f:0c:a0,eduroam,4,2,Corridor Near 4037
+4450,600,1c:d1:e0:3f:0c:af,eduroam,4,5,Corridor Near 4037
+4450,600,1c:d1:e0:3f:0c:a1,ut-public,4,2,Corridor Near 4037
+4450,600,1c:d1:e0:3f:0c:ae,ut-public,4,5,Corridor Near 4037
+
+4250,850,1c:d1:e0:3d:2d:a0,eduroam,4,2,4040
+4250,850,1c:d1:e0:3d:2d:af,eduroam,4,5,4040
+4250,850,1c:d1:e0:3d:2d:a1,ut-public,4,2,4040
+4250,850,1c:d1:e0:3d:2d:ae,ut-public,4,5,4040
+
+3450,1050,1c:d1:e0:44:51:80,eduroam,4,2,4046
+3450,1050,1c:d1:e0:44:51:8f,eduroam,4,5,4046
+3450,1050,1c:d1:e0:44:51:81,ut-public,4,2,4046
+3450,1050,1c:d1:e0:44:51:8e,ut-public,4,5,4046
+
+2650,1000,1c:d1:e0:41:7e:e0,eduroam,4,2,4052
+2650,1000,1c:d1:e0:41:7e:ef,eduroam,4,5,4052
+2650,1000,1c:d1:e0:41:7e:e1,ut-public,4,2,4052
+2650,1000,1c:d1:e0:41:7e:ee,ut-public,4,5,4052
+
+2250,1150,1c:d1:e0:3d:4d:e0,eduroam,4,2,4057
+2250,1150,1c:d1:e0:3d:4d:ef,eduroam,4,5,4057
+2250,1150,1c:d1:e0:3d:4d:e1,ut-public,4,2,4057
+2250,1150,1c:d1:e0:3d:4d:ee,ut-public,4,5,4057
+
+1650,1050,1c:d1:e0:3c:60:e0,eduroam,4,2,Corridor Near 4062
+1650,1050,1c:d1:e0:3c:60:ef,eduroam,4,5,Corridor Near 4062
+1650,1050,1c:d1:e0:3c:60:e1,ut-public,4,2,Corridor Near 4062
+1650,1050,1c:d1:e0:3c:60:ee,ut-public,4,5,Corridor Near 4062
+
+1250,1400,1c:d1:e0:3d:a2:e0,eduroam,4,2,4067
+1250,1400,1c:d1:e0:3d:a2:ef,eduroam,4,5,4067
+1250,1400,1c:d1:e0:3d:a2:e1,ut-public,4,2,4067
+1250,1400,1c:d1:e0:3d:a2:ee,ut-public,4,5,4067
+
+1050,1900,1c:d1:e0:3d:b6:a0,eduroam,4,2,Corridor Near 4073
+1050,1900,1c:d1:e0:3d:b6:af,eduroam,4,5,Corridor Near 4073
+1050,1900,1c:d1:e0:3d:b6:a1,ut-public,4,2,Corridor Near 4073
+1050,1900,1c:d1:e0:3d:b6:ae,ut-public,4,5,Corridor Near 4073
+
+1250,2250,1c:d1:e0:3e:70:00,eduroam,4,2,4075
+1250,2250,1c:d1:e0:3e:70:0f,eduroam,4,5,4075
+1250,2250,1c:d1:e0:3e:70:01,ut-public,4,2,4075
+1250,2250,1c:d1:e0:3e:70:0e,ut-public,4,5,4075
+
+725,2850,1c:d1:e0:41:00:a0,eduroam,4,2,Corridor Near 4084
+725,2850,1c:d1:e0:41:00:af,eduroam,4,5,Corridor Near 4084
+725,2850,1c:d1:e0:41:00:a1,ut-public,4,2,Corridor Near 4084
+725,2850,1c:d1:e0:41:00:ae,ut-public,4,5,Corridor Near 4084
+
+40,2160,1c:d1:e0:43:02:60,eduroam,4,2,4087
+40,2160,1c:d1:e0:43:02:6f,eduroam,4,5,4087
+40,2160,1c:d1:e0:43:02:61,ut-public,4,2,4087
+40,2160,1c:d1:e0:43:02:6e,ut-public,4,5,4087
+
+325,1750,1c:d1:e0:3c:59:80,eduroam,4,2,Corridor Near 4094
+325,1750,1c:d1:e0:3c:59:8f,eduroam,4,5,Corridor Near 4094
+325,1750,1c:d1:e0:3c:59:81,ut-public,4,2,Corridor Near 4094
+325,1750,1c:d1:e0:3c:59:8e,ut-public,4,5,Corridor Near 4094
+
+450,1150,1c:d1:e0:40:02:40,eduroam,4,2,4103
+450,1150,1c:d1:e0:40:02:4f,eduroam,4,5,4103
+450,1150,1c:d1:e0:40:02:41,ut-public,4,2,4103
+450,1150,1c:d1:e0:40:02:4e,ut-public,4,5,4103
+
+250,300,1c:d1:e0:3d:81:a0,eduroam,4,2,Corridor Near 4108
+250,300,1c:d1:e0:3d:81:af,eduroam,4,5,Corridor Near 4108
+250,300,1c:d1:e0:3d:81:a1,ut-public,4,2,Corridor Near 4108
+250,300,1c:d1:e0:3d:81:ae,ut-public,4,5,Corridor Near 4108

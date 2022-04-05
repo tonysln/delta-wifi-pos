@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>978</width>
+    <width>981</width>
     <height>760</height>
    </rect>
   </property>
@@ -170,7 +170,6 @@
            <property name="font">
             <font>
              <family>Arial</family>
-             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="text">
@@ -264,7 +263,7 @@
            </property>
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>11</pointsize>
             </font>
            </property>
            <property name="frameShape">
@@ -273,8 +272,11 @@
            <property name="frameShadow">
             <enum>QFrame::Plain</enum>
            </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOn</enum>
+           </property>
            <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
+            <enum>Qt::ScrollBarAlwaysOn</enum>
            </property>
            <property name="lineWrapMode">
             <enum>QTextEdit::NoWrap</enum>
