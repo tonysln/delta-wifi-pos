@@ -82,7 +82,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="sideMenuLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0">
+       <layout class="QVBoxLayout" name="sideMenuLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0">
         <property name="spacing">
          <number>-1</number>
         </property>
@@ -377,6 +377,13 @@
           </property>
           <property name="checked">
            <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="mapOverlayView">
+          <property name="text">
+           <string>Map Info Overlay</string>
           </property>
          </widget>
         </item>

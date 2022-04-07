@@ -148,6 +148,16 @@ class MapRenderer(object):
         
         # Add the pixmap to a scene in the QGraphicsView
         scene.addPixmap(pix)
+
+        # Load the additional info overlay image if selected
+        if self.window.mapOverlayView.isChecked():
+            pix_overlay = QPixmap(f'map/korrus-{self.user["floor"]}-overlay.png')
+            pix_overlay = pix_overlay.scaled(self.img_w / self.map_scale,
+                                             self.img_h / self.map_scale, 
+                                             Qt.AspectRatioMode.KeepAspectRatio,
+                                             Qt.TransformationMode.SmoothTransformation)
+            scene.addPixmap(pix_overlay)
+
         self.window.mapView.setScene(scene)
 
         # Move the map to give padding around all sides
@@ -240,6 +250,7 @@ class MapRenderer(object):
         self.window.locationLabel.setText(self.user["location"])
         self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
         self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"], 2)} m')
+        self.nr.curFloorLabel.setText(str(self.user['floor']))
 
 
     def reset_labels(self):
@@ -481,6 +492,7 @@ if __name__ == "__main__":
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
     window.simpleMapView.clicked.connect(lambda: mr.render())
+    window.mapOverlayView.clicked.connect(lambda: mr.render())
 
     # Display window and start app
     window.status.showMessage('Ready', 3000)

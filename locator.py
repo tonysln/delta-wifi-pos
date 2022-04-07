@@ -110,6 +110,9 @@ def locate(routers, nearby_routers, trilatOrMean):
         r2 = nearby_routers[1]['DIST']
         r3 = nearby_routers[2]['DIST']
 
+        botleft = min(near_coords[0][0], near_coords[1][0], near_coords[2][0])
+        print(botleft)
+
         # Transform to cartestian coordinates for formula
         # Using Fang's method where A = (0,0,0), B = (x2, 0, 0), C = (x3, y3, 0)
         Ux,_ = scr_to_cart(near_coords[1][0], 0, cfg['IMG_W'], cfg['IMG_H'])
@@ -121,9 +124,9 @@ def locate(routers, nearby_routers, trilatOrMean):
         xf = 1
         yf = 1
         sf = -1
-        x += near_coords[xf][yf] * sf
-        y += near_coords[xf][0] * sf
-
+        # x += near_coords[xf][yf] * sf
+        # y += near_coords[xf][0] * sf
+        
         # Adjust back to screen coordinates
         x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
 
@@ -151,7 +154,7 @@ def locate(routers, nearby_routers, trilatOrMean):
     # Precision is increased if more routers are nearby,
     # by 0.01 for each 10 additional routers
     coef = cfg['RAD_NORM'] - (math.ceil(n / 100) if n < 10 else math.floor(n / 10)) / 100
-    user['precision'] = cfg['PX_SCALE'] * coef * cfg['PX_SCALE']
+    user['precision'] = cfg['PX_SCALE'] * coef
 
     # Maximum radius is based on the maximum distance to a detected router
     user['radius'] = (max_dist / cfg['PX_SCALE']) * user['precision'] / cfg['PX_SCALE']
