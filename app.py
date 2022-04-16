@@ -42,7 +42,6 @@ class MapRenderer(object):
             'y': 0, 
             'floor': 1,
             'location': 'Delta building',
-            'precision': 0,
             'radius': 0
         }
         self.nearby_routers = []
@@ -248,7 +247,6 @@ class MapRenderer(object):
         self.window.coordsLabel.setText(f'x: {round(self.user["x"])}, y: {round(self.user["y"])}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
         self.window.locationLabel.setText(self.user["location"])
-        self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
         self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"], 2)} m')
         self.nr.curFloorLabel.setText(str(self.user['floor']))
 
@@ -259,7 +257,6 @@ class MapRenderer(object):
         self.window.coordsLabel.setText('x: --, y: --')
         self.window.floorLabel.setText('Floor -')
         self.window.locationLabel.setText('---')
-        self.window.precLabel.setText('Precision: -- m')
         self.window.radiusLabel.setText('Radius: -- m')
         self.window.routersListLabel.setText('')
 

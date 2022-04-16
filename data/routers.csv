@@ -1,4 +1,4 @@
-x,y,mac,ssid,floor,frequency
+x,y,mac,ssid,floor,frequency,name
 
 730,440,7c:21:0d:2e:d4:40,eduroam,0,2,Corridor Near 1037
 730,440,7c:21:0d:2e:d4:4f,eduroam,0,5,Corridor Near 1037

@@ -9,6 +9,7 @@ Script for performing positioning calculations.
 
 
 # Packages
+from scipy.optimize import minimize
 import numpy as np
 import math
 import json
@@ -106,17 +107,21 @@ def locate(routers, nearby_routers, trilatOrMean):
     # -================== Trilateration ==================-
     if trilatOrMean:
         # Apply multilateration formulas to the formed circles
+        # TODO [1] fix trilateration. Maybe use optimization?
+
         r1 = nearby_routers[0]['DIST']
         r2 = nearby_routers[1]['DIST']
         r3 = nearby_routers[2]['DIST']
 
-        botleft = min(near_coords[0][0], near_coords[1][0], near_coords[2][0])
-        print(botleft)
+        botleft = sorted(near_coords, key=lambda x:x[0])[0]
+        botleft_idx = near_coords.index(botleft)
+        print(botleft, botleft_idx)
+        print(near_coords[:3])
 
         # Transform to cartestian coordinates for formula
         # Using Fang's method where A = (0,0,0), B = (x2, 0, 0), C = (x3, y3, 0)
-        Ux,_ = scr_to_cart(near_coords[1][0], 0, cfg['IMG_W'], cfg['IMG_H'])
-        Vx,Vy = scr_to_cart(near_coords[2][0], near_coords[2][1], cfg['IMG_W'], cfg['IMG_H'])
+        Ux = near_coords[1][0]
+        Vx,Vy = near_coords[2][0], near_coords[2][1]
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
 
@@ -128,7 +133,7 @@ def locate(routers, nearby_routers, trilatOrMean):
         # y += near_coords[xf][0] * sf
         
         # Adjust back to screen coordinates
-        x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
+        # x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
 
 
 
@@ -153,11 +158,12 @@ def locate(routers, nearby_routers, trilatOrMean):
     n = len(near_coords)
     # Precision is increased if more routers are nearby,
     # by 0.01 for each 10 additional routers
+    # TODO [2] Finish off accuracy/precision/radius.
+
     coef = cfg['RAD_NORM'] - (math.ceil(n / 100) if n < 10 else math.floor(n / 10)) / 100
-    user['precision'] = cfg['PX_SCALE'] * coef
 
     # Maximum radius is based on the maximum distance to a detected router
-    user['radius'] = (max_dist / cfg['PX_SCALE']) * user['precision'] / cfg['PX_SCALE']
+    user['radius'] = (max_dist / cfg['PX_SCALE']) * (coef * cfg['PX_SCALE']) / cfg['PX_SCALE']
 
     # Clamp radius to avoid unrealistic values
     user['radius'] = min(user['radius'], cfg['RAD_THRESHOLD'])

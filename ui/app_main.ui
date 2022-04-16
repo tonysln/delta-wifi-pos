@@ -109,7 +109,7 @@
           <property name="minimumSize">
            <size>
             <width>230</width>
-            <height>146</height>
+            <height>128</height>
            </size>
           </property>
           <property name="font">
@@ -176,29 +176,11 @@
             <string>x: 540, y: 3400</string>
            </property>
           </widget>
-          <widget class="QLabel" name="precLabel">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>100</y>
-             <width>191</width>
-             <height>16</height>
-            </rect>
-           </property>
-           <property name="font">
-            <font>
-             <family>Arial</family>
-            </font>
-           </property>
-           <property name="text">
-            <string>Precision: 6.5 m</string>
-           </property>
-          </widget>
           <widget class="QLabel" name="radiusLabel">
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>120</y>
+             <y>100</y>
              <width>191</width>
              <height>16</height>
             </rect>
@@ -258,7 +240,7 @@
              <x>0</x>
              <y>20</y>
              <width>231</width>
-             <height>171</height>
+             <height>180</height>
             </rect>
            </property>
            <property name="font">
