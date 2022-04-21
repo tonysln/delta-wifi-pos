@@ -107,30 +107,29 @@ def locate(routers, nearby_routers, trilatOrMean):
     # -================== Trilateration ==================-
     if trilatOrMean:
         # Apply multilateration formulas to the formed circles
-        # TODO [1] fix trilateration. Maybe use optimization?
 
         r1 = nearby_routers[0]['DIST']
         r2 = nearby_routers[1]['DIST']
         r3 = nearby_routers[2]['DIST']
 
         botleft = sorted(near_coords, key=lambda x:x[0])[0]
+        indices = {0, 1, 2}
         botleft_idx = near_coords.index(botleft)
-        print(botleft, botleft_idx)
-        print(near_coords[:3])
+        i1 = botleft_idx
+        indices.remove(i1)
+        i2 = indices.pop()
+        i3 = indices.pop()
 
         # Transform to cartestian coordinates for formula
         # Using Fang's method where A = (0,0,0), B = (x2, 0, 0), C = (x3, y3, 0)
-        Ux = near_coords[1][0]
-        Vx,Vy = near_coords[2][0], near_coords[2][1]
+        Ux = near_coords[i2][0]
+        Vx,Vy = near_coords[i3][0], near_coords[i3][1]
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
 
         # Fix result by offsetting
-        xf = 1
-        yf = 1
-        sf = -1
-        # x += near_coords[xf][yf] * sf
-        # y += near_coords[xf][0] * sf
+        x += near_coords[i2][0]
+        y += near_coords[i3][1]
         
         # Adjust back to screen coordinates
         # x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
@@ -148,7 +147,7 @@ def locate(routers, nearby_routers, trilatOrMean):
             dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
 
             if dist_to_mean > cfg['DIST_THRESHOLD']:
-                print(dist_to_mean, router)
+                print("NB!!!", dist_to_mean, router)
 
             # Custom dist precision for mean
             if dist_to_mean > max_dist:
@@ -158,12 +157,11 @@ def locate(routers, nearby_routers, trilatOrMean):
     n = len(near_coords)
     # Precision is increased if more routers are nearby,
     # by 0.01 for each 10 additional routers
-    # TODO [2] Finish off accuracy/precision/radius.
 
     coef = cfg['RAD_NORM'] - (math.ceil(n / 100) if n < 10 else math.floor(n / 10)) / 100
 
     # Maximum radius is based on the maximum distance to a detected router
-    user['radius'] = (max_dist / cfg['PX_SCALE']) * (coef * cfg['PX_SCALE']) / cfg['PX_SCALE']
+    user['radius'] = (max_dist / cfg['PX_SCALE']) * coef
 
     # Clamp radius to avoid unrealistic values
     user['radius'] = min(user['radius'], cfg['RAD_THRESHOLD'])
