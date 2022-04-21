@@ -1,4 +1,5 @@
 {
+    "ADAPTER": "",
     "UI_FILE_PATH": "ui/app_main.ui",
     "ROUTERS_FILE_PATH": "data/routers.csv",
     "IMG_W": 5300,

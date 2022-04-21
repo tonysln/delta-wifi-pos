@@ -43,9 +43,9 @@ In case of macOS you will need sudo privileges:
 $ sudo python3 app.py
 ```
 
-In case of Linux you will also need to specify the name of your Wi-Fi adapter:
+In case of Linux you will also need to specify the name of your Wi-Fi adapter inside the `config.json` file, on line 2:
 ```
-$ sudo python3 app.py --adapter NAME
+"ADAPTER": "add_name_here",
 ```
 
 On some Linux builds, the following error might be displayed, due to a bug in PySide 6:

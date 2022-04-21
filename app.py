@@ -262,13 +262,15 @@ class MapRenderer(object):
 
 
 
-def begin_scan(renderer, adapter=None):
+def begin_scan(renderer):
     # Main Renderer object
     # Custom adapter name to use in Linux, otherwise
-    # adapter name is None and default is used
 
     # Check if trilateration or mean method is selected
     trilatOrMean = renderer.window.trilatMethod.isChecked()
+
+    # Custom adapter name
+    adapter = cfg['ADAPTER']
 
     # Scan the network
     nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -57, 'SSID': 'eduroam'}, 
@@ -277,9 +279,7 @@ def begin_scan(renderer, adapter=None):
               {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
               {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
               {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
-    
-    if adapter:
-        nearby = scanner.scan(adapter)
+    # nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
         window.status.showMessage('No nearby routers detected', 3000)
@@ -317,7 +317,7 @@ def begin_scan(renderer, adapter=None):
     renderer.render()
 
 
-def auto_scan(renderer, adapter=None):
+def auto_scan(renderer):
     # Main Renderer object
     # Custom adapter name
     # Automatic scan (auto-update)
@@ -328,9 +328,9 @@ def auto_scan(renderer, adapter=None):
 
     if activated:
         # Do a scan
-        begin_scan(renderer, adapter)
+        begin_scan(renderer)
         # Repeat this method call in N seconds (will check if button still pressed too)
-        QTimer.singleShot(cfg['AUTO_SEC']*1000, lambda: auto_scan(renderer, adapter))
+        QTimer.singleShot(cfg['AUTO_SEC']*1000, lambda: auto_scan(renderer))
         return
 
 
@@ -448,15 +448,8 @@ if __name__ == "__main__":
         cfg = json.load(f)
 
     # Initial attributes
-    args = sys.argv
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
-    app = QApplication(args)
-
-    # Handle given arguments
-    # Specified adapter to use (Linux only)
-    adapter = None
-    if '--adapter' in args:
-        adapter = args[args.index('--adapter') + 1]
+    app = QApplication(sys.argv)
 
     # Load window from UI file
     window = load_UI(cfg['UI_FILE_PATH'])
@@ -483,8 +476,8 @@ if __name__ == "__main__":
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
-    window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
-    window.autoScanButton.clicked.connect(lambda: auto_scan(mr, adapter))
+    window.scanButton.clicked.connect(lambda: begin_scan(mr))
+    window.autoScanButton.clicked.connect(lambda: auto_scan(mr))
     window.addNewRouterButton.clicked.connect(lambda: add_new_router(mr, nr_dialog))
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
