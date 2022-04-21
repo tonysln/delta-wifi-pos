@@ -77,20 +77,23 @@ def cart_to_scr(x, y, w, h):
 
 
 
+# TODO temp, try out optimisation and MSE technique 
+# from A. Zucconi's blog
 def mse(x, locations, distances):
     # locations: [ (lat1, long1), ... ]
     # distances: [ distance1, ... ]
+    # Source: https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/#part3
     mse = 0.0
     for location, distance in zip(locations, distances):
         distance_calculated = math.sqrt((x[0] - x[1])**2 + (location[0] - location[1])**2)
         mse += math.pow(distance_calculated - distance, 2.0)
     return mse / len(distances)
 
-
 def loc_opt(initial_location, locations, distances):
     # initial_location: (lat, long)
     # locations: [ (lat1, long1), ... ]
     # distances: [ distance1,     ... ] 
+    # Source: https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/#part3
     result = minimize(
                 mse,
                 initial_location,
@@ -101,6 +104,7 @@ def loc_opt(initial_location, locations, distances):
     location = result.x
     print(result)
     return location
+# ===============================================
 
 
 def locate(routers, nearby_routers, trilatOrMean):
