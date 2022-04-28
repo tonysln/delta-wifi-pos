@@ -77,36 +77,6 @@ def cart_to_scr(x, y, w, h):
 
 
 
-# TODO temp, try out optimisation and MSE technique 
-# from A. Zucconi's blog
-def mse(x, locations, distances):
-    # locations: [ (lat1, long1), ... ]
-    # distances: [ distance1, ... ]
-    # Source: https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/#part3
-    mse = 0.0
-    for location, distance in zip(locations, distances):
-        distance_calculated = math.sqrt((x[0] - x[1])**2 + (location[0] - location[1])**2)
-        mse += math.pow(distance_calculated - distance, 2.0)
-    return mse / len(distances)
-
-def loc_opt(initial_location, locations, distances):
-    # initial_location: (lat, long)
-    # locations: [ (lat1, long1), ... ]
-    # distances: [ distance1,     ... ] 
-    # Source: https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/#part3
-    result = minimize(
-                mse,
-                initial_location,
-                args=(locations, distances),
-                method='L-BFGS-B',
-                options={'ftol': 1e-5, 'maxiter': 1e+7}
-            )
-    location = result.x
-    print(result)
-    return location
-# ===============================================
-
-
 def locate(routers, nearby_routers, trilatOrMean):
     # routers: dict of all routers
     # nearby_routers: list of nearby routers as dicts
@@ -139,17 +109,20 @@ def locate(routers, nearby_routers, trilatOrMean):
     if trilatOrMean:
         # Apply multilateration formulas to the formed circles
 
-        r1 = nearby_routers[0]['DIST']
-        r2 = nearby_routers[1]['DIST']
-        r3 = nearby_routers[2]['DIST']
+        # Decide if any of the first three are the same point, 
+        # move index up until all are different
+        i1 = 0
+        i2 = i1
+        while near_coords[i2] == near_coords[i1]:
+            i2 += 1
 
-        botleft = sorted(near_coords, key=lambda x:x[0])[0]
-        indices = {0, 1, 2}
-        botleft_idx = near_coords.index(botleft)
-        i1 = botleft_idx
-        indices.remove(i1)
-        i2 = indices.pop()
-        i3 = indices.pop()
+        i3 = i2
+        while near_coords[i3] == near_coords[i2]:
+            i3 += 1
+
+        r1 = nearby_routers[i1]['DIST']
+        r2 = nearby_routers[i2]['DIST']
+        r3 = nearby_routers[i3]['DIST']
 
         # Transform to cartestian coordinates for formula
         # Using Fang's method where A = (0,0,0), B = (x2, 0, 0), C = (x3, y3, 0)
@@ -178,7 +151,7 @@ def locate(routers, nearby_routers, trilatOrMean):
             dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
 
             if dist_to_mean > cfg['DIST_THRESHOLD']:
-                print("NB!!!", dist_to_mean, router)
+                print("NB!!!", dist_to_mean, router) # TODO temp
 
             # Custom dist precision for mean
             if dist_to_mean > max_dist:

@@ -38,7 +38,7 @@ If you're using Windows as your operating system:
 $ python3 app.py
 ```
 
-In case of macOS you will need sudo privileges:
+In case of macOS and Linux you will need sudo privileges:
 ```
 $ sudo python3 app.py
 ```
