@@ -86,7 +86,7 @@ def locate(routers, nearby_routers, trilatOrMean):
     # coordinates, distance from RSSI
     near_coords = []
     near_weights = []   
-    max_dist = 1.0
+    max_dist = 0.0
     for router in nearby_routers:
         mac = router['MAC']
         router['floor'] = routers[mac]['floor']
@@ -101,6 +101,7 @@ def locate(routers, nearby_routers, trilatOrMean):
             weight = 1 / router['RSSI']
             near_weights.append(weight)
 
+            dist *= cfg['PX_SCALE']
             if dist > max_dist:
                 max_dist = dist
 
@@ -151,7 +152,7 @@ def locate(routers, nearby_routers, trilatOrMean):
             dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
 
             if dist_to_mean > cfg['DIST_THRESHOLD']:
-                print("NB!!!", dist_to_mean, router) # TODO temp
+                print("NB!!!", dist_to_mean, router) # TODO remove if too far still?
 
             # Custom dist precision for mean
             if dist_to_mean > max_dist:
