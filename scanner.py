@@ -153,7 +153,8 @@ def scan(adapter=None):
     # Try sorting networks if list not empty and not malformed
     try:
         networks.sort(key=lambda x:x['RSSI'], reverse=True)
-    except KeyError:
-        raise
+    except KeyError as e:
+        print('[!] Malformed list of networks, unable to find RSSI values.')
+        return e
 
     return networks
