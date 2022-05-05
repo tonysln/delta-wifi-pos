@@ -114,12 +114,16 @@ def locate(routers, nearby_routers, trilatOrMean):
         # move index up until all are different
         i1 = 0
         i2 = i1
-        while near_coords[i2] == near_coords[i1]:
-            i2 += 1
+        try:
+            while near_coords[i2] == near_coords[i1]:
+                i2 += 1
+            i3 = i2
+            while near_coords[i3] == near_coords[i2]:
+                i3 += 1
+        except IndexError:
+            print('[!] Could not find three different APs nearby for trilateration')
+            return
 
-        i3 = i2
-        while near_coords[i3] == near_coords[i2]:
-            i3 += 1
 
         r1 = nearby_routers[i1]['DIST']
         r2 = nearby_routers[i2]['DIST']
@@ -150,9 +154,6 @@ def locate(routers, nearby_routers, trilatOrMean):
         for router in near_coords:
             rx,ry = router
             dist_to_mean = math.sqrt((rx - x)**2 + (ry - y)**2)
-
-            if dist_to_mean > cfg['DIST_THRESHOLD']:
-                print("NB!!!", dist_to_mean, router) # TODO remove if too far still?
 
             # Custom dist precision for mean
             if dist_to_mean > max_dist:
