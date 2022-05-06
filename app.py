@@ -68,9 +68,9 @@ class MapRenderer(object):
     def change_displayed_floor(self, up):
         # Change the floor value to display a different floor
 
-        if up and self.user['floor'] < 4:
+        if up and self.user['floor'] < cfg['MAX_FLOOR']:
             self.user['floor'] += 1
-        elif not up and self.user['floor'] > 1:
+        elif not up and self.user['floor'] > cfg['MIN_FLOOR']:
             self.user['floor'] -= 1
 
         self.render()
@@ -282,7 +282,7 @@ def begin_scan(renderer):
     nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
-        window.status.showMessage('No nearby routers detected', 3000)
+        window.status.showMessage('No nearby routers detected', 5000)
         return
 
     print('Nearby:')
@@ -299,7 +299,7 @@ def begin_scan(renderer):
                 print(router)
                 nearby.remove(router)
         except KeyError:
-            window.status.showMessage('Malformed routers list', 3000)
+            window.status.showMessage('Malformed routers list', 5000)
             return
     
     print()
@@ -324,7 +324,7 @@ def auto_scan(renderer):
 
     activated = renderer.window.autoScanButton.isChecked()
     msg = 'Auto scan started' if activated else 'Auto scan stopped'
-    window.status.showMessage(msg, 3000)
+    window.status.showMessage(msg, 5000)
 
     if activated:
         # Do a scan
@@ -413,7 +413,7 @@ def save_new_router(result_ok, renderer, nr_dialog):
     if result_ok and data_ok:
         # Check if a router with the same MAC already exists
         if data['MAC'] in renderer.routers.keys():
-            window.status.showMessage('A router with the desired MAC already exists', 3000)
+            window.status.showMessage('A router with the desired MAC already exists', 5000)
             add_new_router(renderer, nr_dialog)
             return
 
@@ -485,6 +485,10 @@ if __name__ == "__main__":
     window.mapOverlayView.clicked.connect(lambda: mr.render())
 
     # Display window and start app
-    window.status.showMessage('Ready', 3000)
+    window.status.showMessage('Ready', 5000)
+
+    if not cfg['ADAPTER']:
+        window.status.showMessage('Wireless adapter name is not configured!', 5000)
+
     window.show()
     sys.exit(app.exec())

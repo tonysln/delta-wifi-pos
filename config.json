@@ -11,5 +11,7 @@
     "POWER": 1.68,
     "PATH_LOSS": 2.25,
     "RSSI_MIN": -77,
-    "AUTO_SEC": 4
+    "AUTO_SEC": 4,
+    "MIN_FLOOR": 1,
+    "MAX_FLOOR": 4
 }

@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=Delta Wi-fi Positioning Application
-Comment=Delta Wi-fi Positioning Application
-Exec=./start.sh
-Terminal=false
-Type=Application

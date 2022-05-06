@@ -70,3 +70,4 @@ Some useful variables to configure:
 - `PATH_LOSS` exponent. Influences the conversion algorithm between RSSI and distance.
 - `POWER` value. Influences the conversion between RSSI and distance.
 - `AUTO_SEC` - expressed in seconds. Number of seconds between auto-scan activations.
+- `MIN_FLOOR` and `MAX_FLOOR` - the lowest and highest floor numbers used in the application.
