@@ -6,19 +6,22 @@ An indoor positioning system using lateration and geometric methods for use in t
 ```shell
 /
 ├── data
-│     └── routers.csv          # Main routers database
+│     └── routers.csv             # Main routers database
 ├── map
-│     ├── korrus-1-c.png       # Cleaned up and original versions
-│     ├── korrus-1.png         # of maps for every floor in Delta
+│     ├── korrus-1-c.png          # Cleaned up and original versions
+│     ├── korrus-1.png            # of maps for every floor in Delta
+│     ├── korrus-1-overlay.png    # Overlays for floor maps
 │     └── ...
 ├── ui                      
-│     ├── app_main.ui          # Main app window UI file for PySide
-│     └── components.py        # Classes for various UI components
-├── app.py                     # Main app script file
-├── locator.py                 # All methods required for positioning
-├── config.json                # Configuration file
-├── requirements.txt           # List of Python packages to install
-└── scanner.py                 # Methods for envoking and parsing network scans
+│     ├── app_main.ui             # Main app window UI file for PySide
+│     └── components.py           # Classes for various UI components
+├── app.py                        # Main app script file
+├── config.json                   # Configuration file
+├── install.sh                    # Easy install and setup bash script
+├── locator.py                    # All methods required for positioning
+├── requirements.txt              # List of Python packages to install
+├── scanner.py                    # Methods for envoking and parsing network scans
+└── start.sh                      # Start bash script
 ```
 
 
@@ -29,6 +32,8 @@ $ git clone https://github.com/tonysln/delta-wifi-pos.git
 $ cd delta-wifi-pos
 $ pip install -r requirements.txt
 ```
+
+Alternatively, the `install.sh` script file can be downloaded and launched to complete the installation automatically.
 
 
 ### Running
