@@ -51,11 +51,10 @@ def scan_macos():
         network = {
             'SSID': row[0],
             'MAC': row[1],
-            'RSSI': int(row[2]) # https://support.moonpoint.com/os/os-x/wireless/wifi-signal-strength
+            'RSSI': int(row[2])
         }
         networks.append(network)
 
-    networks.sort(key=lambda x:x['RSSI'], reverse=True)
     return networks
 
 
@@ -124,7 +123,6 @@ def scan_win():
             new_network['MAC'] = row.split(':', 1)[1].strip()
 
         if adding and row.startswith('signal'):
-            # https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_association_attributes
             # Interpolate signal strength % to dBm
             conversion = interp1d([0, 100], [-100, -50])
             percent = int(row.split(':')[1].strip()[:-1])
@@ -139,14 +137,23 @@ def scan(adapter=None):
     # Launch the appropriate scanning method based on OS
     # Custom adapter name given for Linux, otherwise always None
     pf = sys.platform
+    networks = []
 
     if pf == 'linux':
-        return scan_linux(adapter)
+        networks = scan_linux(adapter)
     elif pf  == 'win32':
-        return scan_win()
+        networks = scan_win()
     elif pf == 'darwin':
-        return scan_macos()
+        networks = scan_macos()
     else:
         print('[!] Unable to start a live scan')
         print('Your OS is not supported by this app.')
         sys.exit(1)
+
+    # Try sorting networks if list not empty and not malformed
+    try:
+        networks.sort(key=lambda x:x['RSSI'], reverse=True)
+    except KeyError:
+        print('[!] Malformed list of networks, unable to find RSSI values.')
+
+    return networks

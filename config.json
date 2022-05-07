@@ -1,15 +1,17 @@
 {
+    "ADAPTER": "",
     "UI_FILE_PATH": "ui/app_main.ui",
     "ROUTERS_FILE_PATH": "data/routers.csv",
-    "LOCATIONS_FILE_PATH": "data/locations.csv",
     "IMG_W": 5300,
     "IMG_H": 5553,
-    "DIST_THRESHOLD": 900,
-    "RAD_THRESHOLD": 50,
-    "RAD_NORM": 0.045,
-    "PX_SCALE": 11,
+    "DIST_THRESHOLD": 300,
+    "RAD_THRESHOLD": 14,
+    "RAD_NORM": 0.4,
+    "PX_SCALE": 40,
     "POWER": 1.68,
     "PATH_LOSS": 2.25,
     "RSSI_MIN": -77,
-    "AUTO_SEC": 6
+    "AUTO_SEC": 4,
+    "MIN_FLOOR": 1,
+    "MAX_FLOOR": 4
 }

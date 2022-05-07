@@ -1,25 +1,28 @@
 # Delta Wi-Fi Positioning System
 An indoor positioning system using lateration and geometric methods for use in the University of Tartu Delta Centre.
 
+[![Application main window screenshot](https://i.postimg.cc/L411SxB1/Github-Screen01.png)](https://postimg.cc/qgpRXXFJ)
 
 ### Project Structure
 ```shell
 /
 ├── data
-│     ├── locations.csv        # Location names for all routers
-│     └── routers.csv          # Main routers database
+│     └── routers.csv             # Main routers database
 ├── map
-│     ├── korrus-1-c.png       # Cleaned up and original versions
-│     ├── korrus-1.png         # of maps for every floor in Delta
+│     ├── korrus-1-c.png          # Cleaned up and original versions
+│     ├── korrus-1.png            # of maps for every floor in Delta
+│     ├── korrus-1-overlay.png    # Overlays for floor maps
 │     └── ...
 ├── ui                      
-│     ├── app_main.ui          # Main app window UI file for PySide
-│     └── components.py        # Classes for various UI components
-├── app.py                     # Main app script file
-├── locator.py                 # All methods required for positioning
-├── config.json                # Configuration file
-├── requirements.txt           # List of Python packages to install
-└── scanner.py                 # Methods for envoking and parsing network scans
+│     ├── app_main.ui             # Main app window UI file for PySide
+│     └── components.py           # Classes for various UI components
+├── app.py                        # Main app script file
+├── config.json                   # Configuration file
+├── install.sh                    # Easy install and setup bash script
+├── locator.py                    # All methods required for positioning
+├── requirements.txt              # List of Python packages to install
+├── scanner.py                    # Methods for envoking and parsing network scans
+└── start.sh                      # Start bash script
 ```
 
 
@@ -31,6 +34,8 @@ $ cd delta-wifi-pos
 $ pip install -r requirements.txt
 ```
 
+Alternatively, the `install.sh` script file can be downloaded and launched to complete the installation automatically.
+
 
 ### Running
 If you're using Windows as your operating system:
@@ -39,14 +44,14 @@ If you're using Windows as your operating system:
 $ python3 app.py
 ```
 
-In case of macOS you will need sudo privileges:
+In case of macOS and Linux you will need sudo privileges:
 ```
 $ sudo python3 app.py
 ```
 
-In case of Linux you will also need to specify the name of your Wi-Fi adapter:
+In case of Linux you will also need to specify the name of your Wi-Fi adapter inside the `config.json` file, on line 2:
 ```
-$ sudo python3 app.py --adapter NAME
+"ADAPTER": "add_name_here",
 ```
 
 On some Linux builds, the following error might be displayed, due to a bug in PySide 6:
@@ -71,3 +76,4 @@ Some useful variables to configure:
 - `PATH_LOSS` exponent. Influences the conversion algorithm between RSSI and distance.
 - `POWER` value. Influences the conversion between RSSI and distance.
 - `AUTO_SEC` - expressed in seconds. Number of seconds between auto-scan activations.
+- `MIN_FLOOR` and `MAX_FLOOR` - the lowest and highest floor numbers used in the application.

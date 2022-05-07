@@ -66,6 +66,8 @@ class NewRouterDialog(QDialog):
 
         # Floor
         self.floorRow = QHBoxLayout()
+        self.curFloorLabel = QLabel('')
+        self.curFloorLabel.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.floorRow.addWidget(QLabel('Floor'))
         self.floorDownButton = QPushButton('<')
         self.floorDownButton.setFixedWidth(50)
@@ -73,6 +75,7 @@ class NewRouterDialog(QDialog):
         self.floorUpButton.setFixedWidth(50)
         self.floorRow.addWidget(self.floorDownButton)
         self.floorRow.addWidget(self.floorUpButton)
+        self.floorRow.addWidget(self.curFloorLabel)
         layout.addLayout(self.floorRow)
 
         # Coordinates
@@ -121,5 +124,6 @@ class NewRouterDialog(QDialog):
         self.ssidInputBox.setText('')
         self.macInputBox.setText('')
         self.nameInputBox.setText('')
+        self.curFloorLabel.setText('')
         self.coords.setText('x: 0, y: 0')
 

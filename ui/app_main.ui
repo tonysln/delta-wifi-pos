@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>978</width>
+    <width>981</width>
     <height>760</height>
    </rect>
   </property>
@@ -82,7 +82,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="sideMenuLayout" stretch="0,0,0,0,0,0,0,0,0,0,0">
+       <layout class="QVBoxLayout" name="sideMenuLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0">
         <property name="spacing">
          <number>-1</number>
         </property>
@@ -109,7 +109,7 @@
           <property name="minimumSize">
            <size>
             <width>230</width>
-            <height>146</height>
+            <height>128</height>
            </size>
           </property>
           <property name="font">
@@ -170,36 +170,17 @@
            <property name="font">
             <font>
              <family>Arial</family>
-             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="text">
             <string>x: 540, y: 3400</string>
            </property>
           </widget>
-          <widget class="QLabel" name="precLabel">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>100</y>
-             <width>191</width>
-             <height>16</height>
-            </rect>
-           </property>
-           <property name="font">
-            <font>
-             <family>Arial</family>
-            </font>
-           </property>
-           <property name="text">
-            <string>Precision: 6.5 m</string>
-           </property>
-          </widget>
           <widget class="QLabel" name="radiusLabel">
            <property name="geometry">
             <rect>
              <x>10</x>
-             <y>120</y>
+             <y>100</y>
              <width>191</width>
              <height>16</height>
             </rect>
@@ -253,29 +234,37 @@
           <property name="title">
            <string>Routers</string>
           </property>
-          <widget class="QLabel" name="routersListLabel">
+          <widget class="QTextBrowser" name="routersListLabel">
            <property name="geometry">
             <rect>
-             <x>10</x>
-             <y>30</y>
-             <width>211</width>
-             <height>151</height>
+             <x>0</x>
+             <y>20</y>
+             <width>231</width>
+             <height>180</height>
             </rect>
            </property>
            <property name="font">
             <font>
-             <family>Arial</family>
-             <pointsize>10</pointsize>
+             <pointsize>11</pointsize>
             </font>
            </property>
-           <property name="text">
-            <string/>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
            </property>
-           <property name="scaledContents">
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOn</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOn</enum>
+           </property>
+           <property name="lineWrapMode">
+            <enum>QTextEdit::NoWrap</enum>
+           </property>
+           <property name="openLinks">
             <bool>false</bool>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
            </property>
           </widget>
          </widget>
@@ -362,6 +351,23 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="simpleMapView">
+          <property name="text">
+           <string>Simple Map View</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="mapOverlayView">
+          <property name="text">
+           <string>Map Info Overlay</string>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="mainControlsLayout">

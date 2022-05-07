@@ -24,10 +24,9 @@ import sys
 
 
 class MapRenderer(object):
-    def __init__(self, window, routers, locations):
+    def __init__(self, window, routers):
         self.window = window
-        self.routers = routers # routers dictionary, mac[:]
-        self.locations = locations # locations dictionary, mac[:-1]
+        self.routers = routers # routers dictionary
 
         # Map details
         self.map_scale = 3
@@ -43,7 +42,6 @@ class MapRenderer(object):
             'y': 0, 
             'floor': 1,
             'location': 'Delta building',
-            'precision': 0,
             'radius': 0
         }
         self.nearby_routers = []
@@ -59,9 +57,9 @@ class MapRenderer(object):
     def scale_map(self, up):
         # Change map scaling
         
-        if up and self.map_scale <= 5:
+        if not up and self.map_scale <= 4:
             self.map_scale += 1
-        elif not up and self.map_scale > 1:
+        elif up and self.map_scale > 1:
             self.map_scale -= 1
 
         self.render()
@@ -70,9 +68,9 @@ class MapRenderer(object):
     def change_displayed_floor(self, up):
         # Change the floor value to display a different floor
 
-        if up and self.user['floor'] < 4:
+        if up and self.user['floor'] < cfg['MAX_FLOOR']:
             self.user['floor'] += 1
-        elif not up and self.user['floor'] > 1:
+        elif not up and self.user['floor'] > cfg['MIN_FLOOR']:
             self.user['floor'] -= 1
 
         self.render()
@@ -83,8 +81,8 @@ class MapRenderer(object):
         # Returns a tuple of interpolation functions for use
         # with x and y coordinates.
          
-        scaled_w_range = [0, self.window.mapView.width() * self.map_scale]
-        scaled_h_range = [0, self.window.mapView.height() * self.map_scale]
+        scaled_w_range = [0, self.img_w / self.map_scale]
+        scaled_h_range = [0, self.img_h / self.map_scale]
         img_w_range = [0, self.img_w]
         img_h_range = [0, self.img_h]
         
@@ -104,8 +102,10 @@ class MapRenderer(object):
         # Render the map
         print('Rendering...')
 
+        # Use a simple/clean or full map
+        map_mode = '-c' if self.window.simpleMapView.isChecked() else ''
         # Load map for the current floor
-        path = f'map/korrus-{self.user["floor"]}-c.png'
+        path = f'map/korrus-{self.user["floor"]}{map_mode}.png'
         # Init a pixmap for the map
         pix = QPixmap(path)
         painter = QPainter(pix)
@@ -121,7 +121,7 @@ class MapRenderer(object):
                 self.draw_router(painter, router)
 
                 # Draw router location name on map
-                painter.drawText(router['x'] - 40, router['y'] - 28, self.locations[mac[:-1]])
+                painter.drawText(router['x'] - 40, router['y'] - 28, router['name'])
 
         self.draw_user(painter)
 
@@ -140,13 +140,23 @@ class MapRenderer(object):
 
 
         # Scale map based on current zoom
-        pix = pix.scaled(self.window.mapView.width() * self.map_scale,
-                         self.window.mapView.height() * self.map_scale, 
+        pix = pix.scaled(self.img_w / self.map_scale,
+                         self.img_h / self.map_scale, 
                          Qt.AspectRatioMode.KeepAspectRatio,
                          Qt.TransformationMode.SmoothTransformation)
         
         # Add the pixmap to a scene in the QGraphicsView
         scene.addPixmap(pix)
+
+        # Load the additional info overlay image if selected
+        if self.window.mapOverlayView.isChecked():
+            pix_overlay = QPixmap(f'map/korrus-{self.user["floor"]}-overlay.png')
+            pix_overlay = pix_overlay.scaled(self.img_w / self.map_scale,
+                                             self.img_h / self.map_scale, 
+                                             Qt.AspectRatioMode.KeepAspectRatio,
+                                             Qt.TransformationMode.SmoothTransformation)
+            scene.addPixmap(pix_overlay)
+
         self.window.mapView.setScene(scene)
 
         # Move the map to give padding around all sides
@@ -155,16 +165,12 @@ class MapRenderer(object):
         # Remap center coordinates based on the current map scale
         rc_x,rc_y = self.remap_coords()
 
-        # Center map view on the user's location if not editing routers
+        # Center map view on the user's location
         if not self.add_new_router_mode:
             center_x = rc_x(self.user['x'])
             center_y = rc_y(self.user['y'])
-        else:
-            # Otherwise, center on the new router
-            center_x = rc_x(self.new_router['x'])
-            center_y = rc_y(self.new_router['y'])
-        
-        self.window.mapView.centerOn(center_x, center_y)
+            self.window.mapView.centerOn(center_x, center_y)
+            
         self.window.mapView.show()
 
         self.update_labels()
@@ -177,8 +183,8 @@ class MapRenderer(object):
 
         if self.add_new_router_mode:
             rc_x,rc_y = self.remap_coords(reverse=True)
-            self.new_router['x'] = int(rc_x(new_pos.x()))
-            self.new_router['y'] = int(rc_y(new_pos.y()))
+            self.new_router['x'] = int(rc_x(new_pos.x()).round())
+            self.new_router['y'] = int(rc_y(new_pos.y()).round())
             self.new_router['floor'] = self.user['floor']
             self.nr.coords.setText(f'x: {self.new_router["x"]}, y: {self.new_router["y"]}')
             self.render()
@@ -227,9 +233,10 @@ class MapRenderer(object):
         rl = ''
         for router in self.nearby_routers:
             mac = router['MAC']
-            #loc = self.locations[mac[:-1]]
+            loc = self.routers[router['MAC']]['name']
             dist = router['DIST']
-            rl +=  f'{mac}   ({round(dist, 1)} m)\n'
+            # Formatted line
+            rl +=  f'{loc}   ({round(dist, 1)} m)   {mac[-5:]}\n'
 
         self.window.routersListLabel.setText(rl)
 
@@ -240,8 +247,8 @@ class MapRenderer(object):
         self.window.coordsLabel.setText(f'x: {round(self.user["x"])}, y: {round(self.user["y"])}')
         self.window.floorLabel.setText(f'Floor {self.user["floor"]}')
         self.window.locationLabel.setText(self.user["location"])
-        self.window.precLabel.setText(f'Precision: {round(self.user["precision"], 2)} m')
         self.window.radiusLabel.setText(f'Radius: {round(self.user["radius"], 2)} m')
+        self.nr.curFloorLabel.setText(str(self.user['floor']))
 
 
     def reset_labels(self):
@@ -250,19 +257,20 @@ class MapRenderer(object):
         self.window.coordsLabel.setText('x: --, y: --')
         self.window.floorLabel.setText('Floor -')
         self.window.locationLabel.setText('---')
-        self.window.precLabel.setText('Precision: -- m')
         self.window.radiusLabel.setText('Radius: -- m')
         self.window.routersListLabel.setText('')
 
 
 
-def begin_scan(renderer, adapter=None):
+def begin_scan(renderer):
     # Main Renderer object
     # Custom adapter name to use in Linux, otherwise
-    # adapter name is None and default is used
 
     # Check if trilateration or mean method is selected
     trilatOrMean = renderer.window.trilatMethod.isChecked()
+
+    # Custom adapter name
+    adapter = cfg['ADAPTER']
 
     # Scan the network
     nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -57, 'SSID': 'eduroam'}, 
@@ -271,12 +279,10 @@ def begin_scan(renderer, adapter=None):
               {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
               {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
               {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
-    
-    if adapter:
-        nearby = scanner.scan(adapter)
+    nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
-        window.status.showMessage('No nearby routers detected', 3000)
+        window.status.showMessage('No nearby routers detected', 5000)
         return
 
     print('Nearby:')
@@ -293,7 +299,7 @@ def begin_scan(renderer, adapter=None):
                 print(router)
                 nearby.remove(router)
         except KeyError:
-            window.status.showMessage('Malformed routers list', 3000)
+            window.status.showMessage('Malformed routers list', 5000)
             return
     
     print()
@@ -303,7 +309,7 @@ def begin_scan(renderer, adapter=None):
     user = locator.locate(renderer.routers, nearby, trilatOrMean)
 
     # Set user location name based on nearest router
-    user['location'] = renderer.locations[nearby[0]['MAC'][:-1]]
+    user['location'] = renderer.routers[nearby[0]['MAC']]['name']
 
     # Pass data to renderer and draw
     renderer.nearby_routers = nearby
@@ -311,20 +317,20 @@ def begin_scan(renderer, adapter=None):
     renderer.render()
 
 
-def auto_scan(renderer, adapter=None):
+def auto_scan(renderer):
     # Main Renderer object
     # Custom adapter name
     # Automatic scan (auto-update)
 
     activated = renderer.window.autoScanButton.isChecked()
     msg = 'Auto scan started' if activated else 'Auto scan stopped'
-    window.status.showMessage(msg, 3000)
+    window.status.showMessage(msg, 5000)
 
     if activated:
         # Do a scan
-        begin_scan(renderer, adapter)
+        begin_scan(renderer)
         # Repeat this method call in N seconds (will check if button still pressed too)
-        QTimer.singleShot(cfg['AUTO_SEC']*1000, lambda: auto_scan(renderer, adapter))
+        QTimer.singleShot(cfg['AUTO_SEC']*1000, lambda: auto_scan(renderer))
         return
 
 
@@ -336,7 +342,7 @@ def load_routers(path):
         rows = f.read().splitlines()
 
     # Skip first row
-    if rows[0].startswith('mac'):
+    if rows[0].startswith('x'):
         rows = rows[1:]
 
     # Save router data into a dictionary
@@ -353,7 +359,8 @@ def load_routers(path):
             'y': int(row[1]),
             'SSID': row[3],
             'floor': int(row[4]),
-            'freq': int(row[5])
+            'freq': int(row[5]),
+            'name': row[6].strip()
         }
 
     return routers_dict
@@ -363,45 +370,10 @@ def save_router(path, rr):
     # Save router (rr) entry
     
     router_str = f'\n{rr["x"]},{rr["y"]},{rr["MAC"]}' + \
-                 f',{rr["SSID"]},{rr["floor"]},{rr["freq"]}'
+                 f',{rr["SSID"]},{rr["floor"]},{rr["freq"]},{rr["name"]}'
     
     with open(path, 'a+') as f:
         f.write(router_str)
-
-
-def load_locations(path):
-    # Load data for all locations from storage
-
-    # Open and read file
-    with open(path, 'r') as f:
-        rows = f.read().splitlines()
-
-    # Skip first row
-    if rows[0].startswith('mac'):
-        rows = rows[1:]
-    
-    # Save locations into a dictionary with
-    locations_dict = {}
-    for row in rows:
-        if len(row) == 0 or not row:
-            continue
-
-        row = row.split(',')
-
-        mac = row[0][:-1]
-        loc = row[1]
-        locations_dict[mac] = loc
-
-    return locations_dict
-
-
-def save_location(path, router):
-    # Save location entry
-
-    location_str = f'\n{router["MAC"]},{router["name"]}'
-    
-    with open(path, 'a+') as f:
-        f.write(location_str)
 
 
 def load_UI(path):
@@ -441,7 +413,7 @@ def save_new_router(result_ok, renderer, nr_dialog):
     if result_ok and data_ok:
         # Check if a router with the same MAC already exists
         if data['MAC'] in renderer.routers.keys():
-            window.status.showMessage('A router with the desired MAC already exists', 3000)
+            window.status.showMessage('A router with the desired MAC already exists', 5000)
             add_new_router(renderer, nr_dialog)
             return
 
@@ -452,9 +424,7 @@ def save_new_router(result_ok, renderer, nr_dialog):
 
         # Save the new router entry
         save_router(cfg['ROUTERS_FILE_PATH'], data)
-        save_location(cfg['LOCATIONS_FILE_PATH'], data)
         renderer.routers = load_routers(cfg['ROUTERS_FILE_PATH'])
-        renderer.locations = load_locations(cfg['LOCATIONS_FILE_PATH'])
 
         # Reset labels and new router dict
         nr_dialog.reset()
@@ -478,15 +448,8 @@ if __name__ == "__main__":
         cfg = json.load(f)
 
     # Initial attributes
-    args = sys.argv
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
-    app = QApplication(args)
-
-    # Handle given arguments
-    # Specified adapter to use (Linux only)
-    adapter = None
-    if '--adapter' in args:
-        adapter = args[args.index('--adapter') + 1]
+    app = QApplication(sys.argv)
 
     # Load window from UI file
     window = load_UI(cfg['UI_FILE_PATH'])
@@ -500,10 +463,9 @@ if __name__ == "__main__":
 
     # Load all routers and locations
     routers = load_routers(cfg['ROUTERS_FILE_PATH'])
-    locations = load_locations(cfg['LOCATIONS_FILE_PATH'])
 
     # Init the main renderer class
-    mr = MapRenderer(window, routers, locations)
+    mr = MapRenderer(window, routers)
     # Init new router dialog window
     nr_dialog = uic.NewRouterDialog()
     nr_dialog.finished.connect(lambda res: save_new_router(res, mr, nr_dialog))
@@ -514,13 +476,19 @@ if __name__ == "__main__":
 
     # Connect button controls
     window.quitButton.clicked.connect(sys.exit)
-    window.scanButton.clicked.connect(lambda: begin_scan(mr, adapter))
-    window.autoScanButton.clicked.connect(lambda: auto_scan(mr, adapter))
+    window.scanButton.clicked.connect(lambda: begin_scan(mr))
+    window.autoScanButton.clicked.connect(lambda: auto_scan(mr))
     window.addNewRouterButton.clicked.connect(lambda: add_new_router(mr, nr_dialog))
     window.scalePlusButton.clicked.connect(lambda: mr.scale_map(True))
     window.scaleMinusButton.clicked.connect(lambda: mr.scale_map(False))
+    window.simpleMapView.clicked.connect(lambda: mr.render())
+    window.mapOverlayView.clicked.connect(lambda: mr.render())
 
     # Display window and start app
-    window.status.showMessage('Ready', 3000)
+    window.status.showMessage('Ready', 5000)
+
+    if not cfg['ADAPTER']:
+        window.status.showMessage('Wireless adapter name is not configured!', 5000)
+
     window.show()
     sys.exit(app.exec())
