@@ -129,19 +129,15 @@ def locate(routers, nearby_routers, trilatOrMean):
         r2 = nearby_routers[i2]['DIST']
         r3 = nearby_routers[i3]['DIST']
 
-        # Transform to cartestian coordinates for formula
-        # Using Fang's method where A = (0,0,0), B = (x2, 0, 0), C = (x3, y3, 0)
+        # A = (0,0,0), B = (Ux, 0, 0), C = (Vx, Vy, 0)
         Ux = near_coords[i2][0]
         Vx,Vy = near_coords[i3][0], near_coords[i3][1]
         x = (r1**2 - r2**2 + Ux**2) / (2*Ux)
         y = (r1**2 - r3**2 + Vx**2 + Vy**2 - 2*Vx*x) / (2*Vy)
 
         # Fix result by offsetting
-        x += near_coords[i2][0]
-        y += near_coords[i3][1]
-        
-        # Adjust back to screen coordinates
-        # x,y = cart_to_scr(x, y, cfg['IMG_W'], cfg['IMG_H'])
+        x += near_coords[i1][0]
+        y += near_coords[i1][1]
 
 
 

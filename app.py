@@ -236,7 +236,7 @@ class MapRenderer(object):
             loc = self.routers[router['MAC']]['name']
             dist = router['DIST']
             # Formatted line
-            rl +=  f'{loc}   ({round(dist, 1)} m)   {mac[-5:]}\n'
+            rl +=  f'{loc}   ({round(dist, 1)*10} m)   {mac[-5:]}\n'
 
         self.window.routersListLabel.setText(rl)
 
@@ -273,12 +273,6 @@ def begin_scan(renderer):
     adapter = cfg['ADAPTER']
 
     # Scan the network
-    nearby = [{'MAC': '7c:21:0d:2e:e5:20', 'RSSI': -57, 'SSID': 'eduroam'}, 
-              {'MAC': '7c:21:0d:2e:e5:21', 'RSSI': -51, 'SSID': 'ut-public'}, 
-              {'MAC': '7c:21:0d:2f:73:a0', 'RSSI': -68, 'SSID': 'eduroam'}, 
-              {'MAC': '7c:21:0d:2f:75:21', 'RSSI': -81, 'SSID': 'ut-public'},
-              {'MAC': '7c:21:0d:2f:75:20', 'RSSI': -77, 'SSID': 'eduroam'},
-              {'MAC': '1c:d1:e0:44:97:e0', 'RSSI': -89, 'SSID': 'eduroam'}]
     nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
