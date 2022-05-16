@@ -276,7 +276,7 @@ def begin_scan(renderer):
     nearby = scanner.scan(adapter)
 
     if not nearby or len(nearby) == 0:
-        window.status.showMessage('No nearby routers detected', 5000)
+        window.status.showMessage('No suitable nearby routers detected', 5000)
         return
 
     print('Nearby:')
@@ -297,6 +297,11 @@ def begin_scan(renderer):
             return
     
     print()
+
+    # Check if any routers are left after excluding
+    if len(nearby) == 0:
+        window.status.showMessage('No suitable nearby routers detected', 5000)
+        return
 
     # Predict user x, y, floor
     # NB! Nearby list gets mutated
