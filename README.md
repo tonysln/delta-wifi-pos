@@ -1,7 +1,9 @@
 # Delta Wi-Fi Positioning System
 An indoor positioning system using lateration and geometric methods for use in the University of Tartu Delta Centre.
 
-[![Application main window screenshot](https://i.postimg.cc/L411SxB1/Github-Screen01.png)](https://postimg.cc/qgpRXXFJ)
+
+https://user-images.githubusercontent.com/20811603/169146350-27e1aacf-87a9-4afc-bdaf-0e7ae15886d0.mp4
+
 
 ### Project Structure
 ```shell
