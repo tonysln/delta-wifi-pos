@@ -5,6 +5,8 @@ An indoor positioning system using weighted mean and trilateration methods for u
 https://user-images.githubusercontent.com/20811603/169146350-27e1aacf-87a9-4afc-bdaf-0e7ae15886d0.mp4
 
 
+This application was developed as part of a Bachelor's thesis at University of Tartu, which can be viewed [here](https://comserv.cs.ut.ee/ati_thesis/datasheet.php?id=74434&year=2022).
+
 ### Project Structure
 ```shell
 /
